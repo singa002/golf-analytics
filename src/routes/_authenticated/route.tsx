@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, Link, useLocation } from "@tanstack/react-router";
+import { createFileRoute, Outlet, Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { Eye, BarChart3, Clock, LayoutDashboard, Trophy } from "lucide-react";
 import { useState } from "react";
 import type { ComponentType, SVGProps } from "react";
@@ -32,6 +32,7 @@ const TABS: Tab[] = [
 
 function AuthenticatedLayout() {
   const location = useLocation();
+  const navigate = useNavigate({ from: "/_authenticated" });
   const { shown, complete } = useIntroAnimation();
   const [dismissed, setDismissed] = useState(false);
 
@@ -44,6 +45,7 @@ function AuthenticatedLayout() {
           onComplete={() => {
             complete();
             setDismissed(true);
+            navigate({ to: "/dashboard" });
           }}
         />
       )}
