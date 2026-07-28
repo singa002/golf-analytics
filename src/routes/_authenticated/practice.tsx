@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Circle } from "lucide-react";
 import { getPrePuttRead } from "@/lib/previewService";
 import { generatePuttData, type PuttData, type PuttQuality } from "@/lib/sensorService";
+import { SharedGreenView } from "@/components/SharedGreenView";
+
 
 export const Route = createFileRoute("/_authenticated/practice")({
   head: () => ({
