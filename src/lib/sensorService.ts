@@ -86,5 +86,8 @@ export function generatePuttData(): PuttData {
     made,
     coaching,
     pathSamples,
+    ballAngle: Math.random() * 360,
+    ballDistance: rand(0.55, 0.85),
   };
 }
+
