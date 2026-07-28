@@ -75,13 +75,15 @@ export function useIntroAnimation() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const seen = window.localStorage.getItem("pv_intro_shown");
+    // Clean up any older key from prior testing so animation shows.
+    window.localStorage.removeItem("pv_intro_shown");
+    const seen = window.localStorage.getItem("pv_intro_shown_v2");
     setShown(seen === "1");
   }, []);
 
   const complete = () => {
     if (typeof window !== "undefined") {
-      window.localStorage.setItem("pv_intro_shown", "1");
+      window.localStorage.setItem("pv_intro_shown_v2", "1");
     }
     setShown(true);
   };
