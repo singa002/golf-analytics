@@ -1,7 +1,6 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Target } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,19 +22,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Welcome() {
-  const navigate = useNavigate();
-  const [checking, setChecking] = useState(true);
 
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/preview", replace: true });
-      else setChecking(false);
-    });
-  }, [navigate]);
-
-  if (checking) {
-    return <div className="min-h-screen bg-background" />;
-  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-8 py-12 relative overflow-hidden">
