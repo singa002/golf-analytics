@@ -25,17 +25,6 @@ const GRAY = "#9CA3AF";
 const CARD = "#1C1C1E";
 const COACHING_BG = "#26262A";
 
-function Card({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      className="w-full rounded-2xl p-6"
-      style={{ backgroundColor: CARD, maxWidth: 540 }}
-    >
-      {children}
-    </div>
-  );
-}
-
 function MetricRow({
   label,
   value,
@@ -57,13 +46,94 @@ function MetricRow({
   );
 }
 
+function GreenView({
+  breakDirection,
+  aimDirection,
+}: {
+  breakDirection: "Left" | "Right";
+  aimDirection: "Left" | "Right";
+}) {
+  // Ball at bottom center, hole near top center. Curve bends toward aim side then falls back.
+  const ballX = 200;
+  const ballY = 520;
+  const holeX = 200;
+  const holeY = 80;
+  // Control points for a curved path. Aim direction indicates where to start the ball.
+  const aimOffset = aimDirection === "Left" ? -70 : 70;
+  const breakOffset = breakDirection === "Left" ? -40 : 40;
+  const c1x = ballX + aimOffset;
+  const c1y = 380;
+  const c2x = holeX + breakOffset;
+  const c2y = 220;
+
+  return (
+    <svg
+      viewBox="0 0 400 600"
+      className="w-full h-full"
+      preserveAspectRatio="xMidYMid meet"
+      aria-label="Overhead view of green with predicted putt path"
+    >
+      <defs>
+        <radialGradient id="greenGrad" cx="50%" cy="45%" r="65%">
+          <stop offset="0%" stopColor="#1F6B3A" />
+          <stop offset="60%" stopColor="#134523" />
+          <stop offset="100%" stopColor="#0B2A16" />
+        </radialGradient>
+      </defs>
+
+      {/* Green shape */}
+      <path
+        d="M60,90 C130,40 290,50 350,120 C390,190 380,360 340,470 C290,570 130,580 70,500 C20,410 20,180 60,90 Z"
+        fill="url(#greenGrad)"
+        stroke="#0F3A1E"
+        strokeWidth="2"
+      />
+
+      {/* Contour lines */}
+      <g stroke="#2A7A4A" strokeWidth="1" fill="none" opacity="0.35">
+        <path d="M90,180 C180,150 260,160 320,200" />
+        <path d="M80,280 C170,250 260,260 330,300" />
+        <path d="M85,380 C180,350 270,360 325,395" />
+      </g>
+
+      {/* Predicted putt path */}
+      <path
+        d={`M ${ballX} ${ballY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${holeX} ${holeY}`}
+        stroke={GREEN}
+        strokeWidth="3"
+        strokeDasharray="6 8"
+        strokeLinecap="round"
+        fill="none"
+      />
+
+      {/* Hole */}
+      <circle cx={holeX} cy={holeY} r="10" fill="#0A0A0A" stroke="#000" strokeWidth="1" />
+
+      {/* Flag pole */}
+      <line x1={holeX} y1={holeY} x2={holeX} y2={holeY - 70} stroke="#F5F5F5" strokeWidth="2" />
+      {/* Flag */}
+      <path
+        d={`M ${holeX} ${holeY - 70} L ${holeX + 30} ${holeY - 62} L ${holeX} ${holeY - 54} Z`}
+        fill={GREEN}
+      />
+
+      {/* Ball */}
+      <circle cx={ballX} cy={ballY} r="8" fill={WHITE} stroke="#000" strokeWidth="1" />
+      <circle cx={ballX} cy={ballY} r="8" fill="none" stroke={GREEN} strokeWidth="1.5" opacity="0.7">
+        <animate attributeName="r" from="8" to="16" dur="1.8s" repeatCount="indefinite" />
+        <animate attributeName="opacity" from="0.7" to="0" dur="1.8s" repeatCount="indefinite" />
+      </circle>
+    </svg>
+  );
+}
+
 function PreviewPage() {
   const read = getPrePuttRead();
 
   return (
-    <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-6">
-      <div className="w-full max-w-xl flex flex-col items-center gap-5">
-        <div className="w-full flex items-center gap-2" style={{ maxWidth: 540 }}>
+    <div className="min-h-[calc(100vh-5rem)] p-6">
+      <div className="w-full max-w-[1400px] mx-auto flex flex-col gap-5">
+        <div className="w-full flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: GREEN }} />
           <span
             className="text-[11px] font-semibold uppercase tracking-widest"
@@ -73,54 +143,63 @@ function PreviewPage() {
           </span>
         </div>
 
-        <Card>
-          <h1 className="sr-only">Pre-Putt Read</h1>
+        <h1 className="sr-only">Pre-Putt Read</h1>
 
-          <div className="mb-6">
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Next Putt
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
+          {/* Left column */}
+          <div className="flex flex-col gap-5">
+            <div className="w-full rounded-2xl p-6" style={{ backgroundColor: CARD }}>
+              <div className="flex flex-col">
+                <MetricRow label="Distance" value={`${read.distanceFt} ft`} />
+                <MetricRow label="Speed" value={`${read.speedMs} m/s`} />
+                <MetricRow
+                  label="Break"
+                  value={`${read.breakDeg}° ${read.breakDirection}`}
+                  valueColor={GREEN}
+                />
+                <MetricRow
+                  label="Start Line"
+                  value={`${read.startLineDeg}° ${read.startLineDirection}`}
+                />
+                <MetricRow label="Stimp" value={read.stimp.toString()} />
+                <MetricRow
+                  label="Aim Point"
+                  value={`${read.aimPointFt} ft ${read.aimPointDirection}`}
+                />
+              </div>
             </div>
-            <div className="text-3xl font-bold text-foreground mt-1">
-              {read.distanceFt} ft
+
+            <div
+              className="w-full rounded-xl p-5"
+              style={{ backgroundColor: COACHING_BG }}
+            >
+              <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
+                AI Coaching
+              </div>
+              <p
+                className="text-base italic leading-relaxed"
+                style={{ color: GREEN }}
+              >
+                &ldquo;{read.coaching}&rdquo;
+              </p>
             </div>
           </div>
 
-          <div className="flex flex-col">
-            <MetricRow label="Distance" value={`${read.distanceFt} ft`} />
-            <MetricRow label="Speed" value={`${read.speedMs} m/s`} />
-            <MetricRow
-              label="Break"
-              value={`${read.breakDeg}° ${read.breakDirection}`}
-              valueColor={GREEN}
-            />
-            <MetricRow
-              label="Start Line"
-              value={`${read.startLineDeg}° ${read.startLineDirection}`}
-            />
-            <MetricRow label="Stimp" value={read.stimp.toString()} />
-            <MetricRow
-              label="Aim Point"
-              value={`${read.aimPointFt} ft ${read.aimPointDirection}`}
-            />
-          </div>
-        </Card>
-
-        <div
-          className="w-full rounded-xl p-5"
-          style={{ backgroundColor: COACHING_BG, maxWidth: 540 }}
-        >
-          <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
-            AI Coaching
-          </div>
-          <p
-            className="text-base italic leading-relaxed"
-            style={{ color: GREEN }}
+          {/* Right column */}
+          <div
+            className="w-full rounded-2xl p-4 flex items-center justify-center"
+            style={{ backgroundColor: CARD, minHeight: 520 }}
           >
-            &ldquo;{read.coaching}&rdquo;
-          </p>
+            <div className="w-full h-full max-h-[640px] flex items-center justify-center">
+              <GreenView
+                breakDirection={read.breakDirection}
+                aimDirection={read.aimPointDirection}
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="flex items-center gap-4 w-full" style={{ maxWidth: 540 }}>
+        <div className="flex items-center gap-4 w-full">
           <button
             className="flex-1 rounded-lg py-3.5 text-sm font-semibold tracking-wide"
             style={{ backgroundColor: GREEN, color: "#0A0A0A" }}
@@ -139,4 +218,3 @@ function PreviewPage() {
     </div>
   );
 }
-
