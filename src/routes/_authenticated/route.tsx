@@ -1,17 +1,12 @@
-import { createFileRoute, Outlet, redirect, Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { Eye, BarChart3, Clock, Settings as SettingsIcon, Trophy, LogOut } from "lucide-react";
+import { createFileRoute, Outlet, Link, useLocation } from "@tanstack/react-router";
+import { Eye, BarChart3, Clock, Settings as SettingsIcon, Trophy } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
-import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
-  beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) throw redirect({ to: "/" });
-    return { user: data.user };
-  },
   component: AuthenticatedLayout,
 });
+
 
 // Custom putter icon
 const PutterIcon = (props: SVGProps<SVGSVGElement>) => (
