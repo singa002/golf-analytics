@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Camera } from "lucide-react";
 import { getPrePuttRead } from "@/lib/previewService";
 import { SharedGreenView } from "@/components/SharedGreenView";
+import { usePutt } from "@/context/PuttContext";
 
 
 export const Route = createFileRoute("/_authenticated/preview")({
@@ -56,6 +57,7 @@ function MetricRow({
 
 function PreviewPage() {
   const read = getPrePuttRead();
+  const { currentPutt } = usePutt();
 
   return (
     <div className="min-h-[calc(100vh-5rem)] p-6">
@@ -123,8 +125,8 @@ function PreviewPage() {
             </div>
             <div className="w-full h-full max-h-[640px] flex items-center justify-center">
               <SharedGreenView
-                ballAngle={220}
-                ballDistance={0.7}
+                ballAngle={currentPutt.ballAngle}
+                ballDistance={currentPutt.ballDistance}
                 breakDirection={read.breakDirection}
               />
 

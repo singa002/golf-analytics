@@ -2,8 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Circle } from "lucide-react";
 import { getPrePuttRead } from "@/lib/previewService";
-import { generatePuttData, type PuttData, type PuttQuality } from "@/lib/sensorService";
+import { type PuttData, type PuttQuality } from "@/lib/sensorService";
 import { SharedGreenView } from "@/components/SharedGreenView";
+import { usePutt } from "@/context/PuttContext";
 
 
 export const Route = createFileRoute("/_authenticated/practice")({
@@ -233,7 +234,7 @@ function ResultView({ data, onNext }: { data: PuttData; onNext: () => void }) {
 
 function PracticePage() {
   const read = getPrePuttRead();
-  const [currentPutt, setCurrentPutt] = useState<PuttData>(() => generatePuttData());
+  const { currentPutt, generateNewPutt } = usePutt();
   const [result, setResult] = useState<PuttData | null>(null);
 
   const handlePutt = () => {
@@ -241,7 +242,7 @@ function PracticePage() {
   };
 
   const handleNext = () => {
-    setCurrentPutt(generatePuttData());
+    generateNewPutt();
     setResult(null);
   };
 
