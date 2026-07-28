@@ -5,9 +5,6 @@ import {
   XAxis,
   YAxis,
   ResponsiveContainer,
-  ScatterChart,
-  Scatter,
-  ZAxis,
   Cell,
 } from "recharts";
 import { getSessionAnalytics } from "@/lib/analyticsService";
@@ -193,10 +190,14 @@ function Stat({
 /* ---------------- Start Line Analysis ---------------- */
 
 function StartLineAnalysis({ data }: { data: ReturnType<typeof getSessionAnalytics> }) {
-  const made = data.startLinePoints.filter((p) => p.result === "made");
-  const miss = data.startLinePoints.filter((p) => p.result === "missed");
-  const domainX: [number, number] = [-3.5, 3.5];
-  const domainY: [number, number] = [0, 32];
+  const W = 300;
+  const H = 260;
+  const cx = W / 2;
+  const cy = H / 2 - 10;
+  const maxDeg = 3;
+  const maxR = 95;
+  const rings = [1, 1.5, 3];
+  const labels = [-3, -1.5, 0, 1.5, 3];
 
   return (
     <Card>
@@ -222,45 +223,57 @@ function StartLineAnalysis({ data }: { data: ReturnType<typeof getSessionAnalyti
         </div>
       </div>
 
-      <div className="flex-1 mt-3 min-h-0">
-        <ResponsiveContainer width="100%" height="100%">
-          <ScatterChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
-            <XAxis
-              type="number"
-              dataKey="x"
-              domain={domainX}
-              ticks={[-3, -1.5, 0, 1.5, 3]}
-              tick={{ fill: "#68686E", fontSize: 10 }}
-              axisLine={false}
-              tickLine={false}
-              label={{
-                value: "Degrees",
-                position: "insideBottom",
-                offset: -2,
-                fill: "#68686E",
-                fontSize: 10,
-              }}
+      <div className="flex-1 mt-3 min-h-0 flex items-center justify-center">
+        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full max-h-[280px]">
+          {rings.map((deg) => (
+            <circle
+              key={deg}
+              cx={cx}
+              cy={cy}
+              r={(deg / maxDeg) * maxR}
+              fill="none"
+              stroke="rgba(255,255,255,0.2)"
+              strokeDasharray="4 4"
             />
-            <YAxis
-              type="number"
-              dataKey="y"
-              domain={domainY}
-              tick={{ fill: "#68686E", fontSize: 10 }}
-              axisLine={false}
-              tickLine={false}
-            />
-            <ZAxis range={[50, 50]} />
-            {/* Reference rings via extra scatter of invisible points is complex;
-                instead we render dashed vertical guide lines through custom overlay. */}
-            <Scatter data={made} fill={MADE} />
-            <Scatter data={miss} fill={BLUE} />
-          </ScatterChart>
-        </ResponsiveContainer>
+          ))}
+
+          {labels.map((deg) => (
+            <text
+              key={deg}
+              x={cx + (deg / maxDeg) * maxR}
+              y={cy + maxR + 18}
+              textAnchor="middle"
+              fontSize="10"
+              fill="#68686E"
+            >
+              {deg > 0 ? `+${deg}` : String(deg)}
+            </text>
+          ))}
+
+          {data.startLinePoints.map((p, i) => {
+            const r = (Math.abs(p.x) / maxDeg) * maxR;
+            // Fan points around the circle using distance; keep left/right by sign of x
+            const t = ((p.y - 8) / 20) * Math.PI - Math.PI / 2;
+            const angle = p.x < 0 ? Math.PI - t : t;
+            const px = cx + r * Math.cos(angle);
+            const py = cy + r * Math.sin(angle);
+            return (
+              <circle
+                key={i}
+                cx={px}
+                cy={py}
+                r={5}
+                fill={p.result === "made" ? MADE : MISS}
+                opacity={0.95}
+              />
+            );
+          })}
+        </svg>
       </div>
 
       <div className="flex items-center justify-center gap-6 mt-2 text-xs">
         <LegendDot color={MADE} label="Made" />
-        <LegendDot color={BLUE} label="Missed" />
+        <LegendDot color={MISS} label="Missed" />
       </div>
     </Card>
   );
