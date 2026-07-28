@@ -56,8 +56,10 @@ function MetricCard({ label, value }: { label: string; value: string }) {
 function GreenView() {
   const ballX = 200;
   const ballY = 520;
-  const holeX = 200;
-  const holeY = 80;
+  const holeX = 210;
+  const holeY = 200;
+  // Curved path from ball up to hole, gently bending right for break
+  const pathD = `M ${ballX} ${ballY} C 180 420, 260 320, ${holeX} ${holeY}`;
   return (
     <svg viewBox="0 0 400 600" className="w-full h-full" preserveAspectRatio="xMidYMid meet" aria-label="Overhead view of green">
       <defs>
@@ -66,6 +68,13 @@ function GreenView() {
           <stop offset="60%" stopColor="#134523" />
           <stop offset="100%" stopColor="#0B2A16" />
         </radialGradient>
+        <filter id="pathGlowPractice" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
       </defs>
       <path
         d="M60,90 C130,40 290,50 350,120 C390,190 380,360 340,470 C290,570 130,580 70,500 C20,410 20,180 60,90 Z"
@@ -78,13 +87,28 @@ function GreenView() {
         <path d="M80,280 C170,250 260,260 330,300" />
         <path d="M85,380 C180,350 270,360 325,395" />
       </g>
-      <circle cx={holeX} cy={holeY} r="10" fill="#0A0A0A" stroke="#000" strokeWidth="1" />
+      {/* Predicted putt path */}
+      <path
+        d={pathD}
+        fill="none"
+        stroke={GREEN}
+        strokeWidth="3"
+        strokeDasharray="6 8"
+        strokeLinecap="round"
+        filter="url(#pathGlowPractice)"
+        opacity="0.9"
+      />
+      {/* Hole */}
+      <circle cx={holeX} cy={holeY} r="10" fill="#050505" stroke="#000" strokeWidth="1.5" />
+      {/* Flag pole coming out of hole */}
       <line x1={holeX} y1={holeY} x2={holeX} y2={holeY - 70} stroke="#F5F5F5" strokeWidth="2" />
       <path d={`M ${holeX} ${holeY - 70} L ${holeX + 30} ${holeY - 62} L ${holeX} ${holeY - 54} Z`} fill={GREEN} />
-      <circle cx={ballX} cy={ballY} r="10" fill={WHITE} stroke="#000" strokeWidth="1" />
+      {/* Ball */}
+      <circle cx={ballX} cy={ballY} r="11" fill={WHITE} stroke="#000" strokeWidth="1.5" />
     </svg>
   );
 }
+
 
 function qualityColor(q: PuttQuality) {
   if (q === "Good") return GREEN;
