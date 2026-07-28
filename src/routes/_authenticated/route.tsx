@@ -1,6 +1,8 @@
 import { createFileRoute, Outlet, Link, useLocation } from "@tanstack/react-router";
-import { Eye, BarChart3, Clock, Settings as SettingsIcon, Trophy } from "lucide-react";
+import { Eye, BarChart3, Clock, LayoutDashboard } from "lucide-react";
+import { useState } from "react";
 import type { ComponentType, SVGProps } from "react";
+import { IntroAnimation, useIntroAnimation } from "@/components/IntroAnimation";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -24,15 +26,26 @@ const TABS: Tab[] = [
   { to: "/practice", label: "Practice", Icon: PutterIcon },
   { to: "/analytics", label: "Analytics", Icon: BarChart3 },
   { to: "/history", label: "History", Icon: Clock },
-  { to: "/settings", label: "Settings", Icon: SettingsIcon },
-  { to: "/compete", label: "Compete", Icon: Trophy },
+  { to: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
 ];
 
 function AuthenticatedLayout() {
   const location = useLocation();
+  const { shown, complete } = useIntroAnimation();
+  const [dismissed, setDismissed] = useState(false);
+
+  const showIntro = shown === false && !dismissed;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      {showIntro && (
+        <IntroAnimation
+          onComplete={() => {
+            complete();
+            setDismissed(true);
+          }}
+        />
+      )}
       <header className="h-14 border-b border-border flex items-center px-6">
         <div className="flex items-center gap-2">
           <div className="h-2 w-2 rounded-full bg-primary" />
@@ -47,7 +60,7 @@ function AuthenticatedLayout() {
 
 
       <nav className="fixed bottom-0 left-0 right-0 h-20 bg-nav border-t border-border">
-        <div className="h-full max-w-6xl mx-auto grid grid-cols-6">
+        <div className="h-full max-w-6xl mx-auto grid grid-cols-5">
           {TABS.map(({ to, label, Icon }) => {
             const active = location.pathname === to;
             return (
@@ -68,3 +81,4 @@ function AuthenticatedLayout() {
     </div>
   );
 }
+
