@@ -35,7 +35,7 @@ function AuthenticatedLayout() {
   const { shown, complete } = useIntroAnimation();
   const [dismissed, setDismissed] = useState(false);
 
-  const showIntro = shown === false && !dismissed;
+  const showIntro = !dismissed; // TEMP: force intro every load for debugging
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
