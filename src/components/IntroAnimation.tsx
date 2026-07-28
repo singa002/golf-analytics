@@ -162,22 +162,5 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
 }
 
 export function useIntroAnimation() {
-  const [shown, setShown] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    window.localStorage.removeItem("pv_intro_shown");
-    window.localStorage.removeItem("pv_intro_shown_v2");
-    const seen = window.localStorage.getItem("pv_intro_v3");
-    setShown(seen === "1");
-  }, []);
-
-  const complete = () => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("pv_intro_v3", "1");
-    }
-    setShown(true);
-  };
-
-  return { shown, complete };
+  return { shown: false as boolean | null, complete: () => {} };
 }
