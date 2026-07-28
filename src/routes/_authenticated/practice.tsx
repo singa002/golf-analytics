@@ -123,7 +123,21 @@ function PuttPathDiagram({ samples }: { samples: number[] }) {
 }
 
 
-function LiveView({ read, currentPutt, onPutt }: { read: ReturnType<typeof getPrePuttRead>; currentPutt: PuttData; onPutt: () => void }) {
+function LiveView({
+  read,
+  currentPutt,
+  onPutt,
+  session,
+  recent,
+  tip,
+}: {
+  read: ReturnType<typeof getPrePuttRead>;
+  currentPutt: PuttData;
+  onPutt: () => void;
+  session: { putts: number; made: number; streak: number };
+  recent: SessionPutt[];
+  tip: string;
+}) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
       {/* Left column */}
@@ -157,6 +171,14 @@ function LiveView({ read, currentPutt, onPutt }: { read: ReturnType<typeof getPr
           <PutterIcon size={22} color={WHITE} />
           <span className="text-lg font-semibold tracking-wide">PUTT NOW</span>
         </button>
+
+        <SwipeableInfoCards
+          putts={session.putts}
+          made={session.made}
+          streak={session.streak}
+          recent={recent}
+          tip={tip}
+        />
       </div>
 
       {/* Right column */}
@@ -177,6 +199,7 @@ function LiveView({ read, currentPutt, onPutt }: { read: ReturnType<typeof getPr
     </div>
   );
 }
+
 
 function ResultView({ data, onNext }: { data: PuttData; onNext: () => void }) {
   return (
