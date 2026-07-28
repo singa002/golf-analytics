@@ -125,8 +125,8 @@ function PreviewPage() {
             </div>
             <div className="w-full h-full max-h-[640px] flex items-center justify-center">
               <SharedGreenView
-                ballAngle={220}
-                ballDistance={0.7}
+                ballAngle={currentPutt.ballAngle}
+                ballDistance={currentPutt.ballDistance}
                 breakDirection={read.breakDirection}
               />
 
