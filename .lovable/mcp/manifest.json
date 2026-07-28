@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "sdk_version": "0.25.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "putt-vector-mcp",
+      "version": "0.1.0",
+      "title": "Putt Vector MCP"
+    },
+    "tools": [
+      {
+        "name": "get_pre_putt_read",
+        "title": "Get pre-putt read",
+        "description": "Return the current pre-putt read: distance, speed, break, start line, stimp, aim point, and an AI coaching sentence.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_session_analytics",
+        "title": "Get session analytics",
+        "description": "Return the current putting session summary: make %, total/made/missed putts, averages (distance, speed, start line, break), start-line accuracy, speed distribution, and putt map points.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
