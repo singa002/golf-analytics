@@ -64,17 +64,13 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
           animation: zooming ? "pv-zoom 800ms cubic-bezier(0.7, 0, 0.84, 0) forwards" : undefined,
         }}
       >
-        {/* Golf green */}
+        {/* Golf green — full screen */}
         <div
-          className="absolute left-1/2 top-1/2"
+          className="absolute inset-0"
           style={{
-            width: "min(90vw, 90vh)",
-            height: "min(90vw, 90vh)",
-            transform: "translate(-50%, -50%)",
-            borderRadius: "50%",
             background:
-              "radial-gradient(circle at 50% 50%, #1F6B3A 0%, #134523 65%, #0B2A16 100%)",
-            boxShadow: "inset 0 0 120px rgba(0,0,0,0.55)",
+              "radial-gradient(circle at 50% 50%, #1F6B3A 0%, #134523 55%, #0B2A16 100%)",
+            boxShadow: "inset 0 0 200px rgba(0,0,0,0.7)",
           }}
         >
           {/* Contour rings */}
