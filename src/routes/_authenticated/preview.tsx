@@ -122,10 +122,12 @@ function PreviewPage() {
               <span className="text-[10px] font-semibold uppercase tracking-widest">Live View</span>
             </div>
             <div className="w-full h-full max-h-[640px] flex items-center justify-center">
-              <GreenView
+              <SharedGreenView
+                ballAngle={220}
+                ballDistance={0.7}
                 breakDirection={read.breakDirection}
-                aimDirection={read.aimPointDirection}
               />
+
             </div>
           </div>
         </div>
