@@ -207,9 +207,13 @@ function PreviewPage() {
 
           {/* Right column */}
           <div
-            className="w-full rounded-2xl p-4 flex items-center justify-center"
+            className="relative w-full rounded-2xl p-4 flex items-center justify-center"
             style={{ backgroundColor: CARD, minHeight: 520 }}
           >
+            <div className="absolute top-4 right-4 flex items-center gap-1.5 opacity-40" style={{ color: WHITE }}>
+              <Camera size={12} strokeWidth={2} />
+              <span className="text-[10px] font-semibold uppercase tracking-widest">Live View</span>
+            </div>
             <div className="w-full h-full max-h-[640px] flex items-center justify-center">
               <GreenView
                 breakDirection={read.breakDirection}
