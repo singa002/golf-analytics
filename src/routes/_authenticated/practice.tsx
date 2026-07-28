@@ -5,6 +5,8 @@ import { getPrePuttRead } from "@/lib/previewService";
 import { type PuttData, type PuttQuality } from "@/lib/sensorService";
 import { SharedGreenView } from "@/components/SharedGreenView";
 import { usePutt } from "@/context/PuttContext";
+import { SwipeableInfoCards, COACHING_TIPS, type SessionPutt } from "@/components/SwipeableInfoCards";
+
 
 
 export const Route = createFileRoute("/_authenticated/practice")({
