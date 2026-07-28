@@ -45,7 +45,7 @@ function Welcome() {
 
         <div className="mt-12 flex flex-col gap-3 w-full max-w-sm">
           <Link
-            to="/preview"
+            to="/dashboard"
             className="w-full h-14 rounded-xl bg-primary text-primary-foreground font-semibold text-base flex items-center justify-center hover:opacity-90 transition"
           >
             Enter App

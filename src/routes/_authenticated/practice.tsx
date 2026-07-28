@@ -5,6 +5,8 @@ import { getPrePuttRead } from "@/lib/previewService";
 import { type PuttData, type PuttQuality } from "@/lib/sensorService";
 import { SharedGreenView } from "@/components/SharedGreenView";
 import { usePutt } from "@/context/PuttContext";
+import { SwipeableInfoCards, COACHING_TIPS, type SessionPutt } from "@/components/SwipeableInfoCards";
+
 
 
 export const Route = createFileRoute("/_authenticated/practice")({
@@ -121,7 +123,21 @@ function PuttPathDiagram({ samples }: { samples: number[] }) {
 }
 
 
-function LiveView({ read, currentPutt, onPutt }: { read: ReturnType<typeof getPrePuttRead>; currentPutt: PuttData; onPutt: () => void }) {
+function LiveView({
+  read,
+  currentPutt,
+  onPutt,
+  session,
+  recent,
+  tip,
+}: {
+  read: ReturnType<typeof getPrePuttRead>;
+  currentPutt: PuttData;
+  onPutt: () => void;
+  session: { putts: number; made: number; streak: number };
+  recent: SessionPutt[];
+  tip: string;
+}) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
       {/* Left column */}
@@ -155,6 +171,14 @@ function LiveView({ read, currentPutt, onPutt }: { read: ReturnType<typeof getPr
           <PutterIcon size={22} color={WHITE} />
           <span className="text-lg font-semibold tracking-wide">PUTT NOW</span>
         </button>
+
+        <SwipeableInfoCards
+          putts={session.putts}
+          made={session.made}
+          streak={session.streak}
+          recent={recent}
+          tip={tip}
+        />
       </div>
 
       {/* Right column */}
@@ -175,6 +199,7 @@ function LiveView({ read, currentPutt, onPutt }: { read: ReturnType<typeof getPr
     </div>
   );
 }
+
 
 function ResultView({ data, onNext }: { data: PuttData; onNext: () => void }) {
   return (
@@ -236,14 +261,31 @@ function PracticePage() {
   const read = getPrePuttRead();
   const { currentPutt, generateNewPutt } = usePutt();
   const [result, setResult] = useState<PuttData | null>(null);
+  const [session, setSession] = useState({ putts: 0, made: 0, streak: 0, currentStreak: 0 });
+  const [recent, setRecent] = useState<SessionPutt[]>([]);
+  const [tipIndex, setTipIndex] = useState(0);
 
   const handlePutt = () => {
-    setResult(currentPutt);
+    const putt = currentPutt;
+    setResult(putt);
+    setSession((s) => {
+      const cs = putt.made ? s.currentStreak + 1 : 0;
+      return {
+        putts: s.putts + 1,
+        made: s.made + (putt.made ? 1 : 0),
+        currentStreak: cs,
+        streak: Math.max(s.streak, cs),
+      };
+    });
+    setRecent((r) =>
+      [{ made: putt.made, distanceFt: read.distanceFt, speedMs: putt.speedMs }, ...r].slice(0, 3),
+    );
   };
 
   const handleNext = () => {
     generateNewPutt();
     setResult(null);
+    setTipIndex((i) => (i + 1) % COACHING_TIPS.length);
   };
 
   return (
@@ -253,10 +295,18 @@ function PracticePage() {
         {result ? (
           <ResultView data={result} onNext={handleNext} />
         ) : (
-          <LiveView read={read} currentPutt={currentPutt} onPutt={handlePutt} />
+          <LiveView
+            read={read}
+            currentPutt={currentPutt}
+            onPutt={handlePutt}
+            session={{ putts: session.putts, made: session.made, streak: session.streak }}
+            recent={recent}
+            tip={COACHING_TIPS[tipIndex]}
+          />
         )}
       </div>
     </div>
+
   );
 }
 
