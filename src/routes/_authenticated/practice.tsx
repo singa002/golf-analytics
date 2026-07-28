@@ -163,7 +163,12 @@ function LiveView({ read, currentPutt, onPutt }: { read: ReturnType<typeof getPr
           <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: RED }}>Recording</span>
         </div>
         <div className="w-full h-full max-h-[640px] flex items-center justify-center">
-          <GreenView />
+          <SharedGreenView
+            ballAngle={currentPutt.ballAngle}
+            ballDistance={currentPutt.ballDistance}
+            breakDirection={currentPutt.breakDirection}
+          />
+
         </div>
       </div>
     </div>
