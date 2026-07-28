@@ -145,8 +145,6 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
             <g
               style={{
                 offsetPath: "path('M 120 700 C 220 620, 260 520, 340 460 S 400 400, 400 400')",
-                // @ts-expect-error legacy alias for some engines
-                motionPath: "path('M 120 700 C 220 620, 260 520, 340 460 S 400 400, 400 400')",
                 offsetRotate: "0deg",
                 animation: "pv-ball-roll 1.6s cubic-bezier(0.55, 0.05, 0.35, 1) forwards",
                 transformBox: "fill-box",
