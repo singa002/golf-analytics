@@ -33,15 +33,13 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
   return (
     <div
       className="fixed inset-0 z-[9999] overflow-hidden"
-      style={{ backgroundColor: "red" }}
+      style={{ backgroundColor: "#0A0A0A" }}
     >
       <style>{`
         @keyframes pv-ball-roll {
-          0%   { transform: translate(-40vw, 32vh) rotate(0deg); opacity: 0; }
+          0%   { transform: translate(-42vw, 28vh) rotate(0deg); opacity: 0; }
           10%  { opacity: 1; }
-          40%  { transform: translate(-24vw, 4vh) rotate(360deg); }
-          70%  { transform: translate(-8vw, -6vh) rotate(680deg); }
-          100% { transform: translate(0, 0) rotate(900deg); opacity: 1; }
+          100% { transform: translate(0, 0) rotate(720deg); opacity: 1; }
         }
         @keyframes pv-ball-drop {
           0%   { transform: translate(0,0) scale(1); opacity: 1; }
