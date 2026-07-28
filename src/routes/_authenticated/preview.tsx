@@ -50,35 +50,37 @@ function MetricRow({
 // TODO: Replace with real-time camera feed from hardware SDK
 function GreenView({
   breakDirection,
-  aimDirection,
 }: {
   breakDirection: "Left" | "Right";
   aimDirection: "Left" | "Right";
 }) {
-  // Ball at bottom center, hole near top center. Aim is left, right break bends the path to the right.
-  const ballX = 200;
-  const ballY = 520;
-  const holeX = 200;
-  const holeY = 80;
-  // Control points for a right-breaking curve. Start line is left, break carries the putt back to the right.
-  const aimOffset = aimDirection === "Left" ? -40 : 40;
-  const breakOffset = breakDirection === "Left" ? -90 : 90;
-  const c1x = ballX + aimOffset;
-  const c1y = 420;
-  const c2x = holeX + breakOffset;
-  const c2y = 220;
+  // Circular green — hole in center, ball at bottom-left of center (left angle approach)
+  const W = 400;
+  const H = 400;
+  const cx = W / 2;
+  const cy = H / 2;
+  const rx = 175;
+  const ry = 165;
+  const ballX = cx - 90;
+  const ballY = cy + 110;
+  const breakBias = breakDirection === "Right" ? 55 : -55;
+  // Curved control points from ball up to hole
+  const c1x = ballX + 10;
+  const c1y = ballY - 60;
+  const c2x = cx + breakBias;
+  const c2y = cy + 40;
 
   return (
     <svg
-      viewBox="0 0 400 600"
+      viewBox={`0 0 ${W} ${H}`}
       className="w-full h-full"
       preserveAspectRatio="xMidYMid meet"
       aria-label="Overhead view of green with predicted putt path"
     >
       <defs>
-        <radialGradient id="greenGrad" cx="50%" cy="45%" r="65%">
+        <radialGradient id="greenGrad" cx="50%" cy="50%" r="60%">
           <stop offset="0%" stopColor="#1F6B3A" />
-          <stop offset="60%" stopColor="#134523" />
+          <stop offset="70%" stopColor="#134523" />
           <stop offset="100%" stopColor="#0B2A16" />
         </radialGradient>
         <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
@@ -90,24 +92,40 @@ function GreenView({
         </filter>
       </defs>
 
-      {/* Green shape */}
-      <path
-        d="M60,90 C130,40 290,50 350,120 C390,190 380,360 340,470 C290,570 130,580 70,500 C20,410 20,180 60,90 Z"
-        fill="url(#greenGrad)"
-        stroke="#0F3A1E"
-        strokeWidth="2"
-      />
+      {/* Circular green */}
+      <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="url(#greenGrad)" stroke="#0F3A1E" strokeWidth="2" />
 
-      {/* Contour lines */}
-      <g stroke="#2A7A4A" strokeWidth="1" fill="none" opacity="0.35">
-        <path d="M90,180 C180,150 260,160 320,200" />
-        <path d="M80,280 C170,250 260,260 330,300" />
-        <path d="M85,380 C180,350 270,360 325,395" />
-      </g>
+      {/* Distance rings */}
+      {[
+        { r: 0.33, label: "10ft" },
+        { r: 0.66, label: "20ft" },
+      ].map((ring, i) => (
+        <g key={i}>
+          <ellipse
+            cx={cx}
+            cy={cy}
+            rx={rx * ring.r}
+            ry={ry * ring.r}
+            fill="none"
+            stroke="rgba(255,255,255,0.14)"
+            strokeDasharray="3 5"
+          />
+          <text
+            x={cx}
+            y={cy - ry * ring.r - 4}
+            textAnchor="middle"
+            fontSize="9"
+            fill="rgba(255,255,255,0.45)"
+            letterSpacing="1"
+          >
+            {ring.label}
+          </text>
+        </g>
+      ))}
 
       {/* Predicted putt path glow */}
       <path
-        d={`M ${ballX} ${ballY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${holeX} ${holeY}`}
+        d={`M ${ballX} ${ballY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${cx} ${cy}`}
         stroke={GREEN}
         strokeWidth="8"
         strokeOpacity="0.25"
@@ -118,7 +136,7 @@ function GreenView({
 
       {/* Predicted putt path */}
       <path
-        d={`M ${ballX} ${ballY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${holeX} ${holeY}`}
+        d={`M ${ballX} ${ballY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${cx} ${cy}`}
         stroke={GREEN}
         strokeWidth="3"
         strokeDasharray="6 8"
@@ -126,26 +144,22 @@ function GreenView({
         fill="none"
       />
 
-      {/* Hole */}
-      <circle cx={holeX} cy={holeY} r="10" fill="#0A0A0A" stroke="#000" strokeWidth="1" />
-
+      {/* Hole in center */}
+      <circle cx={cx} cy={cy} r="10" fill="#050505" stroke="#000" strokeWidth="1.5" />
       {/* Flag pole */}
-      <line x1={holeX} y1={holeY} x2={holeX} y2={holeY - 70} stroke="#F5F5F5" strokeWidth="2" />
-      {/* Flag */}
-      <path
-        d={`M ${holeX} ${holeY - 70} L ${holeX + 30} ${holeY - 62} L ${holeX} ${holeY - 54} Z`}
-        fill={GREEN}
-      />
+      <line x1={cx} y1={cy} x2={cx} y2={cy - 70} stroke="#F5F5F5" strokeWidth="2" />
+      <path d={`M ${cx} ${cy - 70} L ${cx + 30} ${cy - 62} L ${cx} ${cy - 54} Z`} fill={GREEN} />
 
       {/* Ball */}
-      <circle cx={ballX} cy={ballY} r="10" fill={WHITE} stroke="#000" strokeWidth="1" />
-      <circle cx={ballX} cy={ballY} r="10" fill="none" stroke={GREEN} strokeWidth="1.5" opacity="0.7">
-        <animate attributeName="r" from="10" to="18" dur="1.8s" repeatCount="indefinite" />
+      <circle cx={ballX} cy={ballY} r="11" fill={WHITE} stroke="#000" strokeWidth="1.5" />
+      <circle cx={ballX} cy={ballY} r="11" fill="none" stroke={GREEN} strokeWidth="1.5" opacity="0.7">
+        <animate attributeName="r" from="11" to="20" dur="1.8s" repeatCount="indefinite" />
         <animate attributeName="opacity" from="0.7" to="0" dur="1.8s" repeatCount="indefinite" />
       </circle>
     </svg>
   );
 }
+
 
 function PreviewPage() {
   const read = getPrePuttRead();
