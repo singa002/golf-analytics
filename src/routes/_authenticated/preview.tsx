@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Camera } from "lucide-react";
 import { getPrePuttRead } from "@/lib/previewService";
+import { SharedGreenView } from "@/components/SharedGreenView";
+
 
 export const Route = createFileRoute("/_authenticated/preview")({
   head: () => ({
