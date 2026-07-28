@@ -233,18 +233,29 @@ function ResultView({ data, onNext }: { data: PuttData; onNext: () => void }) {
 
 function PracticePage() {
   const read = getPrePuttRead();
+  const [currentPutt, setCurrentPutt] = useState<PuttData>(() => generatePuttData());
   const [result, setResult] = useState<PuttData | null>(null);
+
+  const handlePutt = () => {
+    setResult(currentPutt);
+  };
+
+  const handleNext = () => {
+    setCurrentPutt(generatePuttData());
+    setResult(null);
+  };
 
   return (
     <div className="min-h-[calc(100vh-5rem)] p-6">
       <div className="w-full max-w-[1400px] mx-auto">
         <h1 className="sr-only">Practice</h1>
         {result ? (
-          <ResultView data={result} onNext={() => setResult(null)} />
+          <ResultView data={result} onNext={handleNext} />
         ) : (
-          <LiveView read={read} onPutt={() => setResult(generatePuttData())} />
+          <LiveView read={read} currentPutt={currentPutt} onPutt={handlePutt} />
         )}
       </div>
     </div>
   );
 }
+
