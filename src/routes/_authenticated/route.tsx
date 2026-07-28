@@ -26,6 +26,7 @@ const TABS: Tab[] = [
   { to: "/practice", label: "Practice", Icon: PutterIcon },
   { to: "/analytics", label: "Analytics", Icon: BarChart3 },
   { to: "/history", label: "History", Icon: Clock },
+  { to: "/compete", label: "Compete", Icon: Trophy },
   { to: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
 ];
 
