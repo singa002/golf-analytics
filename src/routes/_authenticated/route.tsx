@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, Link, useLocation } from "@tanstack/react-router";
-import { Eye, BarChart3, Clock, LayoutDashboard } from "lucide-react";
+import { Eye, BarChart3, Clock, LayoutDashboard, Trophy } from "lucide-react";
 import { useState } from "react";
 import type { ComponentType, SVGProps } from "react";
 import { IntroAnimation, useIntroAnimation } from "@/components/IntroAnimation";
@@ -26,6 +26,7 @@ const TABS: Tab[] = [
   { to: "/practice", label: "Practice", Icon: PutterIcon },
   { to: "/analytics", label: "Analytics", Icon: BarChart3 },
   { to: "/history", label: "History", Icon: Clock },
+  { to: "/compete", label: "Compete", Icon: Trophy },
   { to: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
 ];
 
@@ -60,7 +61,7 @@ function AuthenticatedLayout() {
 
 
       <nav className="fixed bottom-0 left-0 right-0 h-20 bg-nav border-t border-border">
-        <div className="h-full max-w-6xl mx-auto grid grid-cols-5">
+        <div className="h-full max-w-6xl mx-auto grid grid-cols-6">
           {TABS.map(({ to, label, Icon }) => {
             const active = location.pathname === to;
             return (
