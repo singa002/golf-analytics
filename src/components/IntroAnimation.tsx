@@ -6,175 +6,165 @@ interface IntroAnimationProps {
 
 const GREEN = "#22C55E";
 
+type Phase = "rolling" | "dropping" | "zooming" | "done";
+
 export function IntroAnimation({ onComplete }: IntroAnimationProps) {
-  const [phase, setPhase] = useState<"scene" | "logo" | "done">("scene");
+  const [phase, setPhase] = useState<Phase>("rolling");
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("logo"), 2600);
-    const t2 = setTimeout(() => setPhase("done"), 4200);
-    const t3 = setTimeout(() => onComplete(), 4300);
+    const t1 = setTimeout(() => setPhase("dropping"), 1400);
+    const t2 = setTimeout(() => setPhase("zooming"), 1800);
+    const t3 = setTimeout(() => setPhase("done"), 2600);
+    const t4 = setTimeout(() => onComplete(), 2650);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
+      clearTimeout(t4);
     };
   }, [onComplete]);
 
+  if (phase === "done") {
+    return <div className="fixed inset-0 z-[9999] bg-black" />;
+  }
+
+  const zooming = phase === "zooming";
+
   return (
     <div
-      className="fixed inset-0 z-[9999] overflow-hidden bg-black"
+      className="fixed inset-0 z-[9999] overflow-hidden"
       style={{ backgroundColor: "#0A0A0A" }}
     >
       <style>{`
         @keyframes pv-ball-roll {
-          0% {
-            offset-distance: 0%;
-            opacity: 0;
-            transform: scale(1);
-          }
-          8% { opacity: 1; }
-          75% {
-            offset-distance: 100%;
-            opacity: 1;
-            transform: scale(1);
-          }
-          88% {
-            offset-distance: 100%;
-            opacity: 1;
-            transform: scale(0.35) translateY(6px);
-          }
-          100% {
-            offset-distance: 100%;
-            opacity: 0;
-            transform: scale(0) translateY(10px);
-          }
+          0%   { transform: translate(-40vw, 32vh) rotate(0deg); opacity: 0; }
+          10%  { opacity: 1; }
+          40%  { transform: translate(-24vw, 4vh) rotate(360deg); }
+          70%  { transform: translate(-8vw, -6vh) rotate(680deg); }
+          100% { transform: translate(0, 0) rotate(900deg); opacity: 1; }
+        }
+        @keyframes pv-ball-drop {
+          0%   { transform: translate(0,0) scale(1); opacity: 1; }
+          60%  { transform: translate(0,4px) scale(0.5); opacity: 0.9; }
+          100% { transform: translate(0,8px) scale(0); opacity: 0; }
         }
         @keyframes pv-ripple {
-          0% { transform: scale(0.2); opacity: 0; }
-          20% { opacity: 0.9; }
-          100% { transform: scale(6); opacity: 0; }
+          0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
+          20%  { opacity: 0.9; }
+          100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
         }
         @keyframes pv-zoom {
-          0% { transform: scale(1); opacity: 1; }
-          60% { transform: scale(3.5); opacity: 1; }
-          100% { transform: scale(9); opacity: 0; }
-        }
-        @keyframes pv-scene-fade {
-          0%, 80% { opacity: 1; }
-          100% { opacity: 0; }
-        }
-        @keyframes pv-logo-in {
-          0% { opacity: 0; transform: translateY(8px) scale(0.98); }
-          15% { opacity: 1; transform: translateY(0) scale(1); }
-          85% { opacity: 1; transform: translateY(0) scale(1); }
-          100% { opacity: 0; transform: translateY(-4px) scale(1); }
+          0%   { transform: scale(1); opacity: 1; }
+          100% { transform: scale(12); opacity: 0; }
         }
       `}</style>
 
-      {phase === "scene" && (
+      <div
+        className="absolute inset-0"
+        style={{
+          transformOrigin: "50% 50%",
+          animation: zooming ? "pv-zoom 800ms cubic-bezier(0.7, 0, 0.84, 0) forwards" : undefined,
+        }}
+      >
+        {/* Golf green */}
         <div
-          className="absolute inset-0 flex items-center justify-center"
+          className="absolute left-1/2 top-1/2"
           style={{
-            animation: "pv-zoom 800ms cubic-bezier(0.7, 0, 0.84, 0) 1.6s forwards, pv-scene-fade 400ms ease-out 2.2s forwards",
-            transformOrigin: "50% 50%",
+            width: "min(90vw, 90vh)",
+            height: "min(90vw, 90vh)",
+            transform: "translate(-50%, -50%)",
+            borderRadius: "50%",
+            background:
+              "radial-gradient(circle at 50% 50%, #1F6B3A 0%, #134523 65%, #0B2A16 100%)",
+            boxShadow: "inset 0 0 120px rgba(0,0,0,0.55)",
           }}
         >
-          <svg
-            viewBox="0 0 800 800"
-            className="w-[90vmin] h-[90vmin]"
-            preserveAspectRatio="xMidYMid meet"
-          >
-            <defs>
-              <radialGradient id="pv-green-grad" cx="50%" cy="50%" r="60%">
-                <stop offset="0%" stopColor="#1F6B3A" />
-                <stop offset="70%" stopColor="#134523" />
-                <stop offset="100%" stopColor="#0B2A16" />
-              </radialGradient>
-              <filter id="pv-ball-shadow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="3" />
-              </filter>
-            </defs>
-
-            {/* Green */}
-            <circle cx="400" cy="400" r="360" fill="url(#pv-green-grad)" stroke="#0F3A1E" strokeWidth="2" />
-
-            {/* Subtle contour lines */}
-            {[0.35, 0.55, 0.78].map((r, i) => (
-              <ellipse
-                key={i}
-                cx="400"
-                cy="400"
-                rx={360 * r}
-                ry={360 * r * 0.95}
-                fill="none"
-                stroke="rgba(255,255,255,0.06)"
-                strokeDasharray="4 8"
-              />
-            ))}
-
-            {/* Hole */}
-            <circle cx="400" cy="400" r="14" fill="#050505" stroke="#000" strokeWidth="2" />
-
-            {/* Ripple */}
-            <circle
-              cx="400"
-              cy="400"
-              r="14"
-              fill="none"
-              stroke={GREEN}
-              strokeWidth="3"
+          {/* Contour rings */}
+          {[0.4, 0.6, 0.82].map((r) => (
+            <div
+              key={r}
+              className="absolute left-1/2 top-1/2"
               style={{
-                transformOrigin: "400px 400px",
-                animation: "pv-ripple 700ms ease-out 1.4s both",
+                width: `${r * 100}%`,
+                height: `${r * 100}%`,
+                transform: "translate(-50%, -50%)",
+                borderRadius: "50%",
+                border: "1px dashed rgba(255,255,255,0.06)",
               }}
             />
+          ))}
 
-            {/* Flag */}
-            <line x1="400" y1="400" x2="400" y2="290" stroke="#F5F5F5" strokeWidth="3" />
-            <path d="M 400 290 L 448 302 L 400 314 Z" fill={GREEN} />
-
-            {/* Ball path (hidden) — used for offset-path */}
-            <path
-              id="pv-ball-path"
-              d="M 120 700 C 220 620, 260 520, 340 460 S 400 400, 400 400"
-              fill="none"
-              stroke="none"
-            />
-
-            {/* Ball */}
-            <g
-              style={{
-                offsetPath: "path('M 120 700 C 220 620, 260 520, 340 460 S 400 400, 400 400')",
-                offsetRotate: "0deg",
-                animation: "pv-ball-roll 1.6s cubic-bezier(0.55, 0.05, 0.35, 1) forwards",
-                transformBox: "fill-box",
-              }}
-            >
-              <circle r="16" fill="#000" opacity="0.35" filter="url(#pv-ball-shadow)" cy="4" />
-              <circle r="14" fill="#FFFFFF" stroke="#DDDDDD" strokeWidth="1" />
-            </g>
-          </svg>
-        </div>
-      )}
-
-      {phase === "logo" && (
-        <div
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ backgroundColor: "#000" }}
-        >
+          {/* Hole */}
           <div
-            className="flex flex-col items-center gap-2"
-            style={{ animation: "pv-logo-in 1.6s ease-in-out forwards" }}
-          >
-            <h1 className="text-6xl font-bold tracking-tight text-white">Golf Analytics</h1>
-            <p className="text-sm font-semibold tracking-[0.28em] uppercase" style={{ color: GREEN }}>
-              by Putt Vector
-            </p>
-          </div>
-        </div>
-      )}
+            className="absolute left-1/2 top-1/2"
+            style={{
+              width: 24,
+              height: 24,
+              transform: "translate(-50%, -50%)",
+              borderRadius: "50%",
+              backgroundColor: "#050505",
+              boxShadow: "inset 0 3px 6px rgba(0,0,0,0.9), 0 0 0 2px #000",
+            }}
+          />
 
-      {phase === "done" && <div className="absolute inset-0 bg-black" />}
+          {/* Flag */}
+          <div
+            className="absolute left-1/2 top-1/2"
+            style={{
+              width: 2,
+              height: 90,
+              transform: "translate(-50%, -100%)",
+              backgroundColor: "#F5F5F5",
+            }}
+          />
+          <div
+            className="absolute left-1/2 top-1/2"
+            style={{
+              transform: "translate(0, calc(-100% - 76px))",
+              width: 0,
+              height: 0,
+              borderTop: "8px solid transparent",
+              borderBottom: "8px solid transparent",
+              borderLeft: `18px solid ${GREEN}`,
+            }}
+          />
+
+          {/* Ripple */}
+          {phase === "dropping" && (
+            <div
+              className="absolute left-1/2 top-1/2"
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                border: `3px solid ${GREEN}`,
+                animation: "pv-ripple 700ms ease-out forwards",
+              }}
+            />
+          )}
+
+          {/* Ball */}
+          <div
+            className="absolute left-1/2 top-1/2"
+            style={{
+              width: 20,
+              height: 20,
+              marginLeft: -10,
+              marginTop: -10,
+              borderRadius: "50%",
+              backgroundColor: "#FFFFFF",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.5), inset -2px -3px 4px rgba(0,0,0,0.15)",
+              animation:
+                phase === "rolling"
+                  ? "pv-ball-roll 1.4s cubic-bezier(0.45, 0.05, 0.35, 1) forwards"
+                  : phase === "dropping"
+                    ? "pv-ball-drop 400ms ease-in forwards"
+                    : "none",
+              opacity: phase === "zooming" ? 0 : 1,
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
@@ -185,13 +175,14 @@ export function useIntroAnimation() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     window.localStorage.removeItem("pv_intro_shown");
-    const seen = window.localStorage.getItem("pv_intro_shown_v2");
+    window.localStorage.removeItem("pv_intro_shown_v2");
+    const seen = window.localStorage.getItem("pv_intro_v3");
     setShown(seen === "1");
   }, []);
 
   const complete = () => {
     if (typeof window !== "undefined") {
-      window.localStorage.setItem("pv_intro_shown_v2", "1");
+      window.localStorage.setItem("pv_intro_v3", "1");
     }
     setShown(true);
   };
