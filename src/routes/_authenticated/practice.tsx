@@ -54,18 +54,26 @@ function MetricCard({ label, value }: { label: string; value: string }) {
 }
 
 function GreenView() {
-  const ballX = 200;
-  const ballY = 520;
-  const holeX = 210;
-  const holeY = 200;
-  // Curved path from ball up to hole, gently bending right for break
-  const pathD = `M ${ballX} ${ballY} C 180 420, 260 320, ${holeX} ${holeY}`;
+  // Circular green — hole in center, ball at bottom-right of center (right angle approach)
+  const W = 400;
+  const H = 400;
+  const cx = W / 2;
+  const cy = H / 2;
+  const rx = 175;
+  const ry = 165;
+  const ballX = cx + 95;
+  const ballY = cy + 105;
+  // Curved path bending gently toward hole
+  const c1x = ballX - 10;
+  const c1y = ballY - 60;
+  const c2x = cx + 50;
+  const c2y = cy + 40;
   return (
-    <svg viewBox="0 0 400 600" className="w-full h-full" preserveAspectRatio="xMidYMid meet" aria-label="Overhead view of green">
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full" preserveAspectRatio="xMidYMid meet" aria-label="Overhead view of green">
       <defs>
-        <radialGradient id="greenGradPractice" cx="50%" cy="45%" r="65%">
+        <radialGradient id="greenGradPractice" cx="50%" cy="50%" r="60%">
           <stop offset="0%" stopColor="#1F6B3A" />
-          <stop offset="60%" stopColor="#134523" />
+          <stop offset="70%" stopColor="#134523" />
           <stop offset="100%" stopColor="#0B2A16" />
         </radialGradient>
         <filter id="pathGlowPractice" x="-50%" y="-50%" width="200%" height="200%">
@@ -76,38 +84,62 @@ function GreenView() {
           </feMerge>
         </filter>
       </defs>
+
+      {/* Circular green */}
+      <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="url(#greenGradPractice)" stroke="#0F3A1E" strokeWidth="2" />
+
+      {/* Distance rings */}
+      {[
+        { r: 0.33, label: "10ft" },
+        { r: 0.66, label: "20ft" },
+      ].map((ring, i) => (
+        <g key={i}>
+          <ellipse
+            cx={cx}
+            cy={cy}
+            rx={rx * ring.r}
+            ry={ry * ring.r}
+            fill="none"
+            stroke="rgba(255,255,255,0.14)"
+            strokeDasharray="3 5"
+          />
+          <text x={cx} y={cy - ry * ring.r - 4} textAnchor="middle" fontSize="9" fill="rgba(255,255,255,0.45)" letterSpacing="1">
+            {ring.label}
+          </text>
+        </g>
+      ))}
+
+      {/* Predicted putt path glow */}
       <path
-        d="M60,90 C130,40 290,50 350,120 C390,190 380,360 340,470 C290,570 130,580 70,500 C20,410 20,180 60,90 Z"
-        fill="url(#greenGradPractice)"
-        stroke="#0F3A1E"
-        strokeWidth="2"
+        d={`M ${ballX} ${ballY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${cx} ${cy}`}
+        stroke={GREEN}
+        strokeWidth="8"
+        strokeOpacity="0.25"
+        strokeLinecap="round"
+        fill="none"
+        filter="url(#pathGlowPractice)"
       />
-      <g stroke="#2A7A4A" strokeWidth="1" fill="none" opacity="0.35">
-        <path d="M90,180 C180,150 260,160 320,200" />
-        <path d="M80,280 C170,250 260,260 330,300" />
-        <path d="M85,380 C180,350 270,360 325,395" />
-      </g>
       {/* Predicted putt path */}
       <path
-        d={pathD}
+        d={`M ${ballX} ${ballY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${cx} ${cy}`}
         fill="none"
         stroke={GREEN}
         strokeWidth="3"
         strokeDasharray="6 8"
         strokeLinecap="round"
-        filter="url(#pathGlowPractice)"
-        opacity="0.9"
       />
-      {/* Hole */}
-      <circle cx={holeX} cy={holeY} r="10" fill="#050505" stroke="#000" strokeWidth="1.5" />
-      {/* Flag pole coming out of hole */}
-      <line x1={holeX} y1={holeY} x2={holeX} y2={holeY - 70} stroke="#F5F5F5" strokeWidth="2" />
-      <path d={`M ${holeX} ${holeY - 70} L ${holeX + 30} ${holeY - 62} L ${holeX} ${holeY - 54} Z`} fill={GREEN} />
+
+      {/* Hole in center */}
+      <circle cx={cx} cy={cy} r="10" fill="#050505" stroke="#000" strokeWidth="1.5" />
+      <line x1={cx} y1={cy} x2={cx} y2={cy - 70} stroke="#F5F5F5" strokeWidth="2" />
+      <path d={`M ${cx} ${cy - 70} L ${cx + 30} ${cy - 62} L ${cx} ${cy - 54} Z`} fill={GREEN} />
+
       {/* Ball */}
       <circle cx={ballX} cy={ballY} r="11" fill={WHITE} stroke="#000" strokeWidth="1.5" />
     </svg>
   );
 }
+
 
 
 function qualityColor(q: PuttQuality) {
