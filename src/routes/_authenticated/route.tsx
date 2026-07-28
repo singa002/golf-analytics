@@ -1,8 +1,6 @@
-import { createFileRoute, Outlet, Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Outlet, Link, useLocation } from "@tanstack/react-router";
 import { Eye, BarChart3, Clock, LayoutDashboard, Trophy } from "lucide-react";
-import { useState } from "react";
 import type { ComponentType, SVGProps } from "react";
-import { IntroAnimation, useIntroAnimation } from "@/components/IntroAnimation";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -32,23 +30,9 @@ const TABS: Tab[] = [
 
 function AuthenticatedLayout() {
   const location = useLocation();
-  const navigate = useNavigate({ from: "/_authenticated" });
-  const { shown, complete } = useIntroAnimation();
-  const [dismissed, setDismissed] = useState(false);
-
-  const showIntro = !dismissed;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {showIntro && (
-        <IntroAnimation
-          onComplete={() => {
-            complete();
-            setDismissed(true);
-            navigate({ to: "/dashboard" });
-          }}
-        />
-      )}
       <header className="h-14 border-b border-border flex items-center px-6">
         <div className="flex items-center gap-2">
           <div className="h-2 w-2 rounded-full bg-primary" />
@@ -84,4 +68,3 @@ function AuthenticatedLayout() {
     </div>
   );
 }
-
