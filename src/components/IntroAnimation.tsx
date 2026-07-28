@@ -33,7 +33,7 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
   return (
     <div
       className="fixed inset-0 z-[9999] overflow-hidden"
-      style={{ backgroundColor: "#0A0A0A" }}
+      style={{ backgroundColor: "red" }}
     >
       <style>{`
         @keyframes pv-ball-roll {
