@@ -56,8 +56,10 @@ function MetricCard({ label, value }: { label: string; value: string }) {
 function GreenView() {
   const ballX = 200;
   const ballY = 520;
-  const holeX = 200;
-  const holeY = 80;
+  const holeX = 210;
+  const holeY = 200;
+  // Curved path from ball up to hole, gently bending right for break
+  const pathD = `M ${ballX} ${ballY} C 180 420, 260 320, ${holeX} ${holeY}`;
   return (
     <svg viewBox="0 0 400 600" className="w-full h-full" preserveAspectRatio="xMidYMid meet" aria-label="Overhead view of green">
       <defs>
@@ -66,6 +68,13 @@ function GreenView() {
           <stop offset="60%" stopColor="#134523" />
           <stop offset="100%" stopColor="#0B2A16" />
         </radialGradient>
+        <filter id="pathGlowPractice" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
       </defs>
       <path
         d="M60,90 C130,40 290,50 350,120 C390,190 380,360 340,470 C290,570 130,580 70,500 C20,410 20,180 60,90 Z"
@@ -78,13 +87,28 @@ function GreenView() {
         <path d="M80,280 C170,250 260,260 330,300" />
         <path d="M85,380 C180,350 270,360 325,395" />
       </g>
-      <circle cx={holeX} cy={holeY} r="10" fill="#0A0A0A" stroke="#000" strokeWidth="1" />
+      {/* Predicted putt path */}
+      <path
+        d={pathD}
+        fill="none"
+        stroke={GREEN}
+        strokeWidth="3"
+        strokeDasharray="6 8"
+        strokeLinecap="round"
+        filter="url(#pathGlowPractice)"
+        opacity="0.9"
+      />
+      {/* Hole */}
+      <circle cx={holeX} cy={holeY} r="10" fill="#050505" stroke="#000" strokeWidth="1.5" />
+      {/* Flag pole coming out of hole */}
       <line x1={holeX} y1={holeY} x2={holeX} y2={holeY - 70} stroke="#F5F5F5" strokeWidth="2" />
       <path d={`M ${holeX} ${holeY - 70} L ${holeX + 30} ${holeY - 62} L ${holeX} ${holeY - 54} Z`} fill={GREEN} />
-      <circle cx={ballX} cy={ballY} r="10" fill={WHITE} stroke="#000" strokeWidth="1" />
+      {/* Ball */}
+      <circle cx={ballX} cy={ballY} r="11" fill={WHITE} stroke="#000" strokeWidth="1.5" />
     </svg>
   );
 }
+
 
 function qualityColor(q: PuttQuality) {
   if (q === "Good") return GREEN;
@@ -105,25 +129,48 @@ function ResultPill({ label, value, quality }: { label: string; value: string; q
 
 function PuttPathDiagram({ samples }: { samples: number[] }) {
   const W = 600;
-  const H = 220;
+  const H = 260;
   const midY = H / 2;
   const step = W / (samples.length - 1);
-  const scale = 18; // px per inch drift
-  const points = samples.map((s, i) => `${i * step},${midY + s * scale}`).join(" ");
+  const scale = 50; // px per degree of deviation — dramatic, visible curve
+  const endDrift = samples[samples.length - 1];
+  // Build a smooth curved path using quadratic segments through samples
+  const pts = samples.map((s, i) => ({ x: i * step, y: midY + s * scale }));
+  let d = `M ${pts[0].x} ${pts[0].y}`;
+  for (let i = 1; i < pts.length; i++) {
+    const prev = pts[i - 1];
+    const cur = pts[i];
+    const cx = (prev.x + cur.x) / 2;
+    const cy = (prev.y + cur.y) / 2;
+    d += ` Q ${prev.x} ${prev.y}, ${cx} ${cy}`;
+  }
+  d += ` T ${pts[pts.length - 1].x} ${pts[pts.length - 1].y}`;
+
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full" preserveAspectRatio="none" aria-label="Ball path relative to intended line">
+      <defs>
+        <filter id="pathGlowResult" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
       {/* intended line */}
-      <line x1="0" y1={midY} x2={W} y2={midY} stroke={GRAY} strokeWidth="1.5" strokeDasharray="6 8" opacity="0.6" />
-      <text x="8" y={midY - 8} fill={GRAY} fontSize="10" fontFamily="sans-serif" letterSpacing="2">INTENDED</text>
+      <line x1="0" y1={midY} x2={W} y2={midY} stroke={GRAY} strokeWidth="2" strokeDasharray="8 10" opacity="0.7" />
+      <text x="8" y={midY - 10} fill={GRAY} fontSize="11" fontFamily="sans-serif" letterSpacing="2">INTENDED</text>
+      <text x={W - 90} y={midY + endDrift * scale + (endDrift >= 0 ? 22 : -12)} fill={GREEN} fontSize="11" fontFamily="sans-serif" letterSpacing="2">ACTUAL</text>
+      {/* actual path (curved, glowing) */}
+      <path d={d} fill="none" stroke={GREEN} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" filter="url(#pathGlowResult)" />
       {/* start */}
-      <circle cx="0" cy={midY + samples[0] * scale} r="6" fill={WHITE} />
+      <circle cx="0" cy={midY} r="7" fill={WHITE} stroke="#000" strokeWidth="1" />
       {/* end */}
-      <circle cx={W} cy={midY + samples[samples.length - 1] * scale} r="7" fill={GREEN} />
-      {/* actual path */}
-      <polyline points={points} fill="none" stroke={GREEN} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx={W} cy={midY + endDrift * scale} r="8" fill={GREEN} stroke="#000" strokeWidth="1" />
     </svg>
   );
 }
+
 
 function LiveView({ read, onPutt }: { read: ReturnType<typeof getPrePuttRead>; onPutt: () => void }) {
   return (
