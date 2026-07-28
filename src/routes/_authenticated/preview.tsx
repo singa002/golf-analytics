@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Camera } from "lucide-react";
 import { getPrePuttRead } from "@/lib/previewService";
 
 export const Route = createFileRoute("/_authenticated/preview")({
@@ -46,6 +47,7 @@ function MetricRow({
   );
 }
 
+// TODO: Replace with real-time camera feed from hardware SDK
 function GreenView({
   breakDirection,
   aimDirection,
@@ -53,16 +55,16 @@ function GreenView({
   breakDirection: "Left" | "Right";
   aimDirection: "Left" | "Right";
 }) {
-  // Ball at bottom center, hole near top center. Curve bends toward aim side then falls back.
+  // Ball at bottom center, hole near top center. Aim is left, right break bends the path to the right.
   const ballX = 200;
   const ballY = 520;
   const holeX = 200;
   const holeY = 80;
-  // Control points for a curved path. Aim direction indicates where to start the ball.
-  const aimOffset = aimDirection === "Left" ? -70 : 70;
-  const breakOffset = breakDirection === "Left" ? -40 : 40;
+  // Control points for a right-breaking curve. Start line is left, break carries the putt back to the right.
+  const aimOffset = aimDirection === "Left" ? -40 : 40;
+  const breakOffset = breakDirection === "Left" ? -90 : 90;
   const c1x = ballX + aimOffset;
-  const c1y = 380;
+  const c1y = 420;
   const c2x = holeX + breakOffset;
   const c2y = 220;
 
@@ -79,6 +81,13 @@ function GreenView({
           <stop offset="60%" stopColor="#134523" />
           <stop offset="100%" stopColor="#0B2A16" />
         </radialGradient>
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+          <feMerge>
+            <feMergeNode in="coloredBlur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
       </defs>
 
       {/* Green shape */}
@@ -95,6 +104,17 @@ function GreenView({
         <path d="M80,280 C170,250 260,260 330,300" />
         <path d="M85,380 C180,350 270,360 325,395" />
       </g>
+
+      {/* Predicted putt path glow */}
+      <path
+        d={`M ${ballX} ${ballY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${holeX} ${holeY}`}
+        stroke={GREEN}
+        strokeWidth="8"
+        strokeOpacity="0.25"
+        strokeLinecap="round"
+        fill="none"
+        filter="url(#glow)"
+      />
 
       {/* Predicted putt path */}
       <path
@@ -118,9 +138,9 @@ function GreenView({
       />
 
       {/* Ball */}
-      <circle cx={ballX} cy={ballY} r="8" fill={WHITE} stroke="#000" strokeWidth="1" />
-      <circle cx={ballX} cy={ballY} r="8" fill="none" stroke={GREEN} strokeWidth="1.5" opacity="0.7">
-        <animate attributeName="r" from="8" to="16" dur="1.8s" repeatCount="indefinite" />
+      <circle cx={ballX} cy={ballY} r="10" fill={WHITE} stroke="#000" strokeWidth="1" />
+      <circle cx={ballX} cy={ballY} r="10" fill="none" stroke={GREEN} strokeWidth="1.5" opacity="0.7">
+        <animate attributeName="r" from="10" to="18" dur="1.8s" repeatCount="indefinite" />
         <animate attributeName="opacity" from="0.7" to="0" dur="1.8s" repeatCount="indefinite" />
       </circle>
     </svg>
@@ -187,9 +207,13 @@ function PreviewPage() {
 
           {/* Right column */}
           <div
-            className="w-full rounded-2xl p-4 flex items-center justify-center"
+            className="relative w-full rounded-2xl p-4 flex items-center justify-center"
             style={{ backgroundColor: CARD, minHeight: 520 }}
           >
+            <div className="absolute top-4 right-4 flex items-center gap-1.5 opacity-40" style={{ color: WHITE }}>
+              <Camera size={12} strokeWidth={2} />
+              <span className="text-[10px] font-semibold uppercase tracking-widest">Live View</span>
+            </div>
             <div className="w-full h-full max-h-[640px] flex items-center justify-center">
               <GreenView
                 breakDirection={read.breakDirection}
