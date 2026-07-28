@@ -16,7 +16,11 @@ export interface PuttData {
   coaching: string;
   // Ball path deviation across the roll, expressed in inches at 8 sample points along the path (positive = right).
   pathSamples: number[];
+  // Ball position on the green (for visualization)
+  ballAngle: number; // 0-360 degrees around the hole
+  ballDistance: number; // 0-1 distance from center
 }
+
 
 function rand(min: number, max: number) {
   return Math.random() * (max - min) + min;
