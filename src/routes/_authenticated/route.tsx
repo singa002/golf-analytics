@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, Link, useLocation } from "@tanstack/react-router";
-import { Eye, BarChart3, Clock, LayoutDashboard } from "lucide-react";
+import { Eye, BarChart3, Clock, LayoutDashboard, Trophy } from "lucide-react";
 import { useState } from "react";
 import type { ComponentType, SVGProps } from "react";
 import { IntroAnimation, useIntroAnimation } from "@/components/IntroAnimation";
