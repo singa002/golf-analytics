@@ -45,19 +45,12 @@ function Welcome() {
 
         <div className="mt-12 flex flex-col gap-3 w-full max-w-sm">
           <Link
-            to="/auth"
-            search={{ mode: "signin" }}
+            to="/preview"
             className="w-full h-14 rounded-xl bg-primary text-primary-foreground font-semibold text-base flex items-center justify-center hover:opacity-90 transition"
           >
-            Sign In
+            Enter App
           </Link>
-          <Link
-            to="/auth"
-            search={{ mode: "signup" }}
-            className="w-full h-14 rounded-xl bg-card border border-border text-foreground font-semibold text-base flex items-center justify-center hover:bg-secondary transition"
-          >
-            Create Account
-          </Link>
+
         </div>
 
         <div className="mt-16 flex items-center gap-6 text-xs text-muted-foreground uppercase tracking-widest">
