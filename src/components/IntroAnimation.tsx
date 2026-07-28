@@ -6,7 +6,7 @@ interface IntroAnimationProps {
 
 const GREEN = "#22C55E";
 
-type Phase = "rolling" | "dropping" | "zooming" | "done";
+type Phase = "rolling" | "dropping" | "zooming";
 
 export function IntroAnimation({ onComplete }: IntroAnimationProps) {
   const [phase, setPhase] = useState<Phase>("rolling");
@@ -14,26 +14,24 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("dropping"), 1400);
     const t2 = setTimeout(() => setPhase("zooming"), 1800);
-    const t3 = setTimeout(() => setPhase("done"), 2600);
-    const t4 = setTimeout(() => onComplete(), 2650);
+    const t3 = setTimeout(() => onComplete(), 2400);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
-      clearTimeout(t4);
     };
   }, [onComplete]);
-
-  if (phase === "done") {
-    return <div className="fixed inset-0 z-[9999] bg-black" />;
-  }
 
   const zooming = phase === "zooming";
 
   return (
     <div
-      className="fixed inset-0 z-[9999] overflow-hidden"
-      style={{ backgroundColor: "#0A0A0A" }}
+      className="fixed inset-0 z-[9999] overflow-hidden pointer-events-none"
+      style={{
+        backgroundColor: "#0A0A0A",
+        opacity: zooming ? 0 : 1,
+        transition: "opacity 600ms ease-out",
+      }}
     >
       <style>{`
         @keyframes pv-ball-roll {
