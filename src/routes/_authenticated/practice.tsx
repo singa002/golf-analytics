@@ -234,7 +234,7 @@ function ResultView({ data, onNext }: { data: PuttData; onNext: () => void }) {
 
 function PracticePage() {
   const read = getPrePuttRead();
-  const [currentPutt, setCurrentPutt] = useState<PuttData>(() => generatePuttData());
+  const { currentPutt, generateNewPutt } = usePutt();
   const [result, setResult] = useState<PuttData | null>(null);
 
   const handlePutt = () => {
@@ -242,7 +242,7 @@ function PracticePage() {
   };
 
   const handleNext = () => {
-    setCurrentPutt(generatePuttData());
+    generateNewPutt();
     setResult(null);
   };
 
