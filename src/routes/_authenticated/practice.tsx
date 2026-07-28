@@ -261,14 +261,31 @@ function PracticePage() {
   const read = getPrePuttRead();
   const { currentPutt, generateNewPutt } = usePutt();
   const [result, setResult] = useState<PuttData | null>(null);
+  const [session, setSession] = useState({ putts: 0, made: 0, streak: 0, currentStreak: 0 });
+  const [recent, setRecent] = useState<SessionPutt[]>([]);
+  const [tipIndex, setTipIndex] = useState(0);
 
   const handlePutt = () => {
-    setResult(currentPutt);
+    const putt = currentPutt;
+    setResult(putt);
+    setSession((s) => {
+      const cs = putt.made ? s.currentStreak + 1 : 0;
+      return {
+        putts: s.putts + 1,
+        made: s.made + (putt.made ? 1 : 0),
+        currentStreak: cs,
+        streak: Math.max(s.streak, cs),
+      };
+    });
+    setRecent((r) =>
+      [{ made: putt.made, distanceFt: read.distanceFt, speedMs: putt.speedMs }, ...r].slice(0, 3),
+    );
   };
 
   const handleNext = () => {
     generateNewPutt();
     setResult(null);
+    setTipIndex((i) => (i + 1) % COACHING_TIPS.length);
   };
 
   return (
@@ -278,10 +295,18 @@ function PracticePage() {
         {result ? (
           <ResultView data={result} onNext={handleNext} />
         ) : (
-          <LiveView read={read} currentPutt={currentPutt} onPutt={handlePutt} />
+          <LiveView
+            read={read}
+            currentPutt={currentPutt}
+            onPutt={handlePutt}
+            session={{ putts: session.putts, made: session.made, streak: session.streak }}
+            recent={recent}
+            tip={COACHING_TIPS[tipIndex]}
+          />
         )}
       </div>
     </div>
+
   );
 }
 
