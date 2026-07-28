@@ -120,7 +120,7 @@ function PuttPathDiagram({ samples }: { samples: number[] }) {
 }
 
 
-function LiveView({ read, onPutt }: { read: ReturnType<typeof getPrePuttRead>; onPutt: () => void }) {
+function LiveView({ read, currentPutt, onPutt }: { read: ReturnType<typeof getPrePuttRead>; currentPutt: PuttData; onPutt: () => void }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
       {/* Left column */}
