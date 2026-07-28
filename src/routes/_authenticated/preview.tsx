@@ -57,6 +57,7 @@ function MetricRow({
 
 function PreviewPage() {
   const read = getPrePuttRead();
+  const { currentPutt } = usePutt();
 
   return (
     <div className="min-h-[calc(100vh-5rem)] p-6">
