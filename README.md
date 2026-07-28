@@ -1,29 +1,29 @@
-# Welcome to your Lovable project
+# Golf Analytics CRM
 
-This project was built with [Lovable](https://lovable.dev).
+An AI-powered golf putting analytics and coaching platform built for iPad.
 
-## Build with Lovable
+Overview
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+Golf Analytics is a CRM application for golfers and coaches to track, analyze, and improve putting performance. Built as a proof of concept demonstrating the Putt Vector putting intelligence platform.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+Features
+Six tab iPad interface: Preview, Practice, Analytics, History, Settings, Compete
+Real-time putting session tracking with simulated sensor data
+Advanced analytics: session summary, start line analysis, speed control, putt map
+Coach and golfer role based dashboards
+Supabase authentication and data persistence
+Gamification with challenges and leaderboards
+Tech Stack
 
-## Development
+React, TypeScript, Tailwind CSS, Supabase, Recharts, Lovable
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Architecture
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
-```
+Data is generated through a dedicated sensorService that simulates hardware sensor output. TODO comments throughout mark every point where real hardware data replaces the simulation.
 
-## Built with
+Demo Accounts
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+Coach: coach@golfanalytics.com / password123
+Golfer: golfer1@golfanalytics.com / password123
+
+Built by Dheeraj Singavarapu for Golf Analytics
