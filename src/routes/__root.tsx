@@ -121,10 +121,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <PuttProvider>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-      </PuttProvider>
+      <ViewModeProvider>
+        <PuttProvider>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </PuttProvider>
+      </ViewModeProvider>
     </QueryClientProvider>
   );
 }
