@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 import { getSessionHistory } from "@/lib/historyService";
+import { useViewMode } from "@/context/ViewModeContext";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
