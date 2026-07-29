@@ -42,9 +42,11 @@ function Gauge({ value, color = GREEN, size = 96 }: { value: number; color?: str
   );
 }
 
+let introDismissed = false;
+
 function DashboardPage() {
   const { complete } = useIntroAnimation();
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState(introDismissed);
   const sessions = getSessionHistory();
   const latest = sessions[0];
   const bestSession = sessions.reduce((a, b) => (a.makePercent >= b.makePercent ? a : b));
@@ -55,6 +57,7 @@ function DashboardPage() {
       {!dismissed && (
         <IntroAnimation
           onComplete={() => {
+            introDismissed = true;
             complete();
             setDismissed(true);
           }}
