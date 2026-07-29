@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as CoachRouteImport } from './routes/coach'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
@@ -21,7 +22,12 @@ import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedPracticeRouteImport } from './routes/_authenticated/practice'
 import { Route as AuthenticatedPreviewRouteImport } from './routes/_authenticated/preview'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as CoachIndexRouteImport } from './routes/coach.index'
+import { Route as CoachAnalyticsRouteImport } from './routes/coach.analytics'
+import { Route as CoachScheduleRouteImport } from './routes/coach.schedule'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as CoachStudentsIndexRouteImport } from './routes/coach.students.index'
+import { Route as CoachStudentsStudentIdRouteImport } from './routes/coach.students.$studentId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -30,6 +36,11 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoachRoute = CoachRouteImport.update({
+  id: '/coach',
+  path: '/coach',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -84,15 +95,41 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const CoachIndexRoute = CoachIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CoachRoute,
+} as any)
+const CoachAnalyticsRoute = CoachAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => CoachRoute,
+} as any)
+const CoachScheduleRoute = CoachScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => CoachRoute,
+} as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/.mcp/invoke-tool/$tool',
     path: '/.mcp/invoke-tool/$tool',
     getParentRoute: () => rootRouteImport,
   } as any)
+const CoachStudentsIndexRoute = CoachStudentsIndexRouteImport.update({
+  id: '/students/',
+  path: '/students/',
+  getParentRoute: () => CoachRoute,
+} as any)
+const CoachStudentsStudentIdRoute = CoachStudentsStudentIdRouteImport.update({
+  id: '/students/$studentId',
+  path: '/students/$studentId',
+  getParentRoute: () => CoachRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/coach': typeof CoachRouteWithChildren
   '/mcp': typeof McpRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -103,7 +140,12 @@ export interface FileRoutesByFullPath {
   '/practice': typeof AuthenticatedPracticeRoute
   '/preview': typeof AuthenticatedPreviewRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/coach/analytics': typeof CoachAnalyticsRoute
+  '/coach/schedule': typeof CoachScheduleRoute
+  '/coach/': typeof CoachIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/coach/students/$studentId': typeof CoachStudentsStudentIdRoute
+  '/coach/students/': typeof CoachStudentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -117,12 +159,18 @@ export interface FileRoutesByTo {
   '/practice': typeof AuthenticatedPracticeRoute
   '/preview': typeof AuthenticatedPreviewRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/coach/analytics': typeof CoachAnalyticsRoute
+  '/coach/schedule': typeof CoachScheduleRoute
+  '/coach': typeof CoachIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/coach/students/$studentId': typeof CoachStudentsStudentIdRoute
+  '/coach/students': typeof CoachStudentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/coach': typeof CoachRouteWithChildren
   '/mcp': typeof McpRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -133,12 +181,18 @@ export interface FileRoutesById {
   '/_authenticated/practice': typeof AuthenticatedPracticeRoute
   '/_authenticated/preview': typeof AuthenticatedPreviewRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/coach/analytics': typeof CoachAnalyticsRoute
+  '/coach/schedule': typeof CoachScheduleRoute
+  '/coach/': typeof CoachIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/coach/students/$studentId': typeof CoachStudentsStudentIdRoute
+  '/coach/students/': typeof CoachStudentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/coach'
     | '/mcp'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -149,7 +203,12 @@ export interface FileRouteTypes {
     | '/practice'
     | '/preview'
     | '/settings'
+    | '/coach/analytics'
+    | '/coach/schedule'
+    | '/coach/'
     | '/.mcp/invoke-tool/$tool'
+    | '/coach/students/$studentId'
+    | '/coach/students/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -163,11 +222,17 @@ export interface FileRouteTypes {
     | '/practice'
     | '/preview'
     | '/settings'
+    | '/coach/analytics'
+    | '/coach/schedule'
+    | '/coach'
     | '/.mcp/invoke-tool/$tool'
+    | '/coach/students/$studentId'
+    | '/coach/students'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/coach'
     | '/mcp'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -178,12 +243,18 @@ export interface FileRouteTypes {
     | '/_authenticated/practice'
     | '/_authenticated/preview'
     | '/_authenticated/settings'
+    | '/coach/analytics'
+    | '/coach/schedule'
+    | '/coach/'
     | '/.mcp/invoke-tool/$tool'
+    | '/coach/students/$studentId'
+    | '/coach/students/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  CoachRoute: typeof CoachRouteWithChildren
   McpRoute: typeof McpRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -204,6 +275,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coach': {
+      id: '/coach'
+      path: '/coach'
+      fullPath: '/coach'
+      preLoaderRoute: typeof CoachRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -276,12 +354,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/coach/': {
+      id: '/coach/'
+      path: '/'
+      fullPath: '/coach/'
+      preLoaderRoute: typeof CoachIndexRouteImport
+      parentRoute: typeof CoachRoute
+    }
+    '/coach/analytics': {
+      id: '/coach/analytics'
+      path: '/analytics'
+      fullPath: '/coach/analytics'
+      preLoaderRoute: typeof CoachAnalyticsRouteImport
+      parentRoute: typeof CoachRoute
+    }
+    '/coach/schedule': {
+      id: '/coach/schedule'
+      path: '/schedule'
+      fullPath: '/coach/schedule'
+      preLoaderRoute: typeof CoachScheduleRouteImport
+      parentRoute: typeof CoachRoute
+    }
     '/.mcp/invoke-tool/$tool': {
       id: '/.mcp/invoke-tool/$tool'
       path: '/.mcp/invoke-tool/$tool'
       fullPath: '/.mcp/invoke-tool/$tool'
       preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/coach/students/': {
+      id: '/coach/students/'
+      path: '/students'
+      fullPath: '/coach/students/'
+      preLoaderRoute: typeof CoachStudentsIndexRouteImport
+      parentRoute: typeof CoachRoute
+    }
+    '/coach/students/$studentId': {
+      id: '/coach/students/$studentId'
+      path: '/students/$studentId'
+      fullPath: '/coach/students/$studentId'
+      preLoaderRoute: typeof CoachStudentsStudentIdRouteImport
+      parentRoute: typeof CoachRoute
     }
   }
 }
@@ -309,9 +422,28 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface CoachRouteChildren {
+  CoachAnalyticsRoute: typeof CoachAnalyticsRoute
+  CoachScheduleRoute: typeof CoachScheduleRoute
+  CoachIndexRoute: typeof CoachIndexRoute
+  CoachStudentsStudentIdRoute: typeof CoachStudentsStudentIdRoute
+  CoachStudentsIndexRoute: typeof CoachStudentsIndexRoute
+}
+
+const CoachRouteChildren: CoachRouteChildren = {
+  CoachAnalyticsRoute: CoachAnalyticsRoute,
+  CoachScheduleRoute: CoachScheduleRoute,
+  CoachIndexRoute: CoachIndexRoute,
+  CoachStudentsStudentIdRoute: CoachStudentsStudentIdRoute,
+  CoachStudentsIndexRoute: CoachStudentsIndexRoute,
+}
+
+const CoachRouteWithChildren = CoachRoute._addFileChildren(CoachRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  CoachRoute: CoachRouteWithChildren,
   McpRoute: McpRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
