@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import {
   BarChart3,
@@ -48,6 +48,8 @@ const NAV: { to: string; label: string; Icon: ComponentType<SVGProps<SVGSVGEleme
 
 function DashboardPage() {
   const [showSettings, setShowSettings] = useState(false);
+  const navigate = useNavigate();
+  const { setMode } = useViewMode();
   const settingsRef = useRef<HTMLDivElement | null>(null);
   const avatarRef = useRef<HTMLButtonElement | null>(null);
 
@@ -295,6 +297,20 @@ function DashboardPage() {
             </div>
           </div>
           <ul className="space-y-4">
+            <li className="pb-3 border-b border-white/10">
+              {/* TODO: driven by UI state only — will later come from the user's Supabase role. */}
+              <button
+                onClick={() => {
+                  setMode("coach");
+                  setShowSettings(false);
+                  navigate({ to: "/coach" });
+                }}
+                className="w-full flex items-center justify-between text-xs font-bold text-[#22C55E] hover:text-[#4ade80]"
+              >
+                <span>Switch to Coach View</span>
+                <ChevronRight size={16} />
+              </button>
+            </li>
             {["Account Settings", "Hardware Status", "Coach Sharing"].map((item) => (
               <li key={item}>
                 <Link
