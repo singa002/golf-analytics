@@ -3,7 +3,6 @@ import { Eye, BarChart3, Clock, LayoutDashboard, Trophy } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
 export const Route = createFileRoute("/_authenticated")({
-  ssr: false,
   component: AuthenticatedLayout,
 });
 

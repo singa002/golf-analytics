@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Target } from "lucide-react";
 
 
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Welcome() {
-
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-8 py-12 relative overflow-hidden">
@@ -44,12 +44,13 @@ function Welcome() {
         <p className="mt-4 text-lg text-muted-foreground">Smarter Putting. Better Scores.</p>
 
         <div className="mt-12 flex flex-col gap-3 w-full max-w-sm">
-          <Link
-            to="/dashboard"
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/dashboard", replace: true })}
             className="w-full h-14 rounded-xl bg-primary text-primary-foreground font-semibold text-base flex items-center justify-center hover:opacity-90 transition"
           >
             Enter App
-          </Link>
+          </button>
 
         </div>
 
