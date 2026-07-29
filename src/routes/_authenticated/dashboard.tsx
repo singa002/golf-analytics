@@ -1,7 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronRight, Settings as SettingsIcon, Trophy } from "lucide-react";
-import { useState } from "react";
-import { IntroAnimation, useIntroAnimation } from "@/components/IntroAnimation";
 import { getSessionHistory } from "@/lib/historyService";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -42,11 +40,7 @@ function Gauge({ value, color = GREEN, size = 96 }: { value: number; color?: str
   );
 }
 
-let introDismissed = false;
-
 function DashboardPage() {
-  const { complete } = useIntroAnimation();
-  const [dismissed, setDismissed] = useState(introDismissed);
   const sessions = getSessionHistory();
   const latest = sessions[0];
   const bestSession = sessions.reduce((a, b) => (a.makePercent >= b.makePercent ? a : b));
@@ -54,15 +48,6 @@ function DashboardPage() {
 
   return (
     <div className="min-h-[calc(100vh-5rem)] p-6 relative">
-      {!dismissed && (
-        <IntroAnimation
-          onComplete={() => {
-            introDismissed = true;
-            complete();
-            setDismissed(true);
-          }}
-        />
-      )}
       <div className="w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Left */}
         <div className="flex flex-col gap-5">
