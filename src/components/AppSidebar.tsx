@@ -9,6 +9,13 @@ export type NavItem = {
   Icon: ComponentType<SVGProps<SVGSVGElement>>;
 };
 
+/** Profile-popover destinations, each deep-linking to its own Settings section. */
+export const SETTINGS_LINKS = [
+  { label: "Account Settings", section: "account" },
+  { label: "Hardware Status", section: "hardware" },
+  { label: "Coach Sharing", section: "sharing" },
+] as const;
+
 type SidebarProfile = {
   initials: string;
   name: string;
@@ -29,8 +36,6 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
   const [showSettings, setShowSettings] = useState(false);
   const settingsRef = useRef<HTMLDivElement | null>(null);
   const avatarRef = useRef<HTMLButtonElement | null>(null);
-  const settingsItem = navItems.find(({ to }) => to === "/settings");
-  const primaryItems = navItems.filter(({ to }) => to !== "/settings");
 
   useEffect(() => {
     if (!showSettings) return;
@@ -47,15 +52,18 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
     location.pathname === to || (to !== "/coach" && location.pathname.startsWith(`${to}/`));
 
   return (
-    <nav className="sticky top-0 h-screen w-[100px] shrink-0 flex flex-col items-center py-8 z-20 border-r border-white/10 bg-[#0D1512]">
-      <div className="flex flex-col gap-4 flex-1 w-full px-2 min-h-0 overflow-y-auto">
-        {primaryItems.map(({ to, label, Icon }) => {
+    // Shells that render a top header set --app-header-h so the sidebar ends at the
+    // viewport bottom and the avatar never falls below the fold.
+    <nav className="sticky top-0 h-[calc(100vh-var(--app-header-h,0px))] w-[100px] shrink-0 flex flex-col items-center pt-3 pb-5 z-20 border-r border-white/10 bg-[#0D1512]">
+      {/* First item sits at the top; remaining space is split evenly between the rest. */}
+      <div className="flex flex-col justify-between flex-1 w-full px-2 min-h-0 overflow-y-auto">
+        {navItems.map(({ to, label, Icon }) => {
           const active = isActive(to);
           return (
             <Link
               key={to}
               to={to}
-              className={`flex flex-col items-center gap-1 py-3 rounded-lg transition-colors ${
+              className={`shrink-0 flex flex-col items-center gap-1 py-3 rounded-lg transition-colors ${
                 active
                   ? "golf-accent-glow text-[#34D399] bg-[#34D399]/10"
                   : "text-white/40 hover:text-white"
@@ -67,26 +75,13 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
           );
         })}
       </div>
-      <div className="shrink-0 flex flex-col items-center w-full px-2">
-        {settingsItem && (
-          <Link
-            to={settingsItem.to}
-            className={`flex flex-col items-center gap-1 py-3 px-2 rounded-lg transition-colors ${
-              isActive(settingsItem.to)
-                ? "golf-accent-glow text-[#34D399] bg-[#34D399]/10"
-                : "text-white/40 hover:text-white"
-            }`}
-          >
-            <settingsItem.Icon width={20} height={20} />
-            <span className="text-[10px] uppercase tracking-widest font-semibold">
-              {settingsItem.label}
-            </span>
-          </Link>
-        )}
+
+      {/* Avatar stays fixed at the bottom — not part of the even nav distribution. */}
+      <div className="shrink-0 flex flex-col items-center w-full px-2 pt-4">
         <button
           ref={avatarRef}
           onClick={() => setShowSettings((shown) => !shown)}
-          className="mt-4 w-12 h-12 rounded-full border-2 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-sm font-bold text-[#34D399]"
+          className="w-12 h-12 rounded-full border-2 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-sm font-bold text-[#34D399]"
         >
           {profile.initials}
         </button>
@@ -122,14 +117,15 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
               </button>
             </li>
             {profile.mode === "golfer" &&
-              ["Account Settings", "Hardware Status", "Coach Sharing"].map((item) => (
-                <li key={item}>
+              SETTINGS_LINKS.map(({ label, section }) => (
+                <li key={section}>
                   <Link
                     to="/settings"
+                    search={{ section }}
                     onClick={() => setShowSettings(false)}
                     className="flex items-center justify-between text-xs text-white/60 hover:text-white cursor-pointer"
                   >
-                    <span>{item}</span>
+                    <span>{label}</span>
                     <ChevronRight size={16} />
                   </Link>
                 </li>

@@ -20,6 +20,9 @@ interface Challenge {
   joined: boolean;
 }
 
+/** Your current make streak — shared with the Dashboard hero stats. */
+export const YOUR_MAKE_STREAK = 8;
+
 const challenges: Challenge[] = [
   {
     id: "streak",
@@ -28,7 +31,7 @@ const challenges: Challenge[] = [
     type: "STREAK",
     daysLeft: 3,
     participants: 47,
-    yourScore: "8 in a row",
+    yourScore: `${YOUR_MAKE_STREAK} in a row`,
     joined: true,
   },
   {
@@ -69,7 +72,7 @@ const leaderboards: Record<string, LeaderRow[]> = {
     { rank: 2, name: "Sarah K.", score: "12 streak", sessions: 9, trend: "up", medal: "🥈" },
     { rank: 3, name: "James R.", score: "10 streak", sessions: 15, trend: "neutral", medal: "🥉" },
     { rank: 4, name: "Maria L.", score: "9 streak", sessions: 7, trend: "up" },
-    { rank: 5, name: "Dheeraj S.", score: "8 streak", sessions: 5, trend: "up", you: true },
+    { rank: 5, name: "Dheeraj S.", score: `${YOUR_MAKE_STREAK} streak`, sessions: 5, trend: "up", you: true },
     { rank: 6, name: "Chris P.", score: "7 streak", sessions: 11, trend: "down" },
     { rank: 7, name: "Alex T.", score: "6 streak", sessions: 8, trend: "neutral" },
   ],

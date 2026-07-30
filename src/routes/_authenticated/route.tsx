@@ -1,13 +1,11 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import {
   BarChart3,
-  Clock,
   Eye,
   LayoutDashboard,
-  Settings,
   Trophy,
 } from "lucide-react";
-import type { SVGProps } from "react";
+import type { CSSProperties, SVGProps } from "react";
 import { AppSidebar, type NavItem } from "@/components/AppSidebar";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -27,10 +25,8 @@ const GOLFER_NAV: NavItem[] = [
   { to: "/preview", label: "Preview", Icon: Eye },
   { to: "/practice", label: "Practice", Icon: PutterIcon },
   { to: "/analytics", label: "Analytics", Icon: BarChart3 },
-  { to: "/history", label: "History", Icon: Clock },
   { to: "/compete", label: "Compete", Icon: Trophy },
   { to: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
-  { to: "/settings", label: "Settings", Icon: Settings },
 ];
 
 function AuthenticatedLayout() {
@@ -44,7 +40,7 @@ function AuthenticatedLayout() {
         </div>
       </header>
 
-      <div className="flex flex-1 min-h-0">
+      <div className="flex flex-1 min-h-0" style={{ "--app-header-h": "3.5rem" } as CSSProperties}>
         <AppSidebar
           navItems={GOLFER_NAV}
           profile={{

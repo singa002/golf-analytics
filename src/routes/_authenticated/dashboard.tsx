@@ -1,15 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import {
-  ChevronRight,
-  Play,
-  Settings2,
-  Target,
-  TrendingUp,
-  User,
-} from "lucide-react";
+import { ChevronRight, Play, User } from "lucide-react";
 import { getSessionHistory } from "@/lib/historyService";
 import { useViewMode } from "@/context/ViewModeContext";
+import { SETTINGS_LINKS } from "@/components/AppSidebar";
+import { ProgressChart } from "@/components/ProgressChart";
+import { YOUR_MAKE_STREAK } from "@/routes/_authenticated/compete";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -22,6 +18,19 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   }),
   component: DashboardPage,
 });
+
+function timeOfDayGreeting(hour = new Date().getHours()) {
+  if (hour < 12) return "Good Morning";
+  if (hour < 17) return "Good Afternoon";
+  return "Good Evening";
+}
+
+/** Brief secondary line — warm context, never competing with the greeting. */
+function welcomeSubtitle(streak: number, latestDate: string) {
+  if (streak >= 5) return `You're on an ${streak}-putt streak. Keep the feel going.`;
+  if (streak > 0) return `${streak} in a row last time out. Ready for another?`;
+  return `Last on the green ${latestDate}. Nice work showing up.`;
+}
 
 function DashboardPage() {
   const [showSettings, setShowSettings] = useState(false);
@@ -45,6 +54,21 @@ function DashboardPage() {
   const latest = sessions[0];
   const bestSession = sessions.reduce((a, b) => (a.makePercent >= b.makePercent ? a : b));
   const totalPutts = sessions.reduce((s, x) => s + x.totalPutts, 0);
+  const greeting = timeOfDayGreeting();
+  const subtitle = welcomeSubtitle(YOUR_MAKE_STREAK, latest.date);
+
+  // Local leaderboard is ranked by season make %. Keep displayed scores consistent with ranks.
+  const yourMake = latest.makePercent;
+  const localLeaderboard = [
+    { rank: 1, name: "Justin D.", score: 94.1, you: false },
+    { rank: 5, name: "Dheeraj S. (You)", score: yourMake, you: true },
+    { rank: 6, name: "Mike K.", score: Math.max(0, yourMake - 2.8), you: false },
+  ];
+
+  // Same rank data as before, framed as a percentile instead of a raw fraction.
+  const localFieldSize = 68;
+  const yourRank = localLeaderboard.find((row) => row.you)?.rank ?? localFieldSize;
+  const localTopPercent = Math.ceil((yourRank / localFieldSize) * 100);
 
   return (
     <div className="w-full min-h-[calc(100vh-3.5rem)] flex overflow-hidden relative">
@@ -52,8 +76,13 @@ function DashboardPage() {
       <main className="flex-1 overflow-y-auto px-12 py-10 z-10 relative">
         <header className="flex justify-between items-end mb-12">
           <div>
-            <p className="golf-label mb-1">Good Morning, Dheeraj</p>
-            <h1 className="golf-display text-3xl text-white">Handicap 8.2 · Coach Williams</h1>
+            <h1
+              className="golf-display text-4xl leading-tight"
+              style={{ color: "var(--golf-gold)" }}
+            >
+              {greeting}, Dheeraj
+            </h1>
+            <p className="mt-2 text-sm golf-text-secondary">{subtitle}</p>
           </div>
           <div className="flex items-center gap-4">
             <Link
@@ -76,86 +105,52 @@ function DashboardPage() {
         <div className="grid grid-cols-12 gap-8">
           {/* Left Column */}
           <div className="col-span-7 flex flex-col gap-8">
-            {/* Hero Card */}
-            <div className="bg-[#0D1512] border border-white/10 rounded-[12px] p-8 relative overflow-hidden">
+            {/* Season stats + progress live in one card so the column reads as a single unit. */}
+            <div className="bg-[#0D1512] border border-white/10 rounded-[12px] p-8 relative overflow-hidden flex-1 flex flex-col">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#34D399]/5 blur-3xl rounded-full translate-x-10 -translate-y-10" />
-              <p className="golf-label mb-1">SEASON MAKE %</p>
-              <div className="golf-accent-text-glow flex items-baseline gap-4">
-                <span className="golf-display text-7xl text-white leading-none">{latest.makePercent}</span>
-                <span className="golf-display text-2xl text-[#34D399]">%</span>
-              </div>
-              <div className="mt-8 flex gap-6">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#34D399]" />
-                  <span className="text-xs golf-text-secondary font-medium">
-                    Best <span className="text-[#34D399]">{bestSession.makePercent}%</span> this month
-                  </span>
+              <div className="relative flex items-end gap-8">
+                <div className="min-w-0">
+                  <p className="golf-label mb-1">SEASON MAKE %</p>
+                  <div className="golf-accent-text-glow flex items-baseline gap-4">
+                    <span className="golf-display text-7xl text-white leading-none">{latest.makePercent}</span>
+                    <span className="golf-display text-2xl text-[#34D399]">%</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <TrendingUp size={16} className="text-[#34D399]" />
-                  <span className="text-xs golf-text-secondary font-medium uppercase tracking-widest">
-                    Ranked <span className="text-[#F59E0B]">#5</span> of 68
-                  </span>
-                </div>
-              </div>
-            </div>
 
-            {/* Session Summary */}
-            <div className="bg-[#0D1512] border border-white/10 rounded-[12px] p-8">
-              <div className="flex justify-between items-center mb-8">
-                <p className="golf-label">LAST SESSION SUMMARY</p>
-                <span className="text-[10px] uppercase tracking-widest golf-text-secondary">
-                  {latest.date} • {latest.time}
-                </span>
-              </div>
-              <div className="grid grid-cols-3 gap-8">
-                <div>
-                  <p className="golf-label mb-2">TOTAL PUTTS</p>
-                  <p className="golf-display text-3xl text-white">{latest.totalPutts}</p>
-                </div>
-                <div>
-                  <p className="golf-label mb-2">MADE</p>
-                  <p className="golf-display text-3xl text-[#22C55E]">{latest.made}</p>
-                </div>
-                <div>
-                  <p className="golf-label mb-2">AVG DIST</p>
-                  <p className="golf-display text-3xl text-white">
-                    {latest.avgDistanceFt}
-                    <span className="text-sm ml-1 golf-text-secondary">FT</span>
-                  </p>
+                {/* Secondary stats sit right beside the hero number so the three read as one group. */}
+                <div className="flex items-end divide-x divide-white/10 border-l border-white/10 pl-8">
+                  <div className="pr-8">
+                    <p className="golf-label mb-1">Locally</p>
+                    <div className="golf-display text-3xl leading-none text-white">
+                      Top <span className="text-[#34D399]">{localTopPercent}%</span>
+                    </div>
+                  </div>
+                  <div className="pl-8">
+                    <p className="golf-label mb-1">Current Streak</p>
+                    <div className="golf-display text-3xl leading-none text-white">
+                      <span className="text-[#34D399]">{YOUR_MAKE_STREAK}</span>
+                      <span className="text-sm golf-text-secondary ml-2">IN A ROW</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-10 pt-8 border-t border-white/5">
-                <div className="flex justify-between items-center mb-4">
-                  <p className="golf-label">FACE ANGLE CONSISTENCY</p>
-                  <span className="text-xs text-[#34D399] font-medium">EXCELLENT</span>
-                </div>
-                <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden flex">
-                  <div className="h-full bg-[#EF4444]" style={{ width: "8%" }} />
-                  <div className="h-full bg-[#22C55E]" style={{ width: "84%" }} />
-                  <div className="h-full bg-[#EF4444]" style={{ width: "8%" }} />
-                </div>
-                <div className="flex justify-between mt-2">
-                  <span className="text-[9px] golf-text-secondary font-bold">OPEN</span>
-                  <span className="text-[9px] golf-text-secondary font-bold">SQUARE</span>
-                  <span className="text-[9px] golf-text-secondary font-bold">CLOSED</span>
-                </div>
+              <div className="relative mt-8 pt-8 border-t border-white/5 flex-1 flex flex-col">
+                <ProgressChart sessions={sessions} />
               </div>
             </div>
           </div>
 
           {/* Right Column */}
           <div className="col-span-5 flex flex-col gap-8">
-            {/* Leaderboard */}
+            {/* Leaderboard — ranked by season make % */}
             <div className="bg-[#0D1512] border border-white/10 rounded-[12px] p-8">
-              <p className="golf-label mb-6">LOCAL LEADERBOARD</p>
+              <div className="flex items-baseline justify-between mb-6">
+                <p className="golf-label">LOCAL LEADERBOARD</p>
+                <span className="text-[10px] uppercase tracking-widest golf-text-secondary">By Make %</span>
+              </div>
               <div className="space-y-6">
-                {[
-                  { rank: 1, name: "Justin D.", score: "94.1%", you: false },
-                  { rank: 5, name: "Dheeraj S. (You)", score: `${latest.makePercent}%`, you: true },
-                  { rank: 6, name: "Mike K.", score: "87.9%", you: false },
-                ].map(({ rank, name, score, you }) => (
+                {localLeaderboard.map(({ rank, name, score, you }) => (
                   <div
                     key={rank}
                     className={`flex items-center gap-4 ${
@@ -168,59 +163,60 @@ function DashboardPage() {
                         you ? "bg-[#34D399]/20 border border-[#34D399]/40 text-[#34D399]" : "bg-white/10 text-white/70"
                       }`}
                     >
-                      {name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                      {name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .slice(0, 2)}
                     </div>
                     <div className={you ? "flex-1 font-bold text-white" : "flex-1 font-medium text-white/80"}>{name}</div>
-                    <div className="text-white font-bold">{score}</div>
+                    <div className="text-white font-bold">
+                      {Number.isInteger(score) ? score : score.toFixed(1)}%
+                    </div>
                   </div>
                 ))}
               </div>
+              <div className="mt-6 flex justify-end">
+                <Link
+                  to="/compete"
+                  className="flex items-center gap-1 text-xs font-semibold text-[#34D399] hover:text-[#6EE7B7] transition-colors"
+                >
+                  View full leaderboard
+                  <ChevronRight size={14} />
+                </Link>
+              </div>
             </div>
 
-            {/* Personal Bests */}
-            <div className="bg-[#0D1512] border border-white/10 rounded-[12px] p-8 flex-1">
+            {/* Personal Bests — hero-weight rows so achievements read as primary stats. */}
+            <div className="bg-[#0D1512] border border-white/10 rounded-[12px] p-8 flex-1 flex flex-col">
               <p className="golf-label mb-6">PERSONAL BESTS</p>
-              <div className="space-y-8">
+              <div className="flex-1 flex flex-col justify-between">
                 {[
                   { label: "BEST MAKE %", value: `${bestSession.makePercent}`, unit: "%", badge: "MASTER" },
                   { label: "SESSIONS LOGGED", value: `${sessions.length}`, unit: "TOTAL", badge: "ACTIVE" },
                   { label: "PUTTS RECORDED", value: `${totalPutts}`, unit: "PUTTS", badge: "STREAK ENDER" },
-                ].map((item, i) => (
-                  <div key={i}>
-                    <p className="golf-label mb-2">{item.label}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="golf-display text-2xl text-white">
-                        {item.value} <span className="text-sm golf-text-secondary">{item.unit}</span>
-                      </span>
-                      <span
-                        className={`px-2 py-1 rounded text-[8px] font-bold ${
-                          item.badge === "MASTER" ? "bg-[#34D399]/10 text-[#34D399]" : "bg-white/5 golf-text-secondary"
-                        }`}
-                      >
-                        {item.badge}
-                      </span>
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="flex items-end justify-between gap-4 py-5 border-b border-white/5 last:border-b-0 last:pb-0 first:pt-0"
+                  >
+                    <div className="min-w-0">
+                      <p className="golf-label mb-2">{item.label}</p>
+                      <div className="golf-display text-5xl text-white leading-none">
+                        {item.value}
+                        <span className="text-xl text-[#34D399] ml-2">{item.unit}</span>
+                      </div>
                     </div>
+                    <span
+                      className={`shrink-0 px-2.5 py-1 rounded text-[10px] font-bold tracking-wider ${
+                        item.badge === "MASTER" ? "bg-[#34D399]/10 text-[#34D399]" : "bg-white/5 golf-text-secondary"
+                      }`}
+                    >
+                      {item.badge}
+                    </span>
                   </div>
                 ))}
               </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="grid grid-cols-2 gap-4">
-              <Link
-                to="/practice"
-                className="flex flex-col items-center justify-center gap-3 bg-[#0D1512] border border-white/10 py-6 rounded-[12px] hover:bg-white/5 transition-all group"
-              >
-                <Target size={24} className="text-white/40 group-hover:text-[#34D399]" />
-                <span className="text-[10px] uppercase tracking-widest text-white/60 font-bold">Drill Mode</span>
-              </Link>
-              <Link
-                to="/settings"
-                className="flex flex-col items-center justify-center gap-3 bg-[#0D1512] border border-white/10 py-6 rounded-[12px] hover:bg-white/5 transition-all group"
-              >
-                <Settings2 size={24} className="text-white/40 group-hover:text-[#34D399]" />
-                <span className="text-[10px] uppercase tracking-widest text-white/60 font-bold">Calibrate</span>
-              </Link>
             </div>
           </div>
         </div>
@@ -255,13 +251,15 @@ function DashboardPage() {
                   <ChevronRight size={16} />
                 </button>
               </li>
-              {["Account Settings", "Hardware Status", "Coach Sharing"].map((item) => (
-                <li key={item}>
+              {SETTINGS_LINKS.map(({ label, section }) => (
+                <li key={section}>
                   <Link
                     to="/settings"
+                    search={{ section }}
+                    onClick={() => setShowSettings(false)}
                     className="flex items-center justify-between text-xs text-white/60 hover:text-white cursor-pointer"
                   >
-                    <span>{item}</span>
+                    <span>{label}</span>
                     <ChevronRight size={16} />
                   </Link>
                 </li>
