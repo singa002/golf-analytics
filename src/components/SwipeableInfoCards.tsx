@@ -5,13 +5,19 @@ const CARD = "#1C1C1E";
 const GREEN = "#22C55E";
 const RED = "#EF4444";
 const WHITE = "#FFFFFF";
-const GRAY = "#9CA3AF";
 
 export interface SessionPutt {
   made: boolean;
   distanceFt: number;
   speedMs: number;
 }
+
+/** Fallback recent putts when the live session hasn't started yet */
+const MOCK_RECENT: SessionPutt[] = [
+  { made: true, distanceFt: 8, speedMs: 1.2 },
+  { made: false, distanceFt: 12, speedMs: 1.5 },
+  { made: true, distanceFt: 6, speedMs: 0.9 },
+];
 
 interface Props {
   putts: number;
@@ -24,14 +30,22 @@ interface Props {
 export function SwipeableInfoCards({ putts, made, streak, recent, tip }: Props) {
   const [index, setIndex] = useState(0);
   const startX = useRef<number | null>(null);
+  const displayRecent = recent.length > 0 ? recent : MOCK_RECENT;
 
   const go = (i: number) => setIndex(Math.max(0, Math.min(2, i)));
 
-  const onStart = (x: number) => (startX.current = x);
+  const onStart = (x: number) => {
+    startX.current = x;
+  };
+
   const onEnd = (x: number) => {
     if (startX.current === null) return;
     const dx = x - startX.current;
     if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
+    startX.current = null;
+  };
+
+  const onCancel = () => {
     startX.current = null;
   };
 
@@ -41,15 +55,24 @@ export function SwipeableInfoCards({ putts, made, streak, recent, tip }: Props) 
       style={{ backgroundColor: CARD, height: 180 }}
       onTouchStart={(e) => onStart(e.touches[0].clientX)}
       onTouchEnd={(e) => onEnd(e.changedTouches[0].clientX)}
+      onTouchCancel={onCancel}
       onMouseDown={(e) => onStart(e.clientX)}
       onMouseUp={(e) => onEnd(e.clientX)}
+      onMouseLeave={onCancel}
     >
+      {/* Track is 300% wide; each panel is 1/3 of the track (= 100% of the viewport).
+          translateX percentages are relative to the track itself, so move by index * (100/3)%. */}
       <div
         className="flex h-[140px] transition-transform duration-300 ease-out"
-        style={{ transform: `translateX(-${index * 100}%)`, width: "300%" }}
+        style={{
+          width: "300%",
+          transform: `translateX(-${(index * 100) / 3}%)`,
+        }}
       >
         <div className="w-1/3 shrink-0 p-5">
-          <div className="text-[10px] uppercase tracking-widest mb-4" style={{ color: GRAY }}>Session</div>
+          <div className="golf-label mb-4">
+            Session
+          </div>
           <div className="flex items-end justify-around">
             <Stat label="Putts" value={putts.toString()} color={WHITE} />
             <Stat label="Made" value={made.toString()} color={GREEN} />
@@ -58,34 +81,32 @@ export function SwipeableInfoCards({ putts, made, streak, recent, tip }: Props) 
         </div>
 
         <div className="w-1/3 shrink-0 p-5">
-          <div className="text-[10px] uppercase tracking-widest mb-3" style={{ color: GRAY }}>Recent</div>
-          {recent.length === 0 ? (
-            <div className="h-[90px] flex items-center justify-center text-sm italic" style={{ color: GRAY }}>
-              Hit PUTT NOW to start tracking
-            </div>
-          ) : (
-            <div className="flex flex-col gap-2">
-              {recent.slice(0, 3).map((p, i) => (
-                <div key={i} className="flex items-center gap-3 text-sm">
-                  <span
-                    className="h-2.5 w-2.5 rounded-full shrink-0"
-                    style={{ backgroundColor: p.made ? GREEN : RED }}
-                  />
-                  <span style={{ color: WHITE }}>{p.distanceFt} ft</span>
-                  <span style={{ color: GRAY }}>·</span>
-                  <span style={{ color: WHITE }}>{p.speedMs} m/s</span>
-                  <span style={{ color: GRAY }}>·</span>
-                  <span style={{ color: p.made ? GREEN : RED }} className="font-semibold">
-                    {p.made ? "Made" : "Missed"}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
+          <div className="golf-label mb-3">
+            Recent
+          </div>
+          <div className="flex flex-col gap-2">
+            {displayRecent.slice(0, 3).map((p, i) => (
+              <div key={i} className="flex items-center gap-3 text-sm">
+                <span
+                  className="h-2.5 w-2.5 rounded-full shrink-0"
+                  style={{ backgroundColor: p.made ? GREEN : RED }}
+                />
+                <span style={{ color: WHITE }}>{p.distanceFt} ft</span>
+                <span className="golf-text-secondary">·</span>
+                <span style={{ color: WHITE }}>{p.speedMs} m/s</span>
+                <span className="golf-text-secondary">·</span>
+                <span style={{ color: p.made ? GREEN : RED }} className="font-semibold">
+                  {p.made ? "Made" : "Missed"}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="w-1/3 shrink-0 p-5 flex flex-col">
-          <div className="text-[10px] uppercase tracking-widest mb-3" style={{ color: GRAY }}>Coaching Tip</div>
+          <div className="golf-label mb-3">
+            Coaching Tip
+          </div>
           <div className="flex-1 flex items-center justify-center">
             <p className="text-base italic text-center leading-relaxed" style={{ color: GREEN }}>
               &ldquo;{tip}&rdquo;
@@ -98,7 +119,11 @@ export function SwipeableInfoCards({ putts, made, streak, recent, tip }: Props) 
         {[0, 1, 2].map((i) => (
           <button
             key={i}
-            onClick={() => go(i)}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              go(i);
+            }}
             aria-label={`Card ${i + 1}`}
             className="h-2 rounded-full transition-all"
             style={{
@@ -115,8 +140,12 @@ export function SwipeableInfoCards({ putts, made, streak, recent, tip }: Props) 
 function Stat({ label, value, color }: { label: string; value: string; color: string }) {
   return (
     <div className="flex flex-col items-center gap-1">
-      <div className="text-3xl font-bold tracking-tight" style={{ color }}>{value}</div>
-      <div className="text-[10px] uppercase tracking-widest" style={{ color: GRAY }}>{label}</div>
+      <div className="golf-display text-3xl tracking-tight" style={{ color }}>
+        {value}
+      </div>
+      <div className="golf-label-sm">
+        {label}
+      </div>
     </div>
   );
 }

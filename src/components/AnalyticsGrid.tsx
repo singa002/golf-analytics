@@ -1,6 +1,6 @@
 // Dense 2x2 analytics grid. Originally the golfer Analytics tab; now reused as
 // the per-student analytics view in Coach View. Restyled to the shared design
-// system (#1A2A1A cards, border-white/10, uppercase micro-labels).
+// system (#0D1512 cards, border-white/10, uppercase micro-labels).
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 import type { SessionAnalytics } from "@/lib/analyticsService";
 
@@ -10,7 +10,7 @@ const BLUE = "#3B82F6";
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`bg-[#1A2A1A] border border-white/10 rounded-[12px] p-6 flex flex-col ${className}`}>
+    <div className={`bg-[#0D1512] border border-white/10 rounded-[12px] p-6 flex flex-col ${className}`}>
       {children}
     </div>
   );
@@ -18,7 +18,7 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/40">{children}</div>
+    <div className="golf-label">{children}</div>
   );
 }
 
@@ -63,7 +63,7 @@ function SessionSummary({ data }: { data: SessionAnalytics }) {
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="text-3xl font-bold text-white">{makePercent}%</div>
+            <div className="golf-display text-3xl text-white">{makePercent}%</div>
             <Label>Make %</Label>
           </div>
         </div>
@@ -92,7 +92,7 @@ function SessionSummary({ data }: { data: SessionAnalytics }) {
       <div className="mt-6 flex-1 flex flex-col justify-end">
         <div className="flex items-center justify-between mb-2">
           <Label>Start Line Accuracy</Label>
-          <div className="text-xs text-[#22C55E] font-semibold">
+          <div className="text-xs text-[#34D399] font-semibold">
             {data.withinOneFiveDegPercent}% Within 1.5°
           </div>
         </div>
@@ -126,9 +126,9 @@ function Stat({
   small?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-1">
-      <Label>{label}</Label>
-      <div className={`${small ? "text-base" : "text-2xl"} font-bold ${valueClass}`}>{value}</div>
+    <div className="flex flex-col gap-1 min-w-0">
+      <div className="golf-label-sm whitespace-nowrap">{label}</div>
+      <div className={`${small ? "text-base" : "text-2xl"} golf-display ${valueClass}`}>{value}</div>
     </div>
   );
 }
@@ -150,13 +150,13 @@ function StartLineAnalysis({ data }: { data: SessionAnalytics }) {
       <div className="flex items-start justify-between">
         <div>
           <Label>Start Line Analysis</Label>
-          <div className="mt-2 text-2xl font-bold text-[#22C55E]">
+          <div className="mt-2 golf-display text-2xl text-[#34D399]">
             {Math.abs(data.avgStartLineDeg)}° {data.avgStartLineDeg < 0 ? "Left" : "Right"}
           </div>
           <Label>Average Start Line</Label>
         </div>
         <div className="text-right">
-          <div className="text-xl font-bold text-[#22C55E]">{data.withinOneFiveDegPercent}%</div>
+          <div className="golf-display text-xl text-[#34D399]">{data.withinOneFiveDegPercent}%</div>
           <Label>Within 1.5°</Label>
         </div>
       </div>
@@ -209,7 +209,7 @@ function StartLineAnalysis({ data }: { data: SessionAnalytics }) {
 
 function LegendDot({ color, label }: { color: string; label: string }) {
   return (
-    <div className="flex items-center gap-2 text-white/50">
+    <div className="flex items-center gap-2 golf-text-secondary">
       <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
       {label}
     </div>
@@ -224,13 +224,13 @@ function SpeedControl({ data }: { data: SessionAnalytics }) {
       <Label>Speed Control</Label>
       <div className="mt-2 flex items-baseline gap-6">
         <div>
-          <div className="text-3xl font-bold text-white">
-            {data.avgSpeedMs} <span className="text-base font-normal text-white/40">m/s</span>
+          <div className="golf-display text-3xl text-white">
+            {data.avgSpeedMs} <span className="text-base font-normal golf-text-secondary">m/s</span>
           </div>
           <Label>Avg Speed</Label>
         </div>
         <div>
-          <div className="text-xl font-bold text-[#22C55E]">{data.optimalSpeedMs} m/s</div>
+          <div className="golf-display text-xl text-[#34D399]">{data.optimalSpeedMs} m/s</div>
           <Label>Optimal</Label>
         </div>
       </div>
@@ -249,8 +249,8 @@ function SpeedControl({ data }: { data: SessionAnalytics }) {
       </div>
 
       <div className="grid grid-cols-3 gap-3 mt-3 text-center">
-        <SpeedTag label="Too Slow" value={data.tooSlow} color="text-white/60" />
-        <SpeedTag label="Good" value={data.good} color="text-[#22C55E]" />
+        <SpeedTag label="Too Slow" value={data.tooSlow} color="golf-text-secondary" />
+        <SpeedTag label="Good" value={data.good} color="text-[#34D399]" />
         <SpeedTag label="Too Fast" value={data.tooFast} color="text-[#EF4444]" />
       </div>
     </Card>
@@ -260,8 +260,8 @@ function SpeedControl({ data }: { data: SessionAnalytics }) {
 function SpeedTag({ label, value, color }: { label: string; value: number; color: string }) {
   return (
     <div className="rounded-lg bg-black/20 border border-white/5 py-2">
-      <div className={`text-lg font-bold ${color}`}>{value}</div>
-      <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/40">{label}</div>
+      <div className={`golf-display text-lg ${color}`}>{value}</div>
+      <div className="golf-label-sm">{label}</div>
     </div>
   );
 }

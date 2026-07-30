@@ -22,21 +22,21 @@ function SchedulePage() {
     <CoachShell>
       <header className="mb-10">
         <CoachLabel>Upcoming</CoachLabel>
-        <h1 className="text-3xl font-bold text-white tracking-tight mt-1">Schedule</h1>
+        <h1 className="golf-display text-3xl text-white mt-1">Schedule</h1>
       </header>
 
       <div className="flex flex-col gap-4 max-w-3xl">
         {lessons.map((l) => (
           <CoachCard key={l.id} className="p-6 flex items-center gap-6">
-            <div className="w-28">
+            <div className="w-32 min-w-0">
               <CoachLabel>{l.date}</CoachLabel>
-              <p className="text-2xl font-bold text-[#22C55E] mt-1">{l.time}</p>
+              <p className="golf-display text-2xl text-[#34D399] mt-1 whitespace-nowrap">{l.time}</p>
             </div>
             <div className="flex-1 border-l border-white/10 pl-6">
               <p className="text-lg font-bold text-white">{l.studentName}</p>
-              <p className="text-xs text-white/40 mt-1">{l.focus}</p>
+              <p className="text-xs golf-text-secondary mt-1">{l.focus}</p>
             </div>
-            <span className="px-3 py-1 rounded-full bg-[#22C55E]/10 text-[#22C55E] text-[10px] font-bold uppercase tracking-widest">
+            <span className="px-3 py-1 rounded-full bg-[#34D399]/10 text-[#34D399] text-[10px] font-bold uppercase tracking-widest">
               Confirmed
             </span>
           </CoachCard>

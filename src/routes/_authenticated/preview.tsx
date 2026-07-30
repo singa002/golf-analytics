@@ -23,12 +23,11 @@ export const Route = createFileRoute("/_authenticated/preview")({
   component: PreviewPage,
 });
 
-const GREEN = "#22C55E"; // --golf-accent
+const GREEN = "#34D399"; // --golf-accent
 const WHITE = "#FFFFFF";
-const GRAY = "#9CA3AF";
-const CARD = "#1A2A1A"; // --golf-card
-const COACHING_BG = "#0D1A0D"; // --golf-deep
-const DEEP = "#0D1A0D"; // --golf-deep
+const CARD = "#0D1512"; // --golf-card
+const COACHING_BG = "#040906"; // --golf-deep
+const DEEP = "#040906"; // --golf-deep
 
 function MetricRow({
   label,
@@ -41,10 +40,10 @@ function MetricRow({
 }) {
   return (
     <div className="flex items-baseline justify-between py-3 border-b border-white/10 last:border-b-0">
-      <span className="text-[11px] uppercase tracking-widest" style={{ color: GRAY }}>
+      <span className="golf-label">
         {label}
       </span>
-      <span className="text-2xl font-semibold tracking-tight" style={{ color: valueColor }}>
+      <span className="golf-display text-2xl tracking-tight" style={{ color: valueColor }}>
         {value}
       </span>
     </div>
@@ -61,7 +60,7 @@ function PreviewPage() {
   const { currentPutt } = usePutt();
 
   return (
-    <div className="min-h-[calc(100vh-3.5rem)] p-6 bg-[#0D1A0D]">
+    <div className="min-h-[calc(100vh-3.5rem)] p-6">
       <div className="w-full max-w-[1400px] mx-auto flex flex-col gap-5">
         <div className="w-full flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: GREEN }} />
@@ -103,7 +102,7 @@ function PreviewPage() {
               className="w-full rounded-xl p-5"
               style={{ backgroundColor: COACHING_BG }}
             >
-              <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
+              <div className="golf-label mb-2">
                 AI Coaching
               </div>
               <p
@@ -120,7 +119,7 @@ function PreviewPage() {
             className="relative w-full rounded-2xl p-4 flex items-center justify-center"
             style={{ backgroundColor: CARD, minHeight: 520 }}
           >
-            <div className="absolute top-4 right-4 flex items-center gap-1.5 opacity-40" style={{ color: WHITE }}>
+            <div className="absolute top-4 right-4 flex items-center gap-1.5 golf-text-secondary">
               <Camera size={12} strokeWidth={2} />
               <span className="text-[10px] font-semibold uppercase tracking-widest">Live View</span>
             </div>
@@ -137,15 +136,15 @@ function PreviewPage() {
 
         <div className="flex items-center gap-4 w-full">
           <button
-            className="flex-1 rounded-lg py-3.5 text-sm font-semibold tracking-wide"
-            style={{ backgroundColor: GREEN, color: DEEP }}
+            className="flex-1 rounded-lg py-3.5 text-sm font-semibold tracking-wide border border-[#34D399]"
+            style={{ color: GREEN }}
           >
             PREVIEW COMPLETE
           </button>
           <Link
             to="/practice"
-            className="flex-1 rounded-lg py-3.5 text-sm font-semibold tracking-wide text-center border border-white"
-            style={{ color: WHITE }}
+            className="golf-accent-glow flex-1 rounded-lg py-3.5 text-sm font-semibold tracking-wide text-center border border-[#34D399]"
+            style={{ backgroundColor: GREEN, color: DEEP }}
           >
             START PRACTICE
           </Link>

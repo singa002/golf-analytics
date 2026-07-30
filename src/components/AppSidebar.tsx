@@ -47,7 +47,7 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
     location.pathname === to || (to !== "/coach" && location.pathname.startsWith(`${to}/`));
 
   return (
-    <nav className="sticky top-0 h-screen w-[100px] shrink-0 flex flex-col items-center py-8 z-20 border-r border-white/10 bg-[#1A2A1A]">
+    <nav className="sticky top-0 h-screen w-[100px] shrink-0 flex flex-col items-center py-8 z-20 border-r border-white/10 bg-[#0D1512]">
       <div className="flex flex-col gap-4 flex-1 w-full px-2 min-h-0 overflow-y-auto">
         {primaryItems.map(({ to, label, Icon }) => {
           const active = isActive(to);
@@ -57,7 +57,7 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
               to={to}
               className={`flex flex-col items-center gap-1 py-3 rounded-lg transition-colors ${
                 active
-                  ? "text-[#22C55E] bg-[#22C55E]/10"
+                  ? "golf-accent-glow text-[#34D399] bg-[#34D399]/10"
                   : "text-white/40 hover:text-white"
               }`}
             >
@@ -73,7 +73,7 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
             to={settingsItem.to}
             className={`flex flex-col items-center gap-1 py-3 px-2 rounded-lg transition-colors ${
               isActive(settingsItem.to)
-                ? "text-[#22C55E] bg-[#22C55E]/10"
+                ? "golf-accent-glow text-[#34D399] bg-[#34D399]/10"
                 : "text-white/40 hover:text-white"
             }`}
           >
@@ -86,7 +86,7 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
         <button
           ref={avatarRef}
           onClick={() => setShowSettings((shown) => !shown)}
-          className="mt-4 w-12 h-12 rounded-full border-2 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-sm font-bold text-[#22C55E]"
+          className="mt-4 w-12 h-12 rounded-full border-2 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-sm font-bold text-[#34D399]"
         >
           {profile.initials}
         </button>
@@ -95,15 +95,15 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
       {showSettings && (
         <div
           ref={settingsRef}
-          className="absolute bottom-8 left-24 w-64 bg-[#1A2A1A] border border-white/10 rounded-2xl shadow-2xl p-6 z-50"
+          className="absolute bottom-8 left-24 w-64 bg-[#0D1512] border border-white/10 rounded-2xl shadow-2xl p-6 z-50"
         >
           <div className="flex items-center gap-4 mb-6 border-b border-white/10 pb-4">
-            <div className="w-10 h-10 rounded-full bg-[#22C55E]/20 flex items-center justify-center text-[#22C55E]">
+            <div className="w-10 h-10 rounded-full bg-[#34D399]/20 flex items-center justify-center text-[#34D399]">
               <User size={20} />
             </div>
             <div>
               <p className="text-sm font-bold text-white">{profile.name}</p>
-              <p className="text-[10px] text-white/40">{profile.subtitle}</p>
+              <p className="text-[10px] golf-text-secondary">{profile.subtitle}</p>
             </div>
           </div>
           <ul className="space-y-4">
@@ -115,7 +115,7 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
                   setShowSettings(false);
                   navigate({ to: nextMode === "coach" ? "/coach" : "/dashboard" });
                 }}
-                className="w-full flex items-center justify-between text-xs font-bold text-[#22C55E] hover:text-[#4ade80]"
+                className="w-full flex items-center justify-between text-xs font-bold text-[#34D399] hover:text-[#6EE7B7]"
               >
                 <span>Switch to {profile.mode === "golfer" ? "Coach" : "Golfer"} View</span>
                 <ChevronRight size={16} />

@@ -27,14 +27,15 @@ export const Route = createFileRoute("/_authenticated/practice")({
   component: PracticePage,
 });
 
-const GREEN = "#22C55E"; // --golf-accent
+const ACCENT = "#34D399"; // --golf-accent
+const MADE = "#22C55E";
 const RED = "#EF4444"; // --golf-miss
 const BLUE = "#3B82F6";
 const YELLOW = "#EAB308";
 const WHITE = "#FFFFFF";
 const GRAY = "#9CA3AF";
-const CARD = "#1A2A1A"; // --golf-card
-const INNER = "#0D1A0D"; // --golf-deep
+const CARD = "#0D1512"; // --golf-card
+const INNER = "#040906"; // --golf-deep
 
 function PutterIcon({ size = 20, color = WHITE }: { size?: number; color?: string }) {
   return (
@@ -48,10 +49,10 @@ function PutterIcon({ size = 20, color = WHITE }: { size?: number; color?: strin
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex-1 rounded-xl p-4" style={{ backgroundColor: INNER }}>
-      <div className="text-[10px] uppercase tracking-widest mb-2" style={{ color: GRAY }}>
+      <div className="golf-label mb-2">
         {label}
       </div>
-      <div className="text-2xl font-semibold tracking-tight" style={{ color: WHITE }}>
+      <div className="golf-display text-2xl tracking-tight" style={{ color: WHITE }}>
         {value}
       </div>
     </div>
@@ -62,7 +63,7 @@ function MetricCard({ label, value }: { label: string; value: string }) {
 
 
 function qualityColor(q: PuttQuality) {
-  if (q === "Good") return GREEN;
+  if (q === "Good") return ACCENT;
   if (q === "Fair") return YELLOW;
   return RED;
 }
@@ -71,8 +72,8 @@ function ResultPill({ label, value, quality }: { label: string; value: string; q
   const color = qualityColor(quality);
   return (
     <div className="flex-1 rounded-xl p-4 border" style={{ backgroundColor: INNER, borderColor: `${color}55` }}>
-      <div className="text-[10px] uppercase tracking-widest mb-1.5" style={{ color: GRAY }}>{label}</div>
-      <div className="text-xl font-semibold tracking-tight" style={{ color: WHITE }}>{value}</div>
+      <div className="golf-label mb-1.5">{label}</div>
+      <div className="golf-display text-xl tracking-tight" style={{ color: WHITE }}>{value}</div>
       <div className="text-[11px] font-semibold uppercase tracking-widest mt-1.5" style={{ color }}>{quality}</div>
     </div>
   );
@@ -110,14 +111,14 @@ function PuttPathDiagram({ samples }: { samples: number[] }) {
       </defs>
       {/* intended line */}
       <line x1="0" y1={midY} x2={W} y2={midY} stroke={GRAY} strokeWidth="2" strokeDasharray="8 10" opacity="0.7" />
-      <text x="8" y={midY - 10} fill={GRAY} fontSize="11" fontFamily="sans-serif" letterSpacing="2">INTENDED</text>
-      <text x={W - 90} y={midY + endDrift * scale + (endDrift >= 0 ? 22 : -12)} fill={GREEN} fontSize="11" fontFamily="sans-serif" letterSpacing="2">ACTUAL</text>
+      <text x="8" y={midY - 10} fill="var(--text-secondary)" fontSize="11" fontFamily="sans-serif" letterSpacing="2">INTENDED</text>
+      <text x={W - 90} y={midY + endDrift * scale + (endDrift >= 0 ? 22 : -12)} fill={ACCENT} fontSize="11" fontFamily="sans-serif" letterSpacing="2">ACTUAL</text>
       {/* actual path (curved, glowing) */}
-      <path d={d} fill="none" stroke={GREEN} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" filter="url(#pathGlowResult)" />
+      <path d={d} fill="none" stroke={ACCENT} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" filter="url(#pathGlowResult)" />
       {/* start */}
       <circle cx="0" cy={midY} r="7" fill={WHITE} stroke="#000" strokeWidth="1" />
       {/* end */}
-      <circle cx={W} cy={midY + endDrift * scale} r="8" fill={GREEN} stroke="#000" strokeWidth="1" />
+      <circle cx={W} cy={midY + endDrift * scale} r="8" fill={ACCENT} stroke="#000" strokeWidth="1" />
     </svg>
   );
 }
@@ -150,25 +151,25 @@ function LiveView({
 
         <div className="rounded-2xl p-6" style={{ backgroundColor: CARD }}>
           <div className="flex items-center justify-between py-3 border-b border-white/10">
-            <span className="text-[11px] uppercase tracking-widest" style={{ color: GRAY }}>Start Line</span>
-            <span className="text-xl font-semibold" style={{ color: GREEN }}>0.9° Left</span>
+            <span className="golf-label">Start Line</span>
+            <span className="golf-display text-xl" style={{ color: ACCENT }}>0.9° Left</span>
           </div>
           <div className="flex items-center justify-between py-3 border-b border-white/10">
-            <span className="text-[11px] uppercase tracking-widest" style={{ color: GRAY }}>Actual</span>
-            <span className="text-xl font-semibold" style={{ color: WHITE }}>1.1° Left</span>
+            <span className="golf-label">Actual</span>
+            <span className="golf-display text-xl" style={{ color: WHITE }}>1.1° Left</span>
           </div>
           <div className="flex items-center justify-between py-3">
-            <span className="text-[11px] uppercase tracking-widest" style={{ color: GRAY }}>Difference</span>
-            <span className="text-xl font-semibold" style={{ color: YELLOW }}>0.2° Left</span>
+            <span className="golf-label">Difference</span>
+            <span className="golf-display text-xl" style={{ color: YELLOW }}>0.2° Left</span>
           </div>
         </div>
 
         <button
           onClick={onPutt}
-          className="w-full rounded-2xl py-6 flex items-center justify-center gap-3 border border-white/10 active:opacity-80 transition"
-          style={{ backgroundColor: INNER, color: WHITE }}
+          className="golf-accent-glow w-full rounded-2xl py-6 flex items-center justify-center gap-3 border border-[#34D399] active:opacity-80 transition"
+          style={{ backgroundColor: ACCENT, color: INNER }}
         >
-          <PutterIcon size={22} color={WHITE} />
+          <PutterIcon size={22} color={INNER} />
           <span className="text-lg font-semibold tracking-wide">PUTT NOW</span>
         </button>
 
@@ -223,24 +224,24 @@ function ResultView({ data, onNext }: { data: PuttData; onNext: () => void }) {
       </div>
 
       <div className="rounded-2xl p-8 flex flex-col items-center gap-4" style={{ backgroundColor: CARD }}>
-        <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: GRAY }}>Putt Result</div>
+        <div className="golf-label">Putt Result</div>
         <div
-          className="text-7xl font-bold tracking-tight"
-          style={{ color: data.made ? GREEN : RED }}
+          className="golf-display text-7xl tracking-tight"
+          style={{ color: data.made ? MADE : RED }}
         >
           {data.made ? "MADE!" : "MISSED"}
         </div>
-        <p className="text-base italic text-center max-w-xl" style={{ color: data.made ? GREEN : "#F5F5F5" }}>
+        <p className="text-base italic text-center max-w-xl" style={{ color: data.made ? MADE : "#F5F5F5" }}>
           &ldquo;{data.coaching}&rdquo;
         </p>
         <div className="mt-2 flex items-center gap-2">
-          <span className="text-[10px] uppercase tracking-widest" style={{ color: GRAY }}>Entry Speed:</span>
-          <span className="text-sm font-semibold" style={{ color: WHITE }}>{data.entrySpeedMs} m/s</span>
+          <span className="golf-label">Entry Speed:</span>
+          <span className="golf-display text-sm" style={{ color: WHITE }}>{data.entrySpeedMs} m/s</span>
         </div>
       </div>
 
       <div className="rounded-2xl p-5" style={{ backgroundColor: CARD }}>
-        <div className="text-[10px] uppercase tracking-widest mb-3" style={{ color: GRAY }}>Ball Path vs. Intended Line</div>
+        <div className="golf-label mb-3">Ball Path vs. Intended Line</div>
         <div className="h-44">
           <PuttPathDiagram samples={data.pathSamples} />
         </div>
@@ -289,7 +290,7 @@ function PracticePage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-3.5rem)] p-6 bg-[#0D1A0D]">
+    <div className="min-h-[calc(100vh-3.5rem)] p-6">
       <div className="w-full max-w-[1400px] mx-auto">
         <h1 className="sr-only">Practice</h1>
         {result ? (

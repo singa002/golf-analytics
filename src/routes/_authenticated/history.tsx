@@ -16,10 +16,11 @@ export const Route = createFileRoute("/_authenticated/history")({
   component: HistoryPage,
 });
 
-const MADE = "#22C55E"; // --golf-accent
+const MADE = "#22C55E"; // data-meaning color; intentionally unchanged
 const MISS = "#EF4444"; // --golf-miss
-const DEEP = "#0D1A0D"; // --golf-deep
-const CARD = "#1A2A1A"; // --golf-card
+const ACCENT = "#34D399"; // --golf-accent
+const DEEP = "#040906"; // --golf-deep
+const CARD = "#0D1512"; // --golf-card
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
@@ -32,45 +33,27 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
   );
 }
 
-function makePctColor(p: number) {
-  if (p >= 70) return MADE;
-  if (p >= 60) return "#EAB308";
-  return MISS;
-}
-
-function MiniGauge({ pct, size = 44 }: { pct: number; size?: number }) {
-  const stroke = 5;
-  const r = (size - stroke) / 2;
-  const c = 2 * Math.PI * r;
-  const offset = c - (pct / 100) * c;
-  const color = makePctColor(pct);
-  return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} stroke="rgba(255,255,255,0.08)" strokeWidth={stroke} fill="none" />
-        <circle cx={size / 2} cy={size / 2} r={r} stroke={color} strokeWidth={stroke} strokeLinecap="round" fill="none" strokeDasharray={c} strokeDashoffset={offset} />
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center text-[11px] font-semibold text-white">
-        {pct}%
-      </div>
-    </div>
-  );
+/** Same rule as History list rows: emerald at/above avg, red below. */
+function makePercentVsAverage(makePercent: number, averageMakePercent: number) {
+  return makePercent >= averageMakePercent ? ACCENT : MISS;
 }
 
 function HistoryPage() {
   const sessions = getSessionHistory();
   const [selectedId, setSelectedId] = useState(sessions[0].id);
   const selected = sessions.find((s) => s.id === selectedId) ?? sessions[0];
+  const averageMakePercent =
+    sessions.reduce((total, session) => total + session.makePercent, 0) / sessions.length;
 
   return (
-    <div className="p-4 h-full bg-[#0D1A0D]">
+    <div className="p-4 h-full">
       <h1 className="sr-only">Session History</h1>
       <div className="grid grid-cols-[380px_1fr] gap-4 h-[calc(100vh-9rem)]">
         {/* Left column */}
         <div className="flex flex-col min-h-0">
           <div className="flex items-center gap-2 mb-3 px-1">
-            <Calendar className="h-4 w-4 text-white/40" />
-            <span className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">History</span>
+            <Calendar className="h-4 w-4 golf-text-secondary" />
+            <span className="golf-label">History</span>
           </div>
           <div className="flex-1 overflow-y-auto space-y-3 pr-1">
             {sessions.map((s) => {
@@ -80,20 +63,21 @@ function HistoryPage() {
                   key={s.id}
                   onClick={() => setSelectedId(s.id)}
                   className={`w-full text-left rounded-[12px] p-4 transition border border-white/10 border-l-4 ${
-                    active ? "border-l-[#22C55E]" : "border-l-transparent"
+                    active ? "border-l-[#34D399]" : "border-l-transparent"
                   }`}
                   style={{ backgroundColor: CARD }}
                 >
-                  <div className="flex items-center gap-4">
-                    <MiniGauge pct={s.makePercent} />
-                    <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="min-w-0">
                       <div className="text-sm font-semibold text-white">{s.date}</div>
-                      <div className="text-[11px] text-white/40">{s.time}</div>
-                      <div className="mt-2 flex gap-3 text-[11px] text-white/40">
-                        <span><span className="text-white font-semibold">{s.totalPutts}</span> putts</span>
-                        <span><span className="text-white font-semibold">{s.avgDistanceFt}</span> ft</span>
-                        <span><span className="text-white font-semibold">{s.avgSpeedMs}</span> m/s</span>
-                      </div>
+                      <div className="text-[11px] golf-text-secondary">{s.time}</div>
+                    </div>
+                    <div
+                      className="golf-display text-4xl leading-none"
+                      style={{ color: makePercentVsAverage(s.makePercent, averageMakePercent) }}
+                    >
+                      {s.makePercent}
+                      <span className="text-xl">%</span>
                     </div>
                   </div>
                 </button>
@@ -103,27 +87,33 @@ function HistoryPage() {
         </div>
 
         {/* Right column - detail */}
-        <SessionDetail session={selected} />
+        <SessionDetail session={selected} averageMakePercent={averageMakePercent} />
       </div>
     </div>
   );
 }
 
-function SessionDetail({ session }: { session: SessionSummary }) {
+function SessionDetail({
+  session,
+  averageMakePercent,
+}: {
+  session: SessionSummary;
+  averageMakePercent: number;
+}) {
   const size = 130;
   const stroke = 12;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const offset = c - (session.makePercent / 100) * c;
-  const color = makePctColor(session.makePercent);
+  const color = makePercentVsAverage(session.makePercent, averageMakePercent);
 
   return (
     <Card className="overflow-y-auto flex flex-col gap-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">Session</div>
-          <div className="text-2xl font-bold text-white">{session.date}</div>
-          <div className="text-sm text-white/40">{session.time}</div>
+          <div className="golf-label">Session</div>
+          <div className="golf-display text-2xl text-white">{session.date}</div>
+          <div className="text-sm golf-text-secondary">{session.time}</div>
         </div>
         <div className="relative" style={{ width: size, height: size }}>
           <svg width={size} height={size} className="-rotate-90">
@@ -131,8 +121,11 @@ function SessionDetail({ session }: { session: SessionSummary }) {
             <circle cx={size / 2} cy={size / 2} r={r} stroke={color} strokeWidth={stroke} strokeLinecap="round" fill="none" strokeDasharray={c} strokeDashoffset={offset} />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="text-2xl font-bold text-white">{session.makePercent}%</div>
-            <div className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">Make</div>
+            <div className="golf-display text-2xl leading-none" style={{ color }}>
+              {session.makePercent}
+              <span className="text-lg">%</span>
+            </div>
+            <div className="golf-label">Make</div>
           </div>
         </div>
       </div>
@@ -145,16 +138,16 @@ function SessionDetail({ session }: { session: SessionSummary }) {
         <StatBox label="Avg Speed" value={`${session.avgSpeedMs} m/s`} />
         <StatBox label="Avg Start Line" value={`${Math.abs(session.avgStartLineDeg)}° ${session.avgStartLineDeg < 0 ? "Left" : "Right"}`} />
         <StatBox label="Avg Break" value={`${Math.abs(session.avgBreakDeg)}° ${session.avgBreakDeg < 0 ? "Left" : "Right"}`} />
-        <StatBox label="Within 1.5°" value={`${Math.round((session.startLineAccuracy.filter(b => Math.abs(parseFloat(b.bucket)) <= 1).reduce((a, b) => a + b.count, 0) / session.startLineAccuracy.reduce((a, b) => a + b.count, 0)) * 100)}%`} valueClass="text-[#22C55E]" />
+        <StatBox label="Within 1.5°" value={`${Math.round((session.startLineAccuracy.filter(b => Math.abs(parseFloat(b.bucket)) <= 1).reduce((a, b) => a + b.count, 0) / session.startLineAccuracy.reduce((a, b) => a + b.count, 0)) * 100)}%`} valueClass="text-[#34D399]" />
       </div>
 
       <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
         <div className="rounded-[12px] p-3 border border-white/10" style={{ backgroundColor: DEEP }}>
-          <div className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold mb-2">Putt Map</div>
+          <div className="golf-label mb-2">Putt Map</div>
           <PuttMapSvg session={session} />
         </div>
         <div className="rounded-[12px] p-3 flex flex-col border border-white/10" style={{ backgroundColor: DEEP }}>
-          <div className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold mb-2">Start Line Accuracy</div>
+          <div className="golf-label mb-2">Start Line Accuracy</div>
           <div className="flex-1 min-h-[160px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={session.startLineAccuracy}>
@@ -176,9 +169,9 @@ function SessionDetail({ session }: { session: SessionSummary }) {
 
 function StatBox({ label, value, valueClass = "text-white" }: { label: string; value: React.ReactNode; valueClass?: string }) {
   return (
-    <div className="rounded-[12px] p-3 border border-white/10" style={{ backgroundColor: DEEP }}>
-      <div className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">{label}</div>
-      <div className={`text-lg font-semibold mt-1 ${valueClass}`}>{value}</div>
+    <div className="rounded-[12px] p-3 border border-white/10 min-w-0" style={{ backgroundColor: DEEP }}>
+      <div className="golf-label-sm whitespace-nowrap">{label}</div>
+      <div className={`golf-display text-lg mt-1 ${valueClass}`}>{value}</div>
     </div>
   );
 }

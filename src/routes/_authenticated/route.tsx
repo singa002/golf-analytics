@@ -35,7 +35,7 @@ const GOLFER_NAV: NavItem[] = [
 
 function AuthenticatedLayout() {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen golf-page-background flex flex-col">
       <header className="h-14 border-b border-border flex items-center px-6">
         <div className="flex items-center gap-2">
           <div className="h-2 w-2 rounded-full bg-primary" />

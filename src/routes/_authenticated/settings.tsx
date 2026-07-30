@@ -15,18 +15,14 @@ export const Route = createFileRoute("/_authenticated/settings")({
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`rounded-2xl p-6 ${className}`} style={{ backgroundColor: "#1C1C1E" }}>
+    <div className={`bg-[#0D1512] border border-white/10 rounded-[12px] p-6 ${className}`}>
       {children}
     </div>
   );
 }
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-4">
-      {children}
-    </div>
-  );
+  return <div className="golf-label mb-4">{children}</div>;
 }
 
 function Toggle({
@@ -44,7 +40,7 @@ function Toggle({
       onClick={() => !locked && onChange(!on)}
       disabled={locked}
       className={`relative inline-flex h-7 w-12 items-center rounded-full transition ${
-        on ? "bg-[#22C55E]" : "bg-[#3A3A3D]"
+        on ? "bg-[#34D399]" : "bg-white/10"
       } ${locked ? "opacity-70 cursor-not-allowed" : ""}`}
       aria-pressed={on}
     >
@@ -67,7 +63,7 @@ function SegmentedToggle<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div className="inline-flex rounded-full p-1" style={{ backgroundColor: "#131315" }}>
+    <div className="inline-flex rounded-full p-1 bg-[#040906] border border-white/10">
       {options.map((opt) => {
         const active = opt === value;
         return (
@@ -75,7 +71,7 @@ function SegmentedToggle<T extends string>({
             key={opt}
             onClick={() => onChange(opt)}
             className={`px-4 py-1.5 text-xs font-semibold rounded-full transition ${
-              active ? "bg-[#22C55E] text-black" : "text-muted-foreground"
+              active ? "bg-[#34D399] text-black" : "text-white/40"
             }`}
           >
             {opt}
@@ -88,8 +84,8 @@ function SegmentedToggle<T extends string>({
 
 function ToggleRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between py-3 border-b border-[#2A2A2C] last:border-b-0">
-      <span className="text-sm text-foreground">{label}</span>
+    <div className="flex items-center justify-between py-3 border-b border-white/10 last:border-b-0">
+      <span className="text-sm text-white">{label}</span>
       {children}
     </div>
   );
@@ -104,7 +100,7 @@ function SettingsPage() {
   const [autoSave, setAutoSave] = useState(true);
 
   return (
-    <div className="p-4 h-full">
+    <div className="golf-page-background p-4 h-full">
       <h1 className="sr-only">Settings</h1>
       <div className="grid grid-cols-2 gap-4 h-[calc(100vh-9rem)] overflow-y-auto">
         {/* Left column */}
@@ -112,29 +108,28 @@ function SettingsPage() {
           <Card>
             <div className="flex items-start gap-5">
               <div
-                className="h-20 w-20 rounded-full flex items-center justify-center text-2xl font-bold text-[#22C55E]"
-                style={{ backgroundColor: "#0F2A17" }}
+                className="h-20 w-20 rounded-full flex items-center justify-center text-2xl font-bold text-[#34D399] bg-[#34D399]/15"
               >
                 DS
               </div>
               <div className="flex-1">
-                <div className="text-xl font-bold text-foreground">Dheeraj Singavarapu</div>
-                <div className="mt-1 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider text-[#22C55E]" style={{ backgroundColor: "#0F2A17" }}>
+                <div className="text-xl font-bold text-white">Dheeraj Singavarapu</div>
+                <div className="mt-1 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider text-[#34D399] bg-[#34D399]/15">
                   GOLFER
                 </div>
                 <div className="mt-4 grid grid-cols-2 gap-3">
                   <div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Handicap</div>
-                    <div className="text-lg font-semibold text-foreground">8.2</div>
+                    <div className="golf-label">Handicap</div>
+                    <div className="golf-display text-lg text-white">8.2</div>
                   </div>
                   <div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Assigned Coach</div>
-                    <div className="text-lg font-semibold text-foreground">Coach Williams</div>
+                    <div className="golf-label-sm whitespace-nowrap">Assigned Coach</div>
+                    <div className="golf-display text-lg text-white">Coach Williams</div>
                   </div>
                 </div>
               </div>
             </div>
-            <button className="mt-5 w-full py-2.5 rounded-xl border border-[#22C55E] text-[#22C55E] text-sm font-semibold hover:bg-[#22C55E]/10 transition">
+            <button className="mt-5 w-full py-2.5 rounded-xl border border-[#34D399] text-[#34D399] text-sm font-semibold hover:bg-[#34D399]/10 transition">
               Edit Profile
             </button>
           </Card>
@@ -143,12 +138,12 @@ function SettingsPage() {
             <SectionHeader>Account</SectionHeader>
             <div className="space-y-3">
               <div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Email</div>
-                <div className="text-sm text-foreground">dheeraj@golfanalytics.com</div>
+                <div className="golf-label">Email</div>
+                <div className="text-sm text-white">dheeraj@golfanalytics.com</div>
               </div>
               <div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Member Since</div>
-                <div className="text-sm text-foreground">July 2026</div>
+                <div className="golf-label">Member Since</div>
+                <div className="text-sm text-white">July 2026</div>
               </div>
             </div>
             <button className="mt-5 w-full py-2.5 rounded-xl border border-[#EF4444] text-[#EF4444] text-sm font-semibold hover:bg-[#EF4444]/10 transition">
@@ -187,14 +182,14 @@ function SettingsPage() {
             <SectionHeader>About</SectionHeader>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">App Version</span>
-                <span className="text-sm font-semibold text-foreground">1.0.0 Beta</span>
+                <span className="golf-label">App Version</span>
+                <span className="text-sm font-semibold text-white">1.0.0 Beta</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Brand</span>
-                <span className="text-sm font-semibold text-foreground">Golf Analytics</span>
+                <span className="golf-label">Brand</span>
+                <span className="text-sm font-semibold text-white">Golf Analytics</span>
               </div>
-              <div className="pt-3 mt-2 border-t border-[#2A2A2C] text-[11px] text-muted-foreground text-center">
+              <div className="pt-3 mt-2 border-t border-white/10 text-[11px] golf-text-secondary text-center">
                 Powered by Putt Vector AI
               </div>
             </div>

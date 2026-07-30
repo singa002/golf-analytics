@@ -1,7 +1,7 @@
-const GREEN = "#22C55E"; // --golf-accent
+const GREEN = "#34D399"; // --golf-accent
 const WHITE = "#FFFFFF";
-const DEEP = "#0D1A0D"; // --golf-deep
-const CARD_GREEN = "#1A2A1A"; // --golf-card
+const DEEP = "#040906"; // --golf-deep
+const CARD_GREEN = "#0D1512"; // --golf-card
 
 export interface SharedGreenViewProps {
   ballAngle: number; // 0-360 degrees around the hole

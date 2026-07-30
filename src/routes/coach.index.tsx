@@ -25,14 +25,14 @@ function CoachDashboard() {
     <CoachShell>
       <header className="flex justify-between items-end mb-12">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold mb-1">
+          <p className="golf-label mb-1">
             Good Morning, {COACH.name}
           </p>
-          <h1 className="text-3xl font-bold text-white tracking-tight">{COACH.academy}</h1>
+          <h1 className="golf-display text-3xl text-white">{COACH.academy}</h1>
         </div>
         <Link
           to="/coach/schedule"
-          className="flex items-center gap-3 bg-[#22C55E] hover:bg-[#16a34a] text-black px-6 py-3 rounded-xl font-bold transition-all"
+          className="golf-accent-glow flex items-center gap-3 bg-[#34D399] hover:bg-[#6EE7B7] text-black px-6 py-3 rounded-xl font-bold transition-all"
         >
           <Clock size={20} />
           <span>VIEW SCHEDULE</span>
@@ -48,7 +48,9 @@ function CoachDashboard() {
         ].map((s) => (
           <CoachCard key={s.label} className="p-6">
             <CoachLabel>{s.label}</CoachLabel>
-            <p className="text-4xl font-bold text-white mt-2">{s.value}</p>
+            <p className={`golf-display text-4xl mt-2 ${s.label === "Roster Avg Make %" ? "text-[#34D399]" : "text-white"}`}>
+              {s.value}
+            </p>
           </CoachCard>
         ))}
       </div>
@@ -62,11 +64,11 @@ function CoachDashboard() {
                 <li key={l.id} className="flex items-center justify-between py-4">
                   <div>
                     <p className="text-sm font-bold text-white">{l.studentName}</p>
-                    <p className="text-xs text-white/40 mt-1">{l.focus}</p>
+                    <p className="text-xs golf-text-secondary mt-1">{l.focus}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-bold text-[#22C55E]">{l.time}</p>
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold mt-1">{l.date}</p>
+                    <p className="text-sm font-bold text-[#34D399]">{l.time}</p>
+                    <p className="golf-label mt-1">{l.date}</p>
                   </div>
                 </li>
               ))}
@@ -78,7 +80,7 @@ function CoachDashboard() {
           <CoachCard>
             <div className="flex items-center justify-between">
               <CoachLabel>Current Students</CoachLabel>
-              <Link to="/coach/students" className="text-[10px] uppercase tracking-widest font-bold text-[#22C55E]">
+              <Link to="/coach/students" className="text-[10px] uppercase tracking-widest font-bold text-[#34D399]">
                 View all
               </Link>
             </div>
@@ -94,7 +96,7 @@ function CoachDashboard() {
                       {s.initials}
                     </span>
                     <span className="flex-1 text-sm font-medium text-white/80">{s.name}</span>
-                    <span className="text-sm font-bold text-[#22C55E]">{s.makePercent}%</span>
+                    <span className="text-sm font-bold text-[#34D399]">{s.makePercent}%</span>
                   </Link>
                 </li>
               ))}
