@@ -38,6 +38,11 @@
 
 :root {
   --radius: 0.75rem;
+  /* Golf sports palette tokens */
+  --golf-deep: #0D1A0D;
+  --golf-card: #1A2A1A;
+  --golf-accent: #22C55E;
+  --golf-miss: #EF4444;
   /* Dark sports analytics palette */
   --background: oklch(0.13 0 0); /* ~#0A0A0A */
   --foreground: oklch(0.985 0 0);

@@ -27,14 +27,14 @@ export const Route = createFileRoute("/_authenticated/practice")({
   component: PracticePage,
 });
 
-const GREEN = "#22C55E";
-const RED = "#EF4444";
+const GREEN = "#22C55E"; // --golf-accent
+const RED = "#EF4444"; // --golf-miss
 const BLUE = "#3B82F6";
 const YELLOW = "#EAB308";
 const WHITE = "#FFFFFF";
 const GRAY = "#9CA3AF";
-const CARD = "#1C1C1E";
-const INNER = "#26262A";
+const CARD = "#1A2A1A"; // --golf-card
+const INNER = "#0D1A0D"; // --golf-deep
 
 function PutterIcon({ size = 20, color = WHITE }: { size?: number; color?: string }) {
   return (
@@ -149,11 +149,11 @@ function LiveView({
         </div>
 
         <div className="rounded-2xl p-6" style={{ backgroundColor: CARD }}>
-          <div className="flex items-center justify-between py-3 border-b border-[#2C2C2E]">
+          <div className="flex items-center justify-between py-3 border-b border-white/10">
             <span className="text-[11px] uppercase tracking-widest" style={{ color: GRAY }}>Start Line</span>
             <span className="text-xl font-semibold" style={{ color: GREEN }}>0.9° Left</span>
           </div>
-          <div className="flex items-center justify-between py-3 border-b border-[#2C2C2E]">
+          <div className="flex items-center justify-between py-3 border-b border-white/10">
             <span className="text-[11px] uppercase tracking-widest" style={{ color: GRAY }}>Actual</span>
             <span className="text-xl font-semibold" style={{ color: WHITE }}>1.1° Left</span>
           </div>
@@ -165,7 +165,7 @@ function LiveView({
 
         <button
           onClick={onPutt}
-          className="w-full rounded-2xl py-6 flex items-center justify-center gap-3 border border-[#2C2C2E] active:opacity-80 transition"
+          className="w-full rounded-2xl py-6 flex items-center justify-center gap-3 border border-white/10 active:opacity-80 transition"
           style={{ backgroundColor: INNER, color: WHITE }}
         >
           <PutterIcon size={22} color={WHITE} />
@@ -289,7 +289,7 @@ function PracticePage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-5rem)] p-6">
+    <div className="min-h-[calc(100vh-3.5rem)] p-6 bg-[#0D1A0D]">
       <div className="w-full max-w-[1400px] mx-auto">
         <h1 className="sr-only">Practice</h1>
         {result ? (

@@ -1,13 +1,19 @@
-import { createFileRoute, Outlet, Link, useLocation } from "@tanstack/react-router";
-import { Eye, BarChart3, Clock, LayoutDashboard, Trophy } from "lucide-react";
-import type { ComponentType, SVGProps } from "react";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
+import {
+  BarChart3,
+  Clock,
+  Eye,
+  LayoutDashboard,
+  Settings,
+  Trophy,
+} from "lucide-react";
+import type { SVGProps } from "react";
+import { AppSidebar, type NavItem } from "@/components/AppSidebar";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthenticatedLayout,
 });
 
-
-// Custom putter icon
 const PutterIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <path d="M6 3l3 3" />
@@ -17,19 +23,17 @@ const PutterIcon = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-type Tab = { to: string; label: string; Icon: ComponentType<SVGProps<SVGSVGElement>> };
-const TABS: Tab[] = [
+const GOLFER_NAV: NavItem[] = [
   { to: "/preview", label: "Preview", Icon: Eye },
   { to: "/practice", label: "Practice", Icon: PutterIcon },
   { to: "/analytics", label: "Analytics", Icon: BarChart3 },
   { to: "/history", label: "History", Icon: Clock },
   { to: "/compete", label: "Compete", Icon: Trophy },
   { to: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
+  { to: "/settings", label: "Settings", Icon: Settings },
 ];
 
 function AuthenticatedLayout() {
-  const location = useLocation();
-
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="h-14 border-b border-border flex items-center px-6">
@@ -40,30 +44,20 @@ function AuthenticatedLayout() {
         </div>
       </header>
 
-      <main className="flex-1 pb-24">
-        <Outlet />
-      </main>
-
-
-      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-nav border-t border-border">
-        <div className="h-full max-w-6xl mx-auto grid grid-cols-6">
-          {TABS.map(({ to, label, Icon }) => {
-            const active = location.pathname === to;
-            return (
-              <Link
-                key={to}
-                to={to}
-                className={`flex flex-col items-center justify-center gap-1 transition ${
-                  active ? "text-primary" : "text-nav-foreground hover:text-foreground"
-                }`}
-              >
-                <Icon className="h-6 w-6" />
-                <span className="text-xs font-medium">{label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
+      <div className="flex flex-1 min-h-0">
+        <AppSidebar
+          navItems={GOLFER_NAV}
+          profile={{
+            initials: "DS",
+            name: "Dheeraj S.",
+            subtitle: "Pro Membership",
+            mode: "golfer",
+          }}
+        />
+        <main className="flex-1 min-w-0 overflow-y-auto">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

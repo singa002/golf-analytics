@@ -1,5 +1,7 @@
-const GREEN = "#22C55E";
+const GREEN = "#22C55E"; // --golf-accent
 const WHITE = "#FFFFFF";
+const DEEP = "#0D1A0D"; // --golf-deep
+const CARD_GREEN = "#1A2A1A"; // --golf-card
 
 export interface SharedGreenViewProps {
   ballAngle: number; // 0-360 degrees around the hole
@@ -57,8 +59,8 @@ export function SharedGreenView({
       <defs>
         <radialGradient id="sharedGreenGrad" cx="50%" cy="50%" r="60%">
           <stop offset="0%" stopColor="#1F6B3A" />
-          <stop offset="70%" stopColor="#134523" />
-          <stop offset="100%" stopColor="#0B2A16" />
+          <stop offset="70%" stopColor={CARD_GREEN} />
+          <stop offset="100%" stopColor={DEEP} />
         </radialGradient>
         <filter id="sharedGreenGlow" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="4" result="coloredBlur" />
@@ -76,7 +78,7 @@ export function SharedGreenView({
         rx={rx}
         ry={ry}
         fill="url(#sharedGreenGrad)"
-        stroke="#0F3A1E"
+        stroke={DEEP}
         strokeWidth="2"
       />
 

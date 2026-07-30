@@ -1,19 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import {
-  BarChart3,
   ChevronRight,
-  Clock,
-  Eye,
-  LayoutDashboard,
   Play,
   Settings2,
   Target,
   TrendingUp,
-  Trophy,
   User,
 } from "lucide-react";
-import type { ComponentType, SVGProps } from "react";
 import { getSessionHistory } from "@/lib/historyService";
 import { useViewMode } from "@/context/ViewModeContext";
 
@@ -28,24 +22,6 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   }),
   component: DashboardPage,
 });
-
-const PutterIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M6 3l3 3" />
-    <path d="M7.5 4.5L18 15" />
-    <path d="M15 12h6v3h-6z" />
-    <circle cx="8" cy="20" r="1.5" />
-  </svg>
-);
-
-const NAV: { to: string; label: string; Icon: ComponentType<SVGProps<SVGSVGElement>> }[] = [
-  { to: "/dashboard", label: "Home", Icon: LayoutDashboard },
-  { to: "/preview", label: "Preview", Icon: Eye },
-  { to: "/practice", label: "Practice", Icon: PutterIcon },
-  { to: "/analytics", label: "Stats", Icon: BarChart3 },
-  { to: "/history", label: "Past", Icon: Clock },
-  { to: "/compete", label: "Compete", Icon: Trophy },
-];
 
 function DashboardPage() {
   const [showSettings, setShowSettings] = useState(false);
@@ -88,49 +64,29 @@ function DashboardPage() {
         style={{ background: "radial-gradient(circle at 50% 50%, transparent 0%, #081208 100%)" }}
       />
 
-      {/* Sidebar */}
-      <nav className="w-[100px] flex flex-col items-center py-8 z-20 border-r border-white/5 bg-[#0D1A0D]">
-        <div className="mb-12 text-3xl text-[#22C55E]">⛳</div>
-        <div className="flex flex-col gap-6 flex-1 w-full px-2">
-          {NAV.map(({ to, label, Icon }) => {
-            const active = to === "/dashboard";
-            return (
-              <Link
-                key={to}
-                to={to}
-                className={`flex flex-col items-center gap-1 py-3 rounded-lg transition-colors ${
-                  active ? "text-[#22C55E] bg-[#22C55E]/10" : "text-white/40 hover:text-white"
-                }`}
-              >
-                <Icon width={20} height={20} />
-                <span className="text-[10px] uppercase tracking-widest font-semibold">{label}</span>
-              </Link>
-            );
-          })}
-        </div>
-        <button
-          ref={avatarRef}
-          onClick={() => setShowSettings((s) => !s)}
-          className="mt-auto w-12 h-12 rounded-full border-2 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-sm font-bold text-[#22C55E]"
-        >
-          DS
-        </button>
-      </nav>
-
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto px-12 py-10 z-10">
+      <main className="flex-1 overflow-y-auto px-12 py-10 z-10 relative">
         <header className="flex justify-between items-end mb-12">
           <div>
             <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold mb-1">Good Morning, Dheeraj</p>
             <h1 className="text-3xl font-bold text-white tracking-tight">Handicap 8.2 · Coach Williams</h1>
           </div>
-          <Link
-            to="/preview"
-            className="flex items-center gap-3 bg-[#22C55E] hover:bg-[#16a34a] text-black px-6 py-3 rounded-xl font-bold transition-all"
-          >
-            <Play size={20} />
-            <span>START SESSION</span>
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              to="/preview"
+              className="flex items-center gap-3 bg-[#22C55E] hover:bg-[#16a34a] text-black px-6 py-3 rounded-xl font-bold transition-all"
+            >
+              <Play size={20} />
+              <span>START SESSION</span>
+            </Link>
+            <button
+              ref={avatarRef}
+              onClick={() => setShowSettings((s) => !s)}
+              className="w-12 h-12 rounded-full border-2 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-sm font-bold text-[#22C55E]"
+            >
+              DS
+            </button>
+          </div>
         </header>
 
         <div className="grid grid-cols-12 gap-8">
@@ -280,57 +236,57 @@ function DashboardPage() {
             </div>
           </div>
         </div>
-      </main>
 
-      {/* Settings Popup */}
-      {showSettings && (
-        <div
-          ref={settingsRef}
-          className="absolute bottom-24 left-24 w-64 bg-[#1A2A1A] border border-white/10 rounded-2xl shadow-2xl p-6 z-50"
-        >
-          <div className="flex items-center gap-4 mb-6 border-b border-white/10 pb-4">
-            <div className="w-10 h-10 rounded-full bg-[#22C55E]/20 flex items-center justify-center text-[#22C55E]">
-              <User size={20} />
+        {/* Settings Popup */}
+        {showSettings && (
+          <div
+            ref={settingsRef}
+            className="absolute top-24 right-12 w-64 bg-[#1A2A1A] border border-white/10 rounded-2xl shadow-2xl p-6 z-50"
+          >
+            <div className="flex items-center gap-4 mb-6 border-b border-white/10 pb-4">
+              <div className="w-10 h-10 rounded-full bg-[#22C55E]/20 flex items-center justify-center text-[#22C55E]">
+                <User size={20} />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-white">Dheeraj S.</p>
+                <p className="text-[10px] text-white/40">Pro Membership</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-bold text-white">Dheeraj S.</p>
-              <p className="text-[10px] text-white/40">Pro Membership</p>
-            </div>
-          </div>
-          <ul className="space-y-4">
-            <li className="pb-3 border-b border-white/10">
-              {/* TODO: driven by UI state only — will later come from the user's Supabase role. */}
-              <button
-                onClick={() => {
-                  setMode("coach");
-                  setShowSettings(false);
-                  navigate({ to: "/coach" });
-                }}
-                className="w-full flex items-center justify-between text-xs font-bold text-[#22C55E] hover:text-[#4ade80]"
-              >
-                <span>Switch to Coach View</span>
-                <ChevronRight size={16} />
-              </button>
-            </li>
-            {["Account Settings", "Hardware Status", "Coach Sharing"].map((item) => (
-              <li key={item}>
-                <Link
-                  to="/settings"
-                  className="flex items-center justify-between text-xs text-white/60 hover:text-white cursor-pointer"
+            <ul className="space-y-4">
+              <li className="pb-3 border-b border-white/10">
+                {/* TODO: driven by UI state only — will later come from the user's Supabase role. */}
+                <button
+                  onClick={() => {
+                    setMode("coach");
+                    setShowSettings(false);
+                    navigate({ to: "/coach" });
+                  }}
+                  className="w-full flex items-center justify-between text-xs font-bold text-[#22C55E] hover:text-[#4ade80]"
                 >
-                  <span>{item}</span>
+                  <span>Switch to Coach View</span>
                   <ChevronRight size={16} />
+                </button>
+              </li>
+              {["Account Settings", "Hardware Status", "Coach Sharing"].map((item) => (
+                <li key={item}>
+                  <Link
+                    to="/settings"
+                    className="flex items-center justify-between text-xs text-white/60 hover:text-white cursor-pointer"
+                  >
+                    <span>{item}</span>
+                    <ChevronRight size={16} />
+                  </Link>
+                </li>
+              ))}
+              <li className="pt-2 border-t border-white/10">
+                <Link to="/" className="text-xs text-red-400 font-bold hover:text-red-300">
+                  Sign Out
                 </Link>
               </li>
-            ))}
-            <li className="pt-2 border-t border-white/10">
-              <Link to="/" className="text-xs text-red-400 font-bold hover:text-red-300">
-                Sign Out
-              </Link>
-            </li>
-          </ul>
-        </div>
-      )}
+            </ul>
+          </div>
+        )}
+      </main>
     </div>
   );
 }

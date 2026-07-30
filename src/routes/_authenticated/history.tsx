@@ -16,21 +16,26 @@ export const Route = createFileRoute("/_authenticated/history")({
   component: HistoryPage,
 });
 
-const MADE = "#22C55E";
-const MISS = "#EF4444";
+const MADE = "#22C55E"; // --golf-accent
+const MISS = "#EF4444"; // --golf-miss
+const DEEP = "#0D1A0D"; // --golf-deep
+const CARD = "#1A2A1A"; // --golf-card
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`rounded-2xl p-5 ${className}`} style={{ backgroundColor: "#1C1C1E" }}>
+    <div
+      className={`rounded-[12px] p-5 border border-white/10 ${className}`}
+      style={{ backgroundColor: CARD }}
+    >
       {children}
     </div>
   );
 }
 
 function makePctColor(p: number) {
-  if (p >= 70) return "#22C55E";
+  if (p >= 70) return MADE;
   if (p >= 60) return "#EAB308";
-  return "#EF4444";
+  return MISS;
 }
 
 function MiniGauge({ pct, size = 44 }: { pct: number; size?: number }) {
@@ -42,10 +47,10 @@ function MiniGauge({ pct, size = 44 }: { pct: number; size?: number }) {
   return (
     <div className="relative" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} stroke="#2A2A2C" strokeWidth={stroke} fill="none" />
+        <circle cx={size / 2} cy={size / 2} r={r} stroke="rgba(255,255,255,0.08)" strokeWidth={stroke} fill="none" />
         <circle cx={size / 2} cy={size / 2} r={r} stroke={color} strokeWidth={stroke} strokeLinecap="round" fill="none" strokeDasharray={c} strokeDashoffset={offset} />
       </svg>
-      <div className="absolute inset-0 flex items-center justify-center text-[11px] font-semibold text-foreground">
+      <div className="absolute inset-0 flex items-center justify-center text-[11px] font-semibold text-white">
         {pct}%
       </div>
     </div>
@@ -58,14 +63,14 @@ function HistoryPage() {
   const selected = sessions.find((s) => s.id === selectedId) ?? sessions[0];
 
   return (
-    <div className="p-4 h-full">
+    <div className="p-4 h-full bg-[#0D1A0D]">
       <h1 className="sr-only">Session History</h1>
       <div className="grid grid-cols-[380px_1fr] gap-4 h-[calc(100vh-9rem)]">
         {/* Left column */}
         <div className="flex flex-col min-h-0">
           <div className="flex items-center gap-2 mb-3 px-1">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">History</span>
+            <Calendar className="h-4 w-4 text-white/40" />
+            <span className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">History</span>
           </div>
           <div className="flex-1 overflow-y-auto space-y-3 pr-1">
             {sessions.map((s) => {
@@ -74,20 +79,20 @@ function HistoryPage() {
                 <button
                   key={s.id}
                   onClick={() => setSelectedId(s.id)}
-                  className={`w-full text-left rounded-2xl p-4 transition border-l-4 ${
-                    active ? "border-[#22C55E]" : "border-transparent"
+                  className={`w-full text-left rounded-[12px] p-4 transition border border-white/10 border-l-4 ${
+                    active ? "border-l-[#22C55E]" : "border-l-transparent"
                   }`}
-                  style={{ backgroundColor: "#1C1C1E" }}
+                  style={{ backgroundColor: CARD }}
                 >
                   <div className="flex items-center gap-4">
                     <MiniGauge pct={s.makePercent} />
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-semibold text-foreground">{s.date}</div>
-                      <div className="text-[11px] text-muted-foreground">{s.time}</div>
-                      <div className="mt-2 flex gap-3 text-[11px] text-muted-foreground">
-                        <span><span className="text-foreground font-semibold">{s.totalPutts}</span> putts</span>
-                        <span><span className="text-foreground font-semibold">{s.avgDistanceFt}</span> ft</span>
-                        <span><span className="text-foreground font-semibold">{s.avgSpeedMs}</span> m/s</span>
+                      <div className="text-sm font-semibold text-white">{s.date}</div>
+                      <div className="text-[11px] text-white/40">{s.time}</div>
+                      <div className="mt-2 flex gap-3 text-[11px] text-white/40">
+                        <span><span className="text-white font-semibold">{s.totalPutts}</span> putts</span>
+                        <span><span className="text-white font-semibold">{s.avgDistanceFt}</span> ft</span>
+                        <span><span className="text-white font-semibold">{s.avgSpeedMs}</span> m/s</span>
                       </div>
                     </div>
                   </div>
@@ -116,18 +121,18 @@ function SessionDetail({ session }: { session: SessionSummary }) {
     <Card className="overflow-y-auto flex flex-col gap-5">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-xs uppercase tracking-wider text-muted-foreground">Session</div>
-          <div className="text-2xl font-bold text-foreground">{session.date}</div>
-          <div className="text-sm text-muted-foreground">{session.time}</div>
+          <div className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">Session</div>
+          <div className="text-2xl font-bold text-white">{session.date}</div>
+          <div className="text-sm text-white/40">{session.time}</div>
         </div>
         <div className="relative" style={{ width: size, height: size }}>
           <svg width={size} height={size} className="-rotate-90">
-            <circle cx={size / 2} cy={size / 2} r={r} stroke="#2A2A2C" strokeWidth={stroke} fill="none" />
+            <circle cx={size / 2} cy={size / 2} r={r} stroke="rgba(255,255,255,0.08)" strokeWidth={stroke} fill="none" />
             <circle cx={size / 2} cy={size / 2} r={r} stroke={color} strokeWidth={stroke} strokeLinecap="round" fill="none" strokeDasharray={c} strokeDashoffset={offset} />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="text-2xl font-bold text-foreground">{session.makePercent}%</div>
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Make</div>
+            <div className="text-2xl font-bold text-white">{session.makePercent}%</div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">Make</div>
           </div>
         </div>
       </div>
@@ -144,20 +149,20 @@ function SessionDetail({ session }: { session: SessionSummary }) {
       </div>
 
       <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
-        <div className="rounded-xl p-3" style={{ backgroundColor: "#131315" }}>
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Putt Map</div>
+        <div className="rounded-[12px] p-3 border border-white/10" style={{ backgroundColor: DEEP }}>
+          <div className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold mb-2">Putt Map</div>
           <PuttMapSvg session={session} />
         </div>
-        <div className="rounded-xl p-3 flex flex-col" style={{ backgroundColor: "#131315" }}>
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Start Line Accuracy</div>
+        <div className="rounded-[12px] p-3 flex flex-col border border-white/10" style={{ backgroundColor: DEEP }}>
+          <div className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold mb-2">Start Line Accuracy</div>
           <div className="flex-1 min-h-[160px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={session.startLineAccuracy}>
-                <XAxis dataKey="bucket" tick={{ fill: "#68686E", fontSize: 10 }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="bucket" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 10 }} axisLine={false} tickLine={false} />
                 <Bar dataKey="count" radius={[3, 3, 0, 0]}>
                   {session.startLineAccuracy.map((b, i) => {
                     const near = Math.abs(parseFloat(b.bucket)) <= 1;
-                    return <Cell key={i} fill={near ? MADE : "#3A3A3D"} />;
+                    return <Cell key={i} fill={near ? MADE : "rgba(255,255,255,0.12)"} />;
                   })}
                 </Bar>
               </BarChart>
@@ -169,10 +174,10 @@ function SessionDetail({ session }: { session: SessionSummary }) {
   );
 }
 
-function StatBox({ label, value, valueClass = "text-foreground" }: { label: string; value: React.ReactNode; valueClass?: string }) {
+function StatBox({ label, value, valueClass = "text-white" }: { label: string; value: React.ReactNode; valueClass?: string }) {
   return (
-    <div className="rounded-xl p-3" style={{ backgroundColor: "#131315" }}>
-      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
+    <div className="rounded-[12px] p-3 border border-white/10" style={{ backgroundColor: DEEP }}>
+      <div className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">{label}</div>
       <div className={`text-lg font-semibold mt-1 ${valueClass}`}>{value}</div>
     </div>
   );
@@ -189,9 +194,9 @@ function PuttMapSvg({ session }: { session: SessionSummary }) {
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full">
       <defs>
         <radialGradient id="greenGradHistory" cx="50%" cy="45%" r="60%">
-          <stop offset="0%" stopColor="#1F5A2E" />
-          <stop offset="70%" stopColor="#14381D" />
-          <stop offset="100%" stopColor="#0B2211" />
+          <stop offset="0%" stopColor="#1F6B3A" />
+          <stop offset="70%" stopColor={CARD} />
+          <stop offset="100%" stopColor={DEEP} />
         </radialGradient>
       </defs>
       <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="url(#greenGradHistory)" />

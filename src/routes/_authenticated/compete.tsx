@@ -95,14 +95,14 @@ const leaderboards: Record<string, LeaderRow[]> = {
 
 const typeColors: Record<ChallengeType, string> = {
   ACCURACY: "bg-[#3B82F6]/20 text-[#3B82F6] border-[#3B82F6]/40",
-  STREAK: "bg-[#EF4444]/20 text-[#EF4444] border-[#EF4444]/40",
+  STREAK: "bg-[#22C55E]/20 text-[#22C55E] border-[#22C55E]/40",
   SPEED: "bg-[#F59E0B]/20 text-[#F59E0B] border-[#F59E0B]/40",
 };
 
 function TrendIcon({ trend }: { trend: Trend }) {
   if (trend === "up") return <TrendingUp className="w-4 h-4 text-[#22C55E]" />;
   if (trend === "down") return <TrendingDown className="w-4 h-4 text-[#EF4444]" />;
-  return <Minus className="w-4 h-4 text-gray-500" />;
+  return <Minus className="w-4 h-4 text-white/40" />;
 }
 
 function ComparePage() {
@@ -111,24 +111,24 @@ function ComparePage() {
   const activeName = challenges.find((c) => c.id === activeChallenge)?.title ?? "";
 
   return (
-    <div className="h-full w-full p-6 bg-[#0A0A0A] overflow-hidden">
+    <div className="h-full w-full p-6 bg-[#0D1A0D] overflow-hidden">
       <div className="grid grid-cols-2 gap-6 h-full">
         {/* LEFT — Active Challenges */}
         <div className="flex flex-col min-h-0">
           <div className="flex items-center gap-2 mb-4">
             <Trophy className="w-5 h-5 text-[#22C55E]" />
-            <h2 className="text-xs font-semibold tracking-widest text-gray-400">ACTIVE CHALLENGES</h2>
+            <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">ACTIVE CHALLENGES</h2>
           </div>
           <div className="flex-1 overflow-y-auto space-y-3 pr-1">
             {challenges.map((c) => (
               <div
                 key={c.id}
-                className="bg-[#1C1C1E] rounded-xl p-4 border border-white/5"
+                className="bg-[#1A2A1A] rounded-[12px] p-4 border border-white/10"
               >
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div>
                     <h3 className="text-white font-bold text-lg">{c.title}</h3>
-                    <p className="text-gray-400 text-sm mt-0.5">{c.description}</p>
+                    <p className="text-white/40 text-sm mt-0.5">{c.description}</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -138,17 +138,17 @@ function ComparePage() {
                   <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-[#22C55E]/20 text-[#22C55E] border border-[#22C55E]/40">
                     {c.daysLeft} DAYS LEFT
                   </span>
-                  <span className="text-xs text-gray-500">{c.participants} golfers competing</span>
+                  <span className="text-xs text-white/40">{c.participants} golfers competing</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="text-sm">
                     {c.yourScore ? (
                       <>
-                        <span className="text-gray-500 uppercase text-[10px] tracking-wider">Your Score</span>
+                        <span className="text-white/40 uppercase text-[10px] tracking-widest font-bold">Your Score</span>
                         <div className="text-white font-semibold">{c.yourScore}</div>
                       </>
                     ) : (
-                      <span className="text-gray-600 text-xs">Not joined</span>
+                      <span className="text-white/30 text-xs">Not joined</span>
                     )}
                   </div>
                   {c.joined ? (
@@ -170,8 +170,8 @@ function ComparePage() {
         <div className="flex flex-col min-h-0">
           <div className="flex items-center gap-2 mb-2">
             <Trophy className="w-5 h-5 text-[#22C55E]" />
-            <h2 className="text-xs font-semibold tracking-widest text-gray-400">LEADERBOARD</h2>
-            <span className="text-xs text-gray-500">— {activeName}</span>
+            <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">LEADERBOARD</h2>
+            <span className="text-xs text-white/40">— {activeName}</span>
           </div>
           <div className="flex gap-2 mb-3">
             {challenges.map((c) => (
@@ -181,7 +181,7 @@ function ComparePage() {
                 className={`text-[11px] font-semibold px-3 py-1.5 rounded-full transition ${
                   activeChallenge === c.id
                     ? "bg-[#22C55E] text-black"
-                    : "bg-[#1C1C1E] text-gray-400 hover:text-white"
+                    : "bg-[#1A2A1A] text-white/40 hover:text-white border border-white/10"
                 }`}
               >
                 {c.type}
@@ -189,7 +189,7 @@ function ComparePage() {
             ))}
           </div>
 
-          <div className="bg-[#1C1C1E] rounded-xl overflow-hidden flex-1 flex flex-col min-h-0">
+          <div className="bg-[#1A2A1A] rounded-[12px] border border-white/10 overflow-hidden flex-1 flex flex-col min-h-0">
             <div className="flex-1 overflow-y-auto divide-y divide-white/5">
               {rows.map((r) => (
                 <div
@@ -202,14 +202,14 @@ function ComparePage() {
                     {r.medal ? (
                       <span className="text-xl">{r.medal}</span>
                     ) : (
-                      <span className="text-gray-500 font-bold">#{r.rank}</span>
+                      <span className="text-white/40 font-bold">#{r.rank}</span>
                     )}
                   </div>
                   <div className="flex-1">
                     <div className={`font-semibold ${r.you ? "text-[#22C55E]" : "text-white"}`}>
                       {r.name} {r.you && <span className="text-[10px] text-[#22C55E]/70 ml-1">YOU</span>}
                     </div>
-                    <div className="text-xs text-gray-500">{r.sessions} sessions</div>
+                    <div className="text-xs text-white/40">{r.sessions} sessions</div>
                   </div>
                   <div className="text-white font-bold text-lg">{r.score}</div>
                   <TrendIcon trend={r.trend} />
@@ -219,7 +219,7 @@ function ComparePage() {
           </div>
 
           {/* Your stats */}
-          <div className="mt-3 bg-[#1C1C1E] rounded-xl p-4 grid grid-cols-4 gap-4">
+          <div className="mt-3 bg-[#1A2A1A] rounded-[12px] border border-white/10 p-4 grid grid-cols-4 gap-4">
             {[
               { label: "Your Rank", value: "#5" },
               { label: "Best Score", value: "68%" },
@@ -227,7 +227,7 @@ function ComparePage() {
               { label: "Active Streak", value: "3 days" },
             ].map((s) => (
               <div key={s.label}>
-                <div className="text-[10px] uppercase tracking-widest text-gray-500">{s.label}</div>
+                <div className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">{s.label}</div>
                 <div className="text-white font-bold text-xl mt-1">{s.value}</div>
               </div>
             ))}

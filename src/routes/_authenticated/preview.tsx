@@ -23,11 +23,12 @@ export const Route = createFileRoute("/_authenticated/preview")({
   component: PreviewPage,
 });
 
-const GREEN = "#22C55E";
+const GREEN = "#22C55E"; // --golf-accent
 const WHITE = "#FFFFFF";
 const GRAY = "#9CA3AF";
-const CARD = "#1C1C1E";
-const COACHING_BG = "#26262A";
+const CARD = "#1A2A1A"; // --golf-card
+const COACHING_BG = "#0D1A0D"; // --golf-deep
+const DEEP = "#0D1A0D"; // --golf-deep
 
 function MetricRow({
   label,
@@ -39,7 +40,7 @@ function MetricRow({
   valueColor?: string;
 }) {
   return (
-    <div className="flex items-baseline justify-between py-3 border-b border-[#2C2C2E] last:border-b-0">
+    <div className="flex items-baseline justify-between py-3 border-b border-white/10 last:border-b-0">
       <span className="text-[11px] uppercase tracking-widest" style={{ color: GRAY }}>
         {label}
       </span>
@@ -60,7 +61,7 @@ function PreviewPage() {
   const { currentPutt } = usePutt();
 
   return (
-    <div className="min-h-[calc(100vh-5rem)] p-6">
+    <div className="min-h-[calc(100vh-3.5rem)] p-6 bg-[#0D1A0D]">
       <div className="w-full max-w-[1400px] mx-auto flex flex-col gap-5">
         <div className="w-full flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: GREEN }} />
@@ -137,7 +138,7 @@ function PreviewPage() {
         <div className="flex items-center gap-4 w-full">
           <button
             className="flex-1 rounded-lg py-3.5 text-sm font-semibold tracking-wide"
-            style={{ backgroundColor: GREEN, color: "#0A0A0A" }}
+            style={{ backgroundColor: GREEN, color: DEEP }}
           >
             PREVIEW COMPLETE
           </button>
