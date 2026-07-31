@@ -1,13 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Trophy, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { CoursePhotoBackdrop } from "@/components/CoursePhotoBackdrop";
 
 export const Route = createFileRoute("/_authenticated/compete")({
   head: () => ({ meta: [{ title: "Compete — Putt Vector" }] }),
   component: ComparePage,
 });
 
-type ChallengeType = "ACCURACY" | "STREAK" | "SPEED";
+type ChallengeType = "ACCURACY" | "STREAK" | "SPEED" | "DISTANCE";
 
 interface Challenge {
   id: string;
@@ -53,6 +54,16 @@ const challenges: Challenge[] = [
     yourScore: "68%",
     joined: true,
   },
+  {
+    id: "distance",
+    title: "Lag Putt Pro",
+    description: "Leave every lag putt within 2 feet of the hole.",
+    type: "DISTANCE",
+    daysLeft: 4,
+    participants: 41,
+    yourScore: "7 inside 2 ft",
+    joined: true,
+  },
 ];
 
 type Trend = "up" | "down" | "neutral";
@@ -75,6 +86,11 @@ const leaderboards: Record<string, LeaderRow[]> = {
     { rank: 5, name: "Dheeraj S.", score: `${YOUR_MAKE_STREAK} streak`, sessions: 5, trend: "up", you: true },
     { rank: 6, name: "Chris P.", score: "7 streak", sessions: 11, trend: "down" },
     { rank: 7, name: "Alex T.", score: "6 streak", sessions: 8, trend: "neutral" },
+    { rank: 8, name: "Nina V.", score: "5 streak", sessions: 6, trend: "up" },
+    { rank: 9, name: "Omar H.", score: "5 streak", sessions: 10, trend: "down" },
+    { rank: 10, name: "Priya S.", score: "4 streak", sessions: 4, trend: "up" },
+    { rank: 11, name: "Ben W.", score: "3 streak", sessions: 9, trend: "neutral" },
+    { rank: 12, name: "Kelly F.", score: "3 streak", sessions: 7, trend: "down" },
   ],
   speed: [
     { rank: 1, name: "Tyler M.", score: "92%", sessions: 12, trend: "up", medal: "🥇" },
@@ -84,6 +100,11 @@ const leaderboards: Record<string, LeaderRow[]> = {
     { rank: 5, name: "Dheeraj S.", score: "76%", sessions: 5, trend: "up", you: true },
     { rank: 6, name: "Chris P.", score: "72%", sessions: 11, trend: "down" },
     { rank: 7, name: "Alex T.", score: "68%", sessions: 8, trend: "neutral" },
+    { rank: 8, name: "Nina V.", score: "65%", sessions: 6, trend: "up" },
+    { rank: 9, name: "Omar H.", score: "62%", sessions: 10, trend: "down" },
+    { rank: 10, name: "Priya S.", score: "59%", sessions: 4, trend: "up" },
+    { rank: 11, name: "Ben W.", score: "56%", sessions: 9, trend: "neutral" },
+    { rank: 12, name: "Kelly F.", score: "54%", sessions: 7, trend: "down" },
   ],
   accuracy: [
     { rank: 1, name: "Tyler M.", score: "82%", sessions: 12, trend: "up", medal: "🥇" },
@@ -93,6 +114,25 @@ const leaderboards: Record<string, LeaderRow[]> = {
     { rank: 5, name: "Dheeraj S.", score: "68%", sessions: 5, trend: "up", you: true },
     { rank: 6, name: "Chris P.", score: "65%", sessions: 11, trend: "down" },
     { rank: 7, name: "Alex T.", score: "63%", sessions: 8, trend: "neutral" },
+    { rank: 8, name: "Nina V.", score: "61%", sessions: 6, trend: "up" },
+    { rank: 9, name: "Omar H.", score: "58%", sessions: 10, trend: "down" },
+    { rank: 10, name: "Priya S.", score: "56%", sessions: 4, trend: "up" },
+    { rank: 11, name: "Ben W.", score: "54%", sessions: 9, trend: "neutral" },
+    { rank: 12, name: "Kelly F.", score: "52%", sessions: 7, trend: "down" },
+  ],
+  distance: [
+    { rank: 1, name: "Tyler M.", score: "14 inside 2 ft", sessions: 12, trend: "up", medal: "🥇" },
+    { rank: 2, name: "Sarah K.", score: "12 inside 2 ft", sessions: 9, trend: "up", medal: "🥈" },
+    { rank: 3, name: "James R.", score: "11 inside 2 ft", sessions: 15, trend: "neutral", medal: "🥉" },
+    { rank: 4, name: "Maria L.", score: "9 inside 2 ft", sessions: 7, trend: "up" },
+    { rank: 5, name: "Dheeraj S.", score: "7 inside 2 ft", sessions: 5, trend: "up", you: true },
+    { rank: 6, name: "Chris P.", score: "6 inside 2 ft", sessions: 11, trend: "down" },
+    { rank: 7, name: "Alex T.", score: "6 inside 2 ft", sessions: 8, trend: "neutral" },
+    { rank: 8, name: "Nina V.", score: "5 inside 2 ft", sessions: 6, trend: "up" },
+    { rank: 9, name: "Omar H.", score: "4 inside 2 ft", sessions: 10, trend: "down" },
+    { rank: 10, name: "Priya S.", score: "4 inside 2 ft", sessions: 4, trend: "up" },
+    { rank: 11, name: "Ben W.", score: "3 inside 2 ft", sessions: 9, trend: "neutral" },
+    { rank: 12, name: "Kelly F.", score: "2 inside 2 ft", sessions: 7, trend: "down" },
   ],
 };
 
@@ -100,6 +140,7 @@ const typeColors: Record<ChallengeType, string> = {
   ACCURACY: "bg-[#3B82F6]/20 text-[#3B82F6] border-[#3B82F6]/40",
   STREAK: "bg-[#34D399]/20 text-[#34D399] border-[#34D399]/40",
   SPEED: "bg-[#F59E0B]/20 text-[#F59E0B] border-[#F59E0B]/40",
+  DISTANCE: "bg-[#38BDF8]/20 text-[#38BDF8] border-[#38BDF8]/40",
 };
 
 function TrendIcon({ trend }: { trend: Trend }) {
@@ -114,8 +155,9 @@ function ComparePage() {
   const activeName = challenges.find((c) => c.id === activeChallenge)?.title ?? "";
 
   return (
-    <div className="h-full w-full p-6 overflow-hidden">
-      <div className="grid grid-cols-2 gap-6 h-full">
+    <div className="relative h-full w-full p-6 overflow-hidden">
+      <CoursePhotoBackdrop />
+      <div className="relative grid grid-cols-2 gap-6 h-full">
         {/* LEFT — Active Challenges */}
         <div className="flex flex-col min-h-0">
           <div className="flex items-center gap-2 mb-4">
@@ -126,7 +168,7 @@ function ComparePage() {
             {challenges.map((c) => (
               <div
                 key={c.id}
-                className="bg-[#0D1512] rounded-[12px] p-4 border border-white/10"
+                className="golf-glass rounded-[12px] p-4"
               >
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div>
@@ -184,7 +226,7 @@ function ComparePage() {
                 className={`text-base font-semibold px-3 py-1.5 rounded-full transition ${
                   activeChallenge === c.id
                     ? "golf-accent-glow bg-[#34D399] text-black"
-                    : "bg-[#0D1512] golf-text-secondary hover:text-white border border-white/10"
+                    : "golf-glass-inner golf-text-secondary hover:text-white"
                 }`}
               >
                 {c.type}
@@ -192,7 +234,7 @@ function ComparePage() {
             ))}
           </div>
 
-          <div className="bg-[#0D1512] rounded-[12px] border border-white/10 overflow-hidden flex-1 flex flex-col min-h-0">
+          <div className="golf-glass rounded-[12px] overflow-hidden flex-1 flex flex-col min-h-0">
             <div className="flex-1 overflow-y-auto divide-y divide-white/5">
               {rows.map((r) => (
                 <div
@@ -219,21 +261,6 @@ function ComparePage() {
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Your stats */}
-          <div className="mt-3 bg-[#0D1512] rounded-[12px] border border-white/10 p-4 grid grid-cols-4 gap-4">
-            {[
-              { label: "Your Rank", value: "#5" },
-              { label: "Best Score", value: "68%" },
-              { label: "Completed", value: "2" },
-              { label: "Active Streak", value: "3 days" },
-            ].map((s) => (
-              <div key={s.label}>
-                <div className="golf-label-sm whitespace-nowrap">{s.label}</div>
-                <div className="golf-display text-white text-xl mt-1">{s.value}</div>
-              </div>
-            ))}
           </div>
         </div>
       </div>

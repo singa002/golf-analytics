@@ -5,7 +5,7 @@ import {
   LayoutDashboard,
   Trophy,
 } from "lucide-react";
-import type { CSSProperties, SVGProps } from "react";
+import type { SVGProps } from "react";
 import { AppSidebar, type NavItem } from "@/components/AppSidebar";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -31,16 +31,8 @@ const GOLFER_NAV: NavItem[] = [
 
 function AuthenticatedLayout() {
   return (
-    <div className="min-h-screen golf-page-background flex flex-col golfer-ui">
-      <header className="h-14 border-b border-border flex items-center px-6">
-        <div className="flex items-center gap-2">
-          <div className="h-2 w-2 rounded-full bg-primary" />
-          <span className="text-sm font-semibold tracking-wide text-foreground">Putt Vector</span>
-          <span className="text-base golf-text-secondary ml-1">by Golf Analytics</span>
-        </div>
-      </header>
-
-      <div className="flex flex-1 min-h-0" style={{ "--app-header-h": "3.5rem" } as CSSProperties}>
+    <div className="h-dvh golf-page-background flex flex-col golfer-ui overflow-hidden">
+      <div className="flex flex-1 min-h-0">
         <AppSidebar
           navItems={GOLFER_NAV}
           profile={{
@@ -50,7 +42,7 @@ function AuthenticatedLayout() {
             mode: "golfer",
           }}
         />
-        <main className="flex-1 min-w-0 overflow-y-auto">
+        <main className="flex-1 min-w-0 min-h-0 overflow-y-auto">
           <Outlet />
         </main>
       </div>

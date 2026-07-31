@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Bluetooth, Crosshair, Share2 } from "lucide-react";
+import { CoursePhotoBackdrop } from "@/components/CoursePhotoBackdrop";
 
 const SETTINGS_SECTIONS = ["account", "hardware", "sharing"] as const;
 export type SettingsSection = (typeof SETTINGS_SECTIONS)[number];
@@ -25,7 +26,7 @@ export const Route = createFileRoute("/_authenticated/settings")({
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`bg-[#0D1512] border border-white/10 rounded-[12px] p-6 ${className}`}>
+    <div className={`golf-glass rounded-[12px] p-6 ${className}`}>
       {children}
     </div>
   );
@@ -154,9 +155,10 @@ function SettingsPage() {
   }, [section]);
 
   return (
-    <div className="golf-page-background p-4 min-h-full">
+    <div className="relative p-4 min-h-full">
+      <CoursePhotoBackdrop />
       <h1 className="sr-only">Settings</h1>
-      <div className="flex w-full max-w-[1500px] flex-col gap-10 mx-auto">
+      <div className="relative flex w-full max-w-[1500px] flex-col gap-10 mx-auto">
         <Section id="account" title="Account Settings" highlighted={highlighted === "account"}>
           <div className="grid grid-cols-2 gap-4">
             <Card>

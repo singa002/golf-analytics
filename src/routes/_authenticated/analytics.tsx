@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Calendar } from "lucide-react";
+import { CoursePhotoBackdrop } from "@/components/CoursePhotoBackdrop";
 import { getSessionHistory, type SessionSummary } from "@/lib/historyService";
 
 export const Route = createFileRoute("/_authenticated/analytics")({
@@ -35,10 +36,7 @@ const SESSION_INSIGHT = "Your putts are drifting left on breaking putts.";
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div
-      className={`rounded-[12px] p-5 border border-white/10 ${className}`}
-      style={{ backgroundColor: CARD }}
-    >
+    <div className={`golf-glass rounded-[12px] p-5 ${className}`}>
       {children}
     </div>
   );
@@ -66,9 +64,10 @@ function AnalyticsPage() {
     sessions.reduce((total, session) => total + session.makePercent, 0) / sessions.length;
 
   return (
-    <div className="p-4 h-full">
+    <div className="relative p-4 h-full">
+      <CoursePhotoBackdrop />
       <h1 className="sr-only">Analytics</h1>
-      <div className="grid grid-cols-[380px_1fr] gap-4 h-[calc(100vh-9rem)]">
+      <div className="relative grid grid-cols-[380px_1fr] gap-4 h-[calc(100vh-9rem)]">
         {/* Left column — session list */}
         <div className="flex flex-col min-h-0">
           <div className="flex items-center gap-2 mb-3 px-1">
@@ -82,10 +81,9 @@ function AnalyticsPage() {
                 <button
                   key={s.id}
                   onClick={() => setSelectedId(s.id)}
-                  className={`w-full text-left rounded-[12px] p-4 transition border border-white/10 border-l-4 ${
+                  className={`golf-glass w-full text-left rounded-[12px] p-4 transition border-l-4 ${
                     active ? "border-l-[#34D399]" : "border-l-transparent"
                   }`}
-                  style={{ backgroundColor: CARD }}
                 >
                   <div className="flex items-center justify-between gap-4">
                     <div className="min-w-0">
@@ -167,15 +165,12 @@ function SessionDetail({
         <StatBox label="Avg Distance" value={`${session.avgDistanceFt} ft`} />
       </div>
 
-      <div className="rounded-[12px] p-4 border border-white/10" style={{ backgroundColor: DEEP }}>
+      <div className="golf-glass-inner rounded-[12px] p-4">
         <div className="golf-label mb-2">Insight</div>
         <p className="text-base text-[#34D399] italic leading-relaxed">{SESSION_INSIGHT}</p>
       </div>
 
-      <div
-        className="rounded-[12px] p-3 border border-white/10 flex flex-col flex-1 min-h-0"
-        style={{ backgroundColor: DEEP }}
-      >
+      <div className="golf-glass-inner rounded-[12px] p-3 flex flex-col flex-1 min-h-0">
         <div className="golf-label mb-2">Putt Map</div>
         <div className="flex-1 min-h-0">
           <PuttMapSvg session={session} />
@@ -195,8 +190,8 @@ function StatBox({
   valueClass?: string;
 }) {
   return (
-    <div className="rounded-[12px] p-3 border border-white/10 min-w-0" style={{ backgroundColor: DEEP }}>
-      <div className="golf-label-sm whitespace-nowrap">{label}</div>
+    <div className="golf-glass-inner rounded-[12px] px-4 py-3 min-w-0 overflow-hidden">
+      <div className="golf-label-sm leading-snug">{label}</div>
       <div className={`golf-display text-lg mt-1 ${valueClass}`}>{value}</div>
     </div>
   );
