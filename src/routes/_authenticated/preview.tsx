@@ -116,8 +116,8 @@ function PreviewPage() {
 
           {/* Right column */}
           <div
-            className="relative w-full rounded-2xl p-4 flex items-center justify-center"
-            style={{ backgroundColor: CARD, minHeight: 520 }}
+            className="golf-glass relative w-full rounded-2xl p-4 flex items-center justify-center"
+            style={{ minHeight: 520 }}
           >
             <div className="absolute top-4 right-4 flex items-center gap-1.5 golf-text-secondary">
               <Camera size={12} strokeWidth={2} />
