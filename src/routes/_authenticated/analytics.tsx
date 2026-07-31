@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Calendar } from "lucide-react";
 import { CoursePhotoBackdrop } from "@/components/CoursePhotoBackdrop";
+import { SharedGreenView } from "@/components/SharedGreenView";
 import { getSessionHistory, type SessionSummary } from "@/lib/historyService";
 
 export const Route = createFileRoute("/_authenticated/analytics")({
