@@ -332,6 +332,7 @@ function PracticePage() {
                 ballAngle={currentPutt.ballAngle}
                 ballDistance={currentPutt.ballDistance}
                 breakDirection={read.breakDirection}
+                celebrate={phase === "result" && !!outcome?.made}
                 livePath={
                   showLivePath && outcome
                     ? { deviation: outcome.deviation, endScale: outcome.endScale }
