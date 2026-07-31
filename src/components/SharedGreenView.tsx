@@ -166,8 +166,8 @@ export function SharedGreenView({
           <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
         </radialGradient>
         <radialGradient id="greenVignette" cx="50%" cy="50%" r="50%">
-          <stop offset="60%" stopColor="#000000" stopOpacity="0" />
-          <stop offset="100%" stopColor="#000000" stopOpacity="0.5" />
+          <stop offset="45%" stopColor="#000000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000000" stopOpacity="0.62" />
         </radialGradient>
         <linearGradient id="shimmerGrad" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
@@ -231,8 +231,8 @@ export function SharedGreenView({
           width={W}
           height={H}
           filter="url(#turfGrain)"
-          opacity="0.14"
-          style={{ mixBlendMode: "overlay" }}
+          opacity="0.11"
+          style={{ mixBlendMode: "soft-light" }}
         />
         <rect x="0" y="0" width={W} height={H} fill="url(#greenSheen)" />
         <rect x="0" y="0" width={W} height={H} fill="url(#greenVignette)" />
@@ -243,7 +243,7 @@ export function SharedGreenView({
           width={W * 0.55}
           height={H}
           fill="url(#shimmerGrad)"
-          opacity="0.5"
+          opacity="0.35"
         >
           <animate
             attributeName="x"
