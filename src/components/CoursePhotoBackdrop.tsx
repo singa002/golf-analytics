@@ -11,7 +11,7 @@ export function CoursePhotoBackdrop() {
         src={courseGreen.url}
         alt=""
         className="absolute inset-0 h-full w-full object-cover"
-        style={{ filter: "saturate(0.7) brightness(0.82) contrast(0.95)" }}
+        style={{ filter: "saturate(0.8) brightness(0.98) contrast(0.95)" }}
       />
       <div className="golf-photo-scrim absolute inset-0" />
     </div>
