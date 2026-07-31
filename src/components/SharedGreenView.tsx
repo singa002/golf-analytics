@@ -1,7 +1,6 @@
 const GREEN = "#34D399"; // --golf-accent
 const WHITE = "#FFFFFF";
 const DEEP = "#040906"; // --golf-deep
-const CARD_GREEN = "#0D1512"; // --golf-card
 
 export interface SharedGreenViewProps {
   ballAngle: number; // 0-360 degrees around the hole
@@ -10,9 +9,8 @@ export interface SharedGreenViewProps {
 }
 
 /**
- * Overhead circular green with hole in center and ball positioned
- * around the hole by angle + distance. Predicted putt path curves
- * from the ball to the hole with a subtle green glow.
+ * Overhead layered green with mowed-stripe texture, glowing hole + flag,
+ * and a rich predicted putt path from the ball to the hole.
  */
 export function SharedGreenView({
   ballAngle,
@@ -37,7 +35,6 @@ export function SharedGreenView({
   const dy = cy - ballY;
   const midX = ballX + dx * 0.5;
   const midY = ballY + dy * 0.5;
-  // Perpendicular offset direction for the break bend
   const len = Math.max(1, Math.hypot(dx, dy));
   const perpX = -dy / len;
   const perpY = dx / len;
@@ -57,11 +54,28 @@ export function SharedGreenView({
       aria-label="Overhead view of green with predicted putt path"
     >
       <defs>
-        <radialGradient id="sharedGreenGrad" cx="50%" cy="50%" r="60%">
-          <stop offset="0%" stopColor="#1F6B3A" />
-          <stop offset="70%" stopColor={CARD_GREEN} />
+        <radialGradient id="sharedGreenGrad" cx="46%" cy="40%" r="68%">
+          <stop offset="0%" stopColor="#2E8B4F" />
+          <stop offset="45%" stopColor="#1B5C33" />
+          <stop offset="78%" stopColor="#0F2A1A" />
           <stop offset="100%" stopColor={DEEP} />
         </radialGradient>
+        <pattern id="mowStripes" width="28" height="28" patternUnits="userSpaceOnUse" patternTransform="rotate(24)">
+          <rect width="14" height="28" fill="#FFFFFF" opacity="0.05" />
+          <rect x="14" width="14" height="28" fill="#000000" opacity="0.07" />
+        </pattern>
+        <radialGradient id="greenSheen" cx="34%" cy="26%" r="55%">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.16" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="shimmerGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
+          <stop offset="50%" stopColor="#B8FFD9" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+        </linearGradient>
+        <clipPath id="greenClip">
+          <ellipse cx={cx} cy={cy} rx={rx} ry={ry} />
+        </clipPath>
         <filter id="sharedGreenGlow" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="4" result="coloredBlur" />
           <feMerge>
@@ -69,18 +83,36 @@ export function SharedGreenView({
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
+        <filter id="holeShadow" x="-120%" y="-120%" width="340%" height="340%">
+          <feDropShadow dx="0" dy="2" stdDeviation="6" floodColor="#000000" floodOpacity="0.75" />
+        </filter>
       </defs>
 
-      {/* Circular green */}
-      <ellipse
-        cx={cx}
-        cy={cy}
-        rx={rx}
-        ry={ry}
-        fill="url(#sharedGreenGrad)"
-        stroke={DEEP}
-        strokeWidth="2"
-      />
+      {/* Green base + layers */}
+      <ellipse cx={cx} cy={cy + 6} rx={rx + 6} ry={ry + 6} fill="#000" opacity="0.45" />
+      <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="url(#sharedGreenGrad)" stroke={DEEP} strokeWidth="2" />
+      <g clipPath="url(#greenClip)">
+        <rect x="0" y="0" width={W} height={H} fill="url(#mowStripes)" />
+        <rect x="0" y="0" width={W} height={H} fill="url(#greenSheen)" />
+        {/* Ambient shimmer sweep */}
+        <rect
+          x={-W * 0.5}
+          y="0"
+          width={W * 0.55}
+          height={H}
+          fill="url(#shimmerGrad)"
+          opacity="0.5"
+        >
+          <animate
+            attributeName="x"
+            from={-W * 0.6}
+            to={W}
+            dur="6s"
+            repeatCount="indefinite"
+          />
+        </rect>
+      </g>
+      <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="1.5" />
 
       {/* Distance rings */}
       {[
@@ -110,17 +142,26 @@ export function SharedGreenView({
         </g>
       ))}
 
-      {/* Predicted putt path glow */}
+      {/* Predicted putt path — wide glow */}
       <path
         d={pathD}
         stroke={GREEN}
-        strokeWidth="8"
-        strokeOpacity="0.25"
+        strokeWidth="12"
+        strokeOpacity="0.16"
         strokeLinecap="round"
         fill="none"
         filter="url(#sharedGreenGlow)"
       />
-      {/* Predicted putt path */}
+      <path
+        d={pathD}
+        stroke={GREEN}
+        strokeWidth="6"
+        strokeOpacity="0.28"
+        strokeLinecap="round"
+        fill="none"
+        filter="url(#sharedGreenGlow)"
+      />
+      {/* Predicted putt path — dashed core with travel animation */}
       <path
         d={pathD}
         stroke={GREEN}
@@ -128,18 +169,30 @@ export function SharedGreenView({
         strokeDasharray="6 8"
         strokeLinecap="round"
         fill="none"
-      />
+      >
+        <animate attributeName="stroke-dashoffset" from="28" to="0" dur="1.2s" repeatCount="indefinite" />
+      </path>
+      {/* Travelling energy dot along the path */}
+      <circle r="4" fill={WHITE} opacity="0.9">
+        <animateMotion dur="2.4s" repeatCount="indefinite" path={pathD} />
+      </circle>
 
-      {/* Hole in center */}
-      <circle cx={cx} cy={cy} r="10" fill="#050505" stroke="#000" strokeWidth="1.5" />
+      {/* Hole in center with shadow + halo */}
+      <circle cx={cx} cy={cy} r="20" fill={GREEN} opacity="0.12" />
+      <circle cx={cx} cy={cy} r="10" fill="#050505" stroke="#000" strokeWidth="1.5" filter="url(#holeShadow)" />
+      <ellipse cx={cx} cy={cy - 3} rx="8" ry="4" fill="#FFFFFF" opacity="0.06" />
       <line x1={cx} y1={cy} x2={cx} y2={cy - 70} stroke="#F5F5F5" strokeWidth="2" />
+      <line x1={cx + 2} y1={cy} x2={cx + 14} y2={cy + 6} stroke="#000" strokeWidth="2" opacity="0.35" />
       <path
         d={`M ${cx} ${cy - 70} L ${cx + 30} ${cy - 62} L ${cx} ${cy - 54} Z`}
         fill={GREEN}
+        filter="url(#sharedGreenGlow)"
       />
 
       {/* Ball */}
+      <ellipse cx={ballX + 3} cy={ballY + 5} rx="10" ry="5" fill="#000" opacity="0.5" />
       <circle cx={ballX} cy={ballY} r="11" fill={WHITE} stroke="#000" strokeWidth="1.5" />
+      <circle cx={ballX - 3} cy={ballY - 4} r="3.5" fill="#FFFFFF" opacity="0.9" />
       <circle
         cx={ballX}
         cy={ballY}
