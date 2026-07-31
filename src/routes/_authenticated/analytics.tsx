@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Calendar } from "lucide-react";
 import { CoursePhotoBackdrop } from "@/components/CoursePhotoBackdrop";
+import { SharedGreenView } from "@/components/SharedGreenView";
 import { getSessionHistory, type SessionSummary } from "@/lib/historyService";
 
 export const Route = createFileRoute("/_authenticated/analytics")({
@@ -203,42 +204,20 @@ function SessionDetail({
 }
 
 function PuttMapSvg({ session }: { session: SessionSummary }) {
-  const W = 320;
-  const H = 260;
-  const cx = W / 2;
-  const cy = H / 2 + 4;
-  const rx = 148;
-  const ry = 112;
+  const madeAny = session.puttMap.some((p) => p.result === "made");
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full max-h-full">
-      <defs>
-        <radialGradient id="greenGradAnalytics" cx="50%" cy="45%" r="60%">
-          <stop offset="0%" stopColor="#1F6B3A" />
-          <stop offset="70%" stopColor={CARD} />
-          <stop offset="100%" stopColor={DEEP} />
-        </radialGradient>
-      </defs>
-      <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="url(#greenGradAnalytics)" />
-      {[0.4, 0.75].map((f, i) => (
-        <ellipse
-          key={i}
-          cx={cx}
-          cy={cy}
-          rx={rx * f}
-          ry={ry * f}
-          fill="none"
-          stroke="rgba(255,255,255,0.1)"
-          strokeDasharray="3 4"
-        />
-      ))}
-      <line x1={cx} y1={cy - ry + 15} x2={cx} y2={cy - ry - 14} stroke="#fff" strokeWidth={1.5} />
-      <polygon points={`${cx},${cy - ry - 14} ${cx + 12},${cy - ry - 8} ${cx},${cy - ry - 2}`} fill={ACCENT} />
-      <circle cx={cx} cy={cy - ry + 15} r={2.5} fill="#fff" />
-      {session.puttMap.map((p, i) => {
-        const px = cx + p.x * rx * 0.85;
-        const py = cy - ry * 0.75 + p.y * ry * 1.4;
-        return <circle key={i} cx={px} cy={py} r={4} fill={p.result === "made" ? ACCENT : MISS} />;
-      })}
-    </svg>
+    <SharedGreenView
+      ballAngle={0}
+      ballDistance={0.8}
+      breakDirection="Right"
+      showBall={false}
+      showPredictedPath={false}
+      celebrate={madeAny}
+      putts={session.puttMap.map((p) => ({
+        x: p.x,
+        y: p.y * 1.3 - 0.6,
+        result: p.result,
+      }))}
+    />
   );
 }

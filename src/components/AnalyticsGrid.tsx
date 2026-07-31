@@ -3,6 +3,7 @@
 // system (#0D1512 cards, border-white/10, uppercase micro-labels).
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 import type { SessionAnalytics } from "@/lib/analyticsService";
+import { SharedGreenView } from "@/components/SharedGreenView";
 
 const ACCENT = "#22C55E"; // --golf-accent (also ACCENT / positive data)
 const MISS = "#EF4444";
@@ -272,89 +273,28 @@ export function PuttMap({ data }: { data: SessionAnalytics }) {
   const madePct = Math.round((data.made / data.totalPutts) * 100);
   const missPct = 100 - madePct;
 
-  const W = 400;
-  const H = 320;
-  const cx = W / 2;
-  const cy = H / 2 + 10;
-  const rx = 170;
-  const ry = 130;
-
   return (
     <Card>
       <Label>Putt Map</Label>
 
       <div className="flex-1 mt-2 min-h-0 flex items-center justify-center">
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full max-h-[280px]">
-          <defs>
-            <radialGradient id="greenGrad" cx="50%" cy="45%" r="60%">
-              <stop offset="0%" stopColor="#1F5A2E" />
-              <stop offset="70%" stopColor="#14381D" />
-              <stop offset="100%" stopColor="#0B2211" />
-            </radialGradient>
-          </defs>
-          <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="url(#greenGrad)" />
-
-          {[
-            { r: 0.33, label: "10ft" },
-            { r: 0.66, label: "20ft" },
-            { r: 1.0, label: "30ft" },
-          ].map((ring, i) => (
-            <g key={i}>
-              <ellipse
-                cx={cx}
-                cy={cy}
-                rx={rx * ring.r * 0.85}
-                ry={ry * ring.r * 0.85}
-                fill="none"
-                stroke="rgba(255,255,255,0.12)"
-                strokeDasharray="3 4"
-              />
-              <text
-                x={cx}
-                y={cy - ry * ring.r * 0.85 - 4}
-                textAnchor="middle"
-                fontSize="14"
-                fill="#B0B3AF"
-              >
-                {ring.label}
-              </text>
-            </g>
-          ))}
-
-          <g>
-            <line x1={cx} y1={cy - ry + 20} x2={cx} y2={cy - ry - 18} stroke="#fff" strokeWidth={1.5} />
-            <polygon
-              points={`${cx},${cy - ry - 18} ${cx + 14},${cy - ry - 12} ${cx},${cy - ry - 6}`}
-              fill={ACCENT}
-            />
-            <circle cx={cx} cy={cy - ry + 20} r={3} fill="#fff" />
-          </g>
-
-          {data.puttMap.map((p, i) => {
-            const px = cx + p.x * rx * 0.9;
-            const py = cy - ry * 0.85 + p.y * ry * 1.6;
-            const color = p.result === "made" ? ACCENT : MISS;
-            const halo = p.result === "made" ? "#113821" : "#3F1515";
-            return (
-              <g
-                key={i}
-                style={{
-                  opacity: 0,
-                  transformOrigin: `${px}px ${py}px`,
-                  animation: `golf-dot-in 420ms ease-out ${i * 45}ms forwards`,
-                }}
-                className="cursor-pointer"
-              >
-                <circle cx={px} cy={py} r={10} fill={halo} />
-                <circle cx={px} cy={py} r={5} fill={color} />
-                <circle cx={px} cy={py} r={12} fill="transparent">
-                  <title>{`Putt ${i + 1} — ${p.result === "made" ? "Made" : "Missed"}`}</title>
-                </circle>
-              </g>
-            );
-          })}
-        </svg>
+        <div className="w-full h-full max-h-[280px] flex items-center justify-center">
+          <SharedGreenView
+            ballAngle={0}
+            ballDistance={0.8}
+            breakDirection="Right"
+            showBall={false}
+            showPredictedPath={false}
+            celebrate={data.made > 0}
+            putts={data.puttMap.map((p) => ({
+              x: p.x,
+              y: p.y * 1.3 - 0.6,
+              result: p.result,
+            }))}
+          />
+        </div>
       </div>
+
 
       <div className="flex items-center justify-between mt-2 text-base">
         <div className="text-[#22C55E] font-semibold">
