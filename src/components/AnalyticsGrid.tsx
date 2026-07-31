@@ -92,14 +92,14 @@ function SessionSummary({ data }: { data: SessionAnalytics }) {
       <div className="mt-6 flex-1 flex flex-col justify-end">
         <div className="flex items-center justify-between mb-2">
           <Label>Start Line Accuracy</Label>
-          <div className="text-xs text-[#34D399] font-semibold">
+          <div className="text-base text-[#34D399] font-semibold">
             {data.withinOneFiveDegPercent}% Within 1.5°
           </div>
         </div>
         <div className="h-16">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data.startLineAccuracy}>
-              <XAxis dataKey="bucket" tick={{ fill: "#6B7B6B", fontSize: 10 }} axisLine={false} tickLine={false} />
+              <XAxis dataKey="bucket" tick={{ fill: "#B0B3AF", fontSize: 14 }} axisLine={false} tickLine={false} />
               <Bar dataKey="count" radius={[3, 3, 0, 0]}>
                 {data.startLineAccuracy.map((b, i) => {
                   const near = Math.abs(parseFloat(b.bucket)) <= 1;
@@ -181,8 +181,8 @@ function StartLineAnalysis({ data }: { data: SessionAnalytics }) {
               x={cx + (deg / maxDeg) * maxR}
               y={cy + maxR + 18}
               textAnchor="middle"
-              fontSize="10"
-              fill="#6B7B6B"
+              fontSize="14"
+              fill="#B0B3AF"
             >
               {deg > 0 ? `+${deg}` : String(deg)}
             </text>
@@ -199,7 +199,7 @@ function StartLineAnalysis({ data }: { data: SessionAnalytics }) {
         </svg>
       </div>
 
-      <div className="flex items-center justify-center gap-6 mt-2 text-xs">
+      <div className="flex items-center justify-center gap-6 mt-2 text-base">
         <LegendDot color={MADE} label="Made" />
         <LegendDot color={MISS} label="Missed" />
       </div>
@@ -241,7 +241,7 @@ function SpeedControl({ data }: { data: SessionAnalytics }) {
       <div className="flex-1 min-h-0 mt-1">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data.speedDistribution}>
-            <XAxis dataKey="speed" tick={{ fill: "#6B7B6B", fontSize: 10 }} axisLine={false} tickLine={false} />
+            <XAxis dataKey="speed" tick={{ fill: "#B0B3AF", fontSize: 14 }} axisLine={false} tickLine={false} />
             <YAxis hide />
             <Bar dataKey="count" fill={BLUE} radius={[4, 4, 0, 0]} />
           </BarChart>
@@ -313,8 +313,8 @@ export function PuttMap({ data }: { data: SessionAnalytics }) {
                 x={cx}
                 y={cy - ry * ring.r * 0.85 - 4}
                 textAnchor="middle"
-                fontSize="9"
-                fill="rgba(255,255,255,0.4)"
+                fontSize="14"
+                fill="#B0B3AF"
               >
                 {ring.label}
               </text>
@@ -338,7 +338,7 @@ export function PuttMap({ data }: { data: SessionAnalytics }) {
         </svg>
       </div>
 
-      <div className="flex items-center justify-between mt-2 text-xs">
+      <div className="flex items-center justify-between mt-2 text-base">
         <div className="text-[#22C55E] font-semibold">
           {data.made} Made ({madePct}%)
         </div>

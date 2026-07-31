@@ -64,7 +64,7 @@ function CoachDashboard() {
                 <li key={l.id} className="flex items-center justify-between py-4">
                   <div>
                     <p className="text-sm font-bold text-white">{l.studentName}</p>
-                    <p className="text-xs golf-text-secondary mt-1">{l.focus}</p>
+                    <p className="text-base golf-text-secondary mt-1">{l.focus}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-bold text-[#34D399]">{l.time}</p>
@@ -80,7 +80,7 @@ function CoachDashboard() {
           <CoachCard>
             <div className="flex items-center justify-between">
               <CoachLabel>Current Students</CoachLabel>
-              <Link to="/coach/students" className="text-[10px] uppercase tracking-widest font-bold text-[#34D399]">
+              <Link to="/coach/students" className="text-base uppercase tracking-widest font-bold text-[#34D399]">
                 View all
               </Link>
             </div>
@@ -92,10 +92,10 @@ function CoachDashboard() {
                     params={{ studentId: s.id }}
                     className="flex items-center gap-4 rounded-lg px-3 py-3 hover:bg-white/5 transition-colors"
                   >
-                    <span className="w-9 h-9 rounded-full bg-white/10 text-white/70 flex items-center justify-center text-xs font-bold">
+                    <span className="w-9 h-9 rounded-full bg-white/10 golf-text-secondary flex items-center justify-center text-base font-bold">
                       {s.initials}
                     </span>
-                    <span className="flex-1 text-sm font-medium text-white/80">{s.name}</span>
+                    <span className="flex-1 text-sm font-medium text-white">{s.name}</span>
                     <span className="text-sm font-bold text-[#34D399]">{s.makePercent}%</span>
                   </Link>
                 </li>

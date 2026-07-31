@@ -74,7 +74,7 @@ function ResultPill({ label, value, quality }: { label: string; value: string; q
     <div className="flex-1 rounded-xl p-4 border" style={{ backgroundColor: INNER, borderColor: `${color}55` }}>
       <div className="golf-label mb-1.5">{label}</div>
       <div className="golf-display text-xl tracking-tight" style={{ color: WHITE }}>{value}</div>
-      <div className="text-[11px] font-semibold uppercase tracking-widest mt-1.5" style={{ color }}>{quality}</div>
+      <div className="text-base font-semibold uppercase tracking-widest mt-1.5" style={{ color }}>{quality}</div>
     </div>
   );
 }
@@ -186,7 +186,7 @@ function LiveView({
       <div className="relative w-full rounded-2xl p-4 flex items-center justify-center" style={{ backgroundColor: CARD, minHeight: 520 }}>
         <div className="absolute top-4 right-4 flex items-center gap-1.5">
           <Circle size={10} fill={RED} stroke={RED} className="animate-pulse" />
-          <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: RED }}>Recording</span>
+          <span className="text-base font-semibold uppercase tracking-widest" style={{ color: RED }}>Recording</span>
         </div>
         <div className="w-full h-full max-h-[640px] flex items-center justify-center">
           <SharedGreenView

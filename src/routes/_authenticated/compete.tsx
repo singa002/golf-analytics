@@ -105,7 +105,7 @@ const typeColors: Record<ChallengeType, string> = {
 function TrendIcon({ trend }: { trend: Trend }) {
   if (trend === "up") return <TrendingUp className="w-4 h-4 text-[#34D399]" />;
   if (trend === "down") return <TrendingDown className="w-4 h-4 text-[#EF4444]" />;
-  return <Minus className="w-4 h-4 text-white/40" />;
+  return <Minus className="w-4 h-4 golf-text-secondary" />;
 }
 
 function ComparePage() {
@@ -135,13 +135,13 @@ function ComparePage() {
                   </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <span className={`text-[10px] font-bold px-2 py-1 rounded-full border ${typeColors[c.type]}`}>
+                  <span className={`text-base font-bold px-2 py-1 rounded-full border ${typeColors[c.type]}`}>
                     {c.type}
                   </span>
-                  <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-[#34D399]/20 text-[#34D399] border border-[#34D399]/40">
+                  <span className="text-base font-bold px-2 py-1 rounded-full bg-[#34D399]/20 text-[#34D399] border border-[#34D399]/40">
                     {c.daysLeft} DAYS LEFT
                   </span>
-                  <span className="text-xs golf-text-secondary">{c.participants} golfers competing</span>
+                  <span className="text-base golf-text-secondary">{c.participants} golfers competing</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="text-sm">
@@ -151,15 +151,15 @@ function ComparePage() {
                         <div className="golf-display text-base text-white">{c.yourScore}</div>
                       </>
                     ) : (
-                      <span className="golf-text-secondary text-xs">Not joined</span>
+                      <span className="golf-text-secondary text-base">Not joined</span>
                     )}
                   </div>
                   {c.joined ? (
-                    <span className="text-xs font-bold px-3 py-1.5 rounded-full text-[#34D399] border border-[#34D399]">
+                    <span className="text-sm font-bold px-3 py-1.5 rounded-full text-[#34D399] border border-[#34D399]">
                       COMPETING
                     </span>
                   ) : (
-                    <button className="golf-accent-glow text-xs font-bold px-4 py-2 rounded-lg border border-[#34D399] bg-[#34D399] text-black hover:bg-[#6EE7B7] transition">
+                    <button className="golf-accent-glow text-sm font-bold px-4 py-2 rounded-lg border border-[#34D399] bg-[#34D399] text-black hover:bg-[#6EE7B7] transition">
                       JOIN CHALLENGE
                     </button>
                   )}
@@ -174,17 +174,17 @@ function ComparePage() {
           <div className="flex items-center gap-2 mb-2">
             <Trophy className="w-5 h-5 text-[#34D399]" />
             <h2 className="golf-label">LEADERBOARD</h2>
-            <span className="text-xs golf-text-secondary">— {activeName}</span>
+            <span className="text-base golf-text-secondary">— {activeName}</span>
           </div>
           <div className="flex gap-2 mb-3">
             {challenges.map((c) => (
               <button
                 key={c.id}
                 onClick={() => setActiveChallenge(c.id)}
-                className={`text-[11px] font-semibold px-3 py-1.5 rounded-full transition ${
+                className={`text-base font-semibold px-3 py-1.5 rounded-full transition ${
                   activeChallenge === c.id
                     ? "golf-accent-glow bg-[#34D399] text-black"
-                    : "bg-[#0D1512] text-white/40 hover:text-white border border-white/10"
+                    : "bg-[#0D1512] golf-text-secondary hover:text-white border border-white/10"
                 }`}
               >
                 {c.type}
@@ -210,9 +210,9 @@ function ComparePage() {
                   </div>
                   <div className="flex-1">
                     <div className={`font-semibold ${r.you ? "text-[#34D399]" : "text-white"}`}>
-                      {r.name} {r.you && <span className="text-[10px] text-[#34D399]/70 ml-1">YOU</span>}
+                      {r.name} {r.you && <span className="text-base text-[#34D399] ml-1">YOU</span>}
                     </div>
-                    <div className="text-xs golf-text-secondary">{r.sessions} sessions</div>
+                    <div className="text-base golf-text-secondary">{r.sessions} sessions</div>
                   </div>
                   <div className="text-white golf-display text-lg">{r.score}</div>
                   <TrendIcon trend={r.trend} />

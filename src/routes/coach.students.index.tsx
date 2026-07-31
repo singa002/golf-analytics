@@ -36,7 +36,7 @@ function StudentsPage() {
                 </span>
                 <div className="flex-1">
                   <p className="text-lg font-bold text-white">{s.name}</p>
-                  <p className="text-xs golf-text-secondary mt-1">
+                  <p className="text-base golf-text-secondary mt-1">
                     Hcp {s.handicap} · Last session {s.lastSession}
                   </p>
                 </div>
@@ -48,7 +48,7 @@ function StudentsPage() {
                     {s.makePercent}
                   </p>
                 </div>
-                <ChevronRight size={20} className="text-white/30" />
+                <ChevronRight size={20} className="golf-text-secondary" />
               </div>
             </CoachCard>
           </Link>

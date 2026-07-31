@@ -55,8 +55,9 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
     // Shells that render a top header set --app-header-h so the sidebar ends at the
     // viewport bottom and the avatar never falls below the fold.
     <nav className="sticky top-0 h-[calc(100vh-var(--app-header-h,0px))] w-[100px] shrink-0 flex flex-col items-center pt-3 pb-5 z-20 border-r border-white/10 bg-[#0D1512]">
-      {/* First item sits at the top; remaining space is split evenly between the rest. */}
-      <div className="flex flex-col justify-between flex-1 w-full px-2 min-h-0 overflow-y-auto">
+      {/* overflow-y-auto clips box-shadow; py gives the active glow room at the ends
+          without changing spacing between nav items (still justify-between). */}
+      <div className="flex flex-col justify-between flex-1 w-full px-2 py-6 min-h-0 overflow-y-auto">
         {navItems.map(({ to, label, Icon }) => {
           const active = isActive(to);
           return (
@@ -66,11 +67,12 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
               className={`shrink-0 flex flex-col items-center gap-1 py-3 rounded-lg transition-colors ${
                 active
                   ? "golf-accent-glow text-[#34D399] bg-[#34D399]/10"
-                  : "text-white/40 hover:text-white"
+                  : "golf-text-secondary hover:text-white"
               }`}
             >
               <Icon width={20} height={20} />
-              <span className="text-[10px] uppercase tracking-widest font-semibold">{label}</span>
+              {/* Quiet wayfinding — keep small; do not use golfer-chrome-text (16px floor). */}
+              <span className="text-xs uppercase tracking-widest font-semibold">{label}</span>
             </Link>
           );
         })}
@@ -98,7 +100,7 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
             </div>
             <div>
               <p className="text-sm font-bold text-white">{profile.name}</p>
-              <p className="text-[10px] golf-text-secondary">{profile.subtitle}</p>
+              <p className="golfer-chrome-text text-[10px] golf-text-secondary">{profile.subtitle}</p>
             </div>
           </div>
           <ul className="space-y-4">
@@ -110,7 +112,7 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
                   setShowSettings(false);
                   navigate({ to: nextMode === "coach" ? "/coach" : "/dashboard" });
                 }}
-                className="w-full flex items-center justify-between text-xs font-bold text-[#34D399] hover:text-[#6EE7B7]"
+                className="golfer-chrome-text w-full flex items-center justify-between text-xs font-bold text-[#34D399] hover:text-[#6EE7B7]"
               >
                 <span>Switch to {profile.mode === "golfer" ? "Coach" : "Golfer"} View</span>
                 <ChevronRight size={16} />
@@ -123,7 +125,7 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
                     to="/settings"
                     search={{ section }}
                     onClick={() => setShowSettings(false)}
-                    className="flex items-center justify-between text-xs text-white/60 hover:text-white cursor-pointer"
+                    className="golfer-chrome-text flex items-center justify-between text-xs golf-text-secondary hover:text-white cursor-pointer"
                   >
                     <span>{label}</span>
                     <ChevronRight size={16} />
@@ -131,7 +133,7 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
                 </li>
               ))}
             <li className="pt-2 border-t border-white/10">
-              <Link to="/" className="text-xs text-red-400 font-bold hover:text-red-300">
+              <Link to="/" className="golfer-chrome-text text-xs text-red-400 font-bold hover:text-red-300">
                 Sign Out
               </Link>
             </li>

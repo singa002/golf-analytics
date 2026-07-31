@@ -65,7 +65,7 @@ function PreviewPage() {
         <div className="w-full flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: GREEN }} />
           <span
-            className="text-[11px] font-semibold uppercase tracking-widest"
+            className="text-base font-semibold uppercase tracking-widest"
             style={{ color: GREEN }}
           >
             {read.status}
@@ -121,7 +121,7 @@ function PreviewPage() {
           >
             <div className="absolute top-4 right-4 flex items-center gap-1.5 golf-text-secondary">
               <Camera size={12} strokeWidth={2} />
-              <span className="text-[10px] font-semibold uppercase tracking-widest">Live View</span>
+              <span className="text-base font-semibold uppercase tracking-widest">Live View</span>
             </div>
             <div className="w-full h-full max-h-[640px] flex items-center justify-center">
               <SharedGreenView

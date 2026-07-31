@@ -12,7 +12,7 @@ const COACH_NAV: NavItem[] = [
 
 export function CoachShell({ children }: { children: ReactNode }) {
   return (
-    <div className="golf-page-background w-full min-h-screen flex overflow-hidden relative">
+    <div className="golf-page-background golfer-ui w-full min-h-screen flex overflow-hidden relative">
       {/* Same shared sidebar as authenticated layout (coach routes sit outside _authenticated). */}
       <div className="relative z-20 flex">
         <AppSidebar

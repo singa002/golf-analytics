@@ -109,8 +109,8 @@ function SegmentedToggle<T extends string>({
           <button
             key={opt}
             onClick={() => onChange(opt)}
-            className={`px-4 py-1.5 text-xs font-semibold rounded-full transition ${
-              active ? "bg-[#34D399] text-black" : "text-white/40"
+            className={`px-4 py-1.5 text-base font-semibold rounded-full transition ${
+              active ? "bg-[#34D399] text-black" : "golf-text-secondary"
             }`}
           >
             {opt}
@@ -166,7 +166,7 @@ function SettingsPage() {
                 </div>
                 <div className="flex-1">
                   <div className="text-xl font-bold text-white">Dheeraj Singavarapu</div>
-                  <div className="mt-1 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider text-[#34D399] bg-[#34D399]/15">
+                  <div className="mt-1 inline-block px-2.5 py-0.5 rounded-full text-base font-bold tracking-wider text-[#34D399] bg-[#34D399]/15">
                     GOLFER
                   </div>
                   <div className="mt-4 grid grid-cols-2 gap-3">
@@ -215,7 +215,7 @@ function SettingsPage() {
                     <Bluetooth size={18} className="text-[#34D399]" />
                     <span className="text-sm text-white">Putt Vector Sensor</span>
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider text-[#34D399] bg-[#34D399]/15">
+                  <span className="px-2.5 py-0.5 rounded-full text-base font-bold tracking-wider text-[#34D399] bg-[#34D399]/15">
                     CONNECTED
                   </span>
                 </div>
@@ -257,12 +257,12 @@ function SettingsPage() {
                 </div>
                 <div>
                   <div className="text-sm font-semibold text-white">Coach Williams</div>
-                  <div className="text-[11px] golf-text-secondary">
+                  <div className="text-base golf-text-secondary">
                     Golf Analytics Performance Academy
                   </div>
                 </div>
               </div>
-              <button className="mt-5 w-full py-2.5 rounded-xl border border-white/20 text-white/70 text-sm font-semibold hover:bg-white/5 transition flex items-center justify-center gap-2">
+              <button className="mt-5 w-full py-2.5 rounded-xl border border-white/20 golf-text-secondary text-sm font-semibold hover:bg-white/5 hover:text-white transition flex items-center justify-center gap-2">
                 <Share2 size={16} />
                 Manage Sharing
               </button>
@@ -319,7 +319,7 @@ function SettingsPage() {
                   <span className="golf-label">Brand</span>
                   <span className="text-sm font-semibold text-white">Golf Analytics</span>
                 </div>
-                <div className="pt-3 mt-2 border-t border-white/10 text-[11px] golf-text-secondary text-center">
+                <div className="pt-3 mt-2 border-t border-white/10 text-base golf-text-secondary text-center">
                   Powered by Putt Vector AI
                 </div>
               </div>

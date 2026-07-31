@@ -31,12 +31,12 @@ const GOLFER_NAV: NavItem[] = [
 
 function AuthenticatedLayout() {
   return (
-    <div className="min-h-screen golf-page-background flex flex-col">
+    <div className="min-h-screen golf-page-background flex flex-col golfer-ui">
       <header className="h-14 border-b border-border flex items-center px-6">
         <div className="flex items-center gap-2">
           <div className="h-2 w-2 rounded-full bg-primary" />
           <span className="text-sm font-semibold tracking-wide text-foreground">Putt Vector</span>
-          <span className="text-xs text-muted-foreground ml-1">by Golf Analytics</span>
+          <span className="text-base golf-text-secondary ml-1">by Golf Analytics</span>
         </div>
       </header>
 

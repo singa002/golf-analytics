@@ -36,7 +36,7 @@ function ProgressTooltip({
     <div className="rounded-[10px] border border-white/10 px-3 py-2 shadow-xl" style={{ backgroundColor: DEEP }}>
       <div className="golf-label-sm whitespace-nowrap">{point.date}</div>
       <div className="golf-display text-lg text-[#34D399] leading-tight">{point.makePercent}%</div>
-      <div className="text-[11px] golf-text-secondary">
+      <div className="text-base golf-text-secondary">
         <span className="text-[#22C55E]">{point.made} made</span>
         {" · "}
         <span className="text-[#EF4444]">{point.missed} missed</span>
@@ -77,7 +77,7 @@ export function ProgressChart({ sessions }: { sessions: SessionSummary[] }) {
     <div className="flex h-full flex-col">
       <div className="flex justify-between items-center mb-4">
         <p className="golf-label">PROGRESS</p>
-        <span className="text-xs font-medium text-[#34D399]">
+        <span className="text-base font-medium text-[#34D399]">
           {progressDelta >= 0 ? "+" : ""}
           {progressDelta}% since your first session
         </span>
@@ -96,13 +96,13 @@ export function ProgressChart({ sessions }: { sessions: SessionSummary[] }) {
             <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
             <XAxis
               dataKey="date"
-              tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 10 }}
+              tick={{ fill: "#B0B3AF", fontSize: 14 }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
               domain={domain}
-              tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 10 }}
+              tick={{ fill: "#B0B3AF", fontSize: 14 }}
               axisLine={false}
               tickLine={false}
               width={44}
@@ -129,7 +129,7 @@ export function ProgressChart({ sessions }: { sessions: SessionSummary[] }) {
         <Link
           to="/analytics"
           search={selectedId ? { session: selectedId } : {}}
-          className="flex items-center gap-1 text-xs font-semibold text-[#34D399] hover:text-[#6EE7B7] transition-colors"
+          className="flex items-center gap-1 text-base font-semibold text-[#34D399] hover:text-[#6EE7B7] transition-colors"
         >
           View full history
           <ChevronRight size={14} />

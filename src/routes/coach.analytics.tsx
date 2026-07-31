@@ -36,7 +36,7 @@ function CoachAnalytics() {
                 params={{ studentId: s.id }}
                 className="flex items-center gap-6 py-5 hover:bg-white/5 rounded-lg px-3 transition-colors"
               >
-                <span className="w-10 h-10 rounded-full bg-white/10 text-white/70 flex items-center justify-center text-xs font-bold">
+                <span className="w-10 h-10 rounded-full bg-white/10 golf-text-secondary flex items-center justify-center text-base font-bold">
                   {s.initials}
                 </span>
                 <span className="flex-1 text-sm font-bold text-white">{s.name}</span>
@@ -52,7 +52,7 @@ function CoachAnalytics() {
                   <CoachLabel>Last</CoachLabel>
                   <p className="golf-display text-xl text-white">{s.lastSession}</p>
                 </div>
-                <ChevronRight size={18} className="text-white/30" />
+                <ChevronRight size={18} className="golf-text-secondary" />
               </Link>
             </li>
           ))}

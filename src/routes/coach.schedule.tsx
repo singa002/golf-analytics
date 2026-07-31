@@ -34,9 +34,9 @@ function SchedulePage() {
             </div>
             <div className="flex-1 border-l border-white/10 pl-6">
               <p className="text-lg font-bold text-white">{l.studentName}</p>
-              <p className="text-xs golf-text-secondary mt-1">{l.focus}</p>
+              <p className="text-base golf-text-secondary mt-1">{l.focus}</p>
             </div>
-            <span className="px-3 py-1 rounded-full bg-[#34D399]/10 text-[#34D399] text-[10px] font-bold uppercase tracking-widest">
+            <span className="px-3 py-1 rounded-full bg-[#34D399]/10 text-[#34D399] text-base font-bold uppercase tracking-widest">
               Confirmed
             </span>
           </CoachCard>

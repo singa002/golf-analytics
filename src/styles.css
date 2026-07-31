@@ -117,7 +117,8 @@
   line-height: 16px;
   letter-spacing: 1.44px;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--golf-gold) 78%, transparent);
+  /* Solid gold — no alpha mix (outdoor contrast). */
+  color: var(--golf-gold);
 }
 
 @utility golf-label-sm {
@@ -127,11 +128,24 @@
   line-height: 14px;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--golf-gold) 78%, transparent);
+  color: var(--golf-gold);
 }
 
 @utility golf-text-secondary {
   color: var(--text-secondary);
+}
+
+/* Size floor for golfer + coach shells: labels/chrome using shared utilities → 16px.
+   Both AuthenticatedLayout and CoachShell opt in via .golfer-ui. */
+.golfer-ui :is(.golf-label, .golf-label-sm) {
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 1.2px;
+}
+
+.golfer-ui .golfer-chrome-text {
+  font-size: 16px;
+  line-height: 20px;
 }
 
 @utility golf-page-background {

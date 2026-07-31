@@ -108,7 +108,7 @@ function DashboardPage() {
             {/* Season stats + progress live in one card so the column reads as a single unit. */}
             <div className="bg-[#0D1512] border border-white/10 rounded-[12px] p-8 relative overflow-hidden flex-1 flex flex-col">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#34D399]/5 blur-3xl rounded-full translate-x-10 -translate-y-10" />
-              <div className="relative flex items-end gap-8">
+              <div className="relative grid w-full grid-cols-3 items-end">
                 <div className="min-w-0">
                   <p className="golf-label mb-1">SEASON MAKE %</p>
                   <div className="golf-accent-text-glow flex items-baseline gap-4">
@@ -117,20 +117,17 @@ function DashboardPage() {
                   </div>
                 </div>
 
-                {/* Secondary stats sit right beside the hero number so the three read as one group. */}
-                <div className="flex items-end divide-x divide-white/10 border-l border-white/10 pl-8">
-                  <div className="pr-8">
-                    <p className="golf-label mb-1">Locally</p>
-                    <div className="golf-display text-3xl leading-none text-white">
-                      Top <span className="text-[#34D399]">{localTopPercent}%</span>
-                    </div>
+                <div className="border-l border-white/10 pl-8">
+                  <p className="golf-label mb-1">Locally</p>
+                  <div className="golf-display text-3xl leading-none text-white">
+                    Top <span className="text-[#34D399]">{localTopPercent}%</span>
                   </div>
-                  <div className="pl-8">
-                    <p className="golf-label mb-1">Current Streak</p>
-                    <div className="golf-display text-3xl leading-none text-white">
-                      <span className="text-[#34D399]">{YOUR_MAKE_STREAK}</span>
-                      <span className="text-sm golf-text-secondary ml-2">IN A ROW</span>
-                    </div>
+                </div>
+                <div className="border-l border-white/10 pl-8">
+                  <p className="golf-label mb-1">Current Streak</p>
+                  <div className="golf-display text-3xl leading-none text-white">
+                    <span className="text-[#34D399]">{YOUR_MAKE_STREAK}</span>
+                    <span className="text-sm golf-text-secondary ml-2">IN A ROW</span>
                   </div>
                 </div>
               </div>
@@ -147,7 +144,7 @@ function DashboardPage() {
             <div className="bg-[#0D1512] border border-white/10 rounded-[12px] p-8">
               <div className="flex items-baseline justify-between mb-6">
                 <p className="golf-label">LOCAL LEADERBOARD</p>
-                <span className="text-[10px] uppercase tracking-widest golf-text-secondary">By Make %</span>
+                <span className="text-base uppercase tracking-widest golf-text-secondary">By Make %</span>
               </div>
               <div className="space-y-6">
                 {localLeaderboard.map(({ rank, name, score, you }) => (
@@ -159,8 +156,8 @@ function DashboardPage() {
                   >
                     <div className={you ? "text-[#34D399] font-bold" : "text-[#F59E0B] font-bold"}>{rank}</div>
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs ${
-                        you ? "bg-[#34D399]/20 border border-[#34D399]/40 text-[#34D399]" : "bg-white/10 text-white/70"
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-base ${
+                        you ? "bg-[#34D399]/20 border border-[#34D399]/40 text-[#34D399]" : "bg-white/10 golf-text-secondary"
                       }`}
                     >
                       {name
@@ -169,7 +166,7 @@ function DashboardPage() {
                         .join("")
                         .slice(0, 2)}
                     </div>
-                    <div className={you ? "flex-1 font-bold text-white" : "flex-1 font-medium text-white/80"}>{name}</div>
+                    <div className={you ? "flex-1 font-bold text-white" : "flex-1 font-medium text-white"}>{name}</div>
                     <div className="text-white font-bold">
                       {Number.isInteger(score) ? score : score.toFixed(1)}%
                     </div>
@@ -179,7 +176,7 @@ function DashboardPage() {
               <div className="mt-6 flex justify-end">
                 <Link
                   to="/compete"
-                  className="flex items-center gap-1 text-xs font-semibold text-[#34D399] hover:text-[#6EE7B7] transition-colors"
+                  className="flex items-center gap-1 text-base font-semibold text-[#34D399] hover:text-[#6EE7B7] transition-colors"
                 >
                   View full leaderboard
                   <ChevronRight size={14} />
@@ -208,7 +205,7 @@ function DashboardPage() {
                       </div>
                     </div>
                     <span
-                      className={`shrink-0 px-2.5 py-1 rounded text-[10px] font-bold tracking-wider ${
+                      className={`shrink-0 px-2.5 py-1 rounded text-base font-bold tracking-wider ${
                         item.badge === "MASTER" ? "bg-[#34D399]/10 text-[#34D399]" : "bg-white/5 golf-text-secondary"
                       }`}
                     >
@@ -233,7 +230,7 @@ function DashboardPage() {
               </div>
               <div>
                 <p className="text-sm font-bold text-white">Dheeraj S.</p>
-                <p className="text-[10px] golf-text-secondary">Pro Membership</p>
+                <p className="text-base golf-text-secondary">Pro Membership</p>
               </div>
             </div>
             <ul className="space-y-4">
@@ -245,7 +242,7 @@ function DashboardPage() {
                     setShowSettings(false);
                     navigate({ to: "/coach" });
                   }}
-                  className="w-full flex items-center justify-between text-xs font-bold text-[#34D399] hover:text-[#6EE7B7]"
+                  className="w-full flex items-center justify-between text-base font-bold text-[#34D399] hover:text-[#6EE7B7]"
                 >
                   <span>Switch to Coach View</span>
                   <ChevronRight size={16} />
@@ -257,7 +254,7 @@ function DashboardPage() {
                     to="/settings"
                     search={{ section }}
                     onClick={() => setShowSettings(false)}
-                    className="flex items-center justify-between text-xs text-white/60 hover:text-white cursor-pointer"
+                    className="flex items-center justify-between text-base golf-text-secondary hover:text-white cursor-pointer"
                   >
                     <span>{label}</span>
                     <ChevronRight size={16} />
@@ -265,7 +262,7 @@ function DashboardPage() {
                 </li>
               ))}
               <li className="pt-2 border-t border-white/10">
-                <Link to="/" className="text-xs text-red-400 font-bold hover:text-red-300">
+                <Link to="/" className="text-base text-red-400 font-bold hover:text-red-300">
                   Sign Out
                 </Link>
               </li>
