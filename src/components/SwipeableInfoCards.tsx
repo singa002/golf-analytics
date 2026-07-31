@@ -51,8 +51,8 @@ export function SwipeableInfoCards({ putts, made, streak, recent, tip }: Props) 
 
   return (
     <div
-      className="rounded-2xl overflow-hidden select-none"
-      style={{ backgroundColor: CARD, height: 180 }}
+      className="rounded-2xl overflow-hidden select-none shrink-0"
+      style={{ backgroundColor: CARD, height: 148 }}
       onTouchStart={(e) => onStart(e.touches[0].clientX)}
       onTouchEnd={(e) => onEnd(e.changedTouches[0].clientX)}
       onTouchCancel={onCancel}
@@ -63,14 +63,14 @@ export function SwipeableInfoCards({ putts, made, streak, recent, tip }: Props) 
       {/* Track is 300% wide; each panel is 1/3 of the track (= 100% of the viewport).
           translateX percentages are relative to the track itself, so move by index * (100/3)%. */}
       <div
-        className="flex h-[140px] transition-transform duration-300 ease-out"
+        className="flex h-[112px] transition-transform duration-300 ease-out"
         style={{
           width: "300%",
           transform: `translateX(-${(index * 100) / 3}%)`,
         }}
       >
-        <div className="w-1/3 shrink-0 p-5">
-          <div className="golf-label mb-4">
+        <div className="w-1/3 shrink-0 px-4 py-3">
+          <div className="golf-label mb-2">
             Session
           </div>
           <div className="flex items-end justify-around">
@@ -80,15 +80,15 @@ export function SwipeableInfoCards({ putts, made, streak, recent, tip }: Props) 
           </div>
         </div>
 
-        <div className="w-1/3 shrink-0 p-5">
-          <div className="golf-label mb-3">
+        <div className="w-1/3 shrink-0 px-4 py-3">
+          <div className="golf-label mb-2">
             Recent
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
             {displayRecent.slice(0, 3).map((p, i) => (
-              <div key={i} className="flex items-center gap-3 text-sm">
+              <div key={i} className="flex items-center gap-2 text-sm">
                 <span
-                  className="h-2.5 w-2.5 rounded-full shrink-0"
+                  className="h-2 w-2 rounded-full shrink-0"
                   style={{ backgroundColor: p.made ? ACCENT : RED }}
                 />
                 <span style={{ color: WHITE }}>{p.distanceFt} ft</span>
@@ -103,19 +103,19 @@ export function SwipeableInfoCards({ putts, made, streak, recent, tip }: Props) 
           </div>
         </div>
 
-        <div className="w-1/3 shrink-0 p-5 flex flex-col">
-          <div className="golf-label mb-3">
+        <div className="w-1/3 shrink-0 px-4 py-3 flex flex-col">
+          <div className="golf-label mb-2">
             Coaching Tip
           </div>
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-base italic text-center leading-relaxed" style={{ color: ACCENT }}>
+            <p className="text-sm italic text-center leading-relaxed" style={{ color: ACCENT }}>
               &ldquo;{tip}&rdquo;
             </p>
           </div>
         </div>
       </div>
 
-      <div className="h-10 flex items-center justify-center gap-2">
+      <div className="h-9 flex items-center justify-center gap-2">
         {[0, 1, 2].map((i) => (
           <button
             key={i}
@@ -139,8 +139,8 @@ export function SwipeableInfoCards({ putts, made, streak, recent, tip }: Props) 
 
 function Stat({ label, value, color }: { label: string; value: string; color: string }) {
   return (
-    <div className="flex flex-col items-center gap-1">
-      <div className="golf-display text-3xl tracking-tight" style={{ color }}>
+    <div className="flex flex-col items-center gap-0.5">
+      <div className="golf-display text-2xl tracking-tight" style={{ color }}>
         {value}
       </div>
       <div className="golf-label-sm">

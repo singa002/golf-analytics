@@ -5,7 +5,6 @@ import { generatePrePuttRead, type PrePuttRead } from "@/lib/previewService";
 import { pickPuttOutcome, type PuttOutcome } from "@/lib/puttOutcome";
 import { SharedGreenView } from "@/components/SharedGreenView";
 import { usePutt } from "@/context/PuttContext";
-import { SwipeableInfoCards, COACHING_TIPS, type SessionPutt } from "@/components/SwipeableInfoCards";
 import { CoursePhotoBackdrop } from "@/components/CoursePhotoBackdrop";
 
 export const Route = createFileRoute("/_authenticated/practice")({
@@ -62,7 +61,7 @@ function MetricRow({
   pending?: boolean;
 }) {
   return (
-    <div className="flex items-baseline justify-between py-3 border-b border-white/10 last:border-b-0">
+    <div className="flex-1 flex items-center justify-between min-h-0 border-b border-white/10 last:border-b-0 py-2.5">
       <span className="golf-label">{label}</span>
       <span
         className="golf-display text-2xl tracking-tight transition-all duration-300"
@@ -73,6 +72,51 @@ function MetricRow({
       >
         {value}
       </span>
+    </div>
+  );
+}
+
+/** READY / RECORDING / MADE|MISSED — lives in the metrics card header (not a separate row). */
+function PhaseStatus({ phase, outcome }: { phase: Phase; outcome: PuttOutcome | null }) {
+  return (
+    <div
+      className="flex items-center gap-2 mb-2 pb-2.5 border-b border-white/10"
+      data-testid="practice-phase"
+      data-phase={phase}
+    >
+      {phase === "ready" && (
+        <>
+          <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: ACCENT }} />
+          <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: ACCENT }}>
+            READY
+          </span>
+        </>
+      )}
+      {phase === "live" && (
+        <>
+          <Circle size={10} fill={RED} stroke={RED} className="animate-pulse" />
+          <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: RED }}>
+            RECORDING
+          </span>
+        </>
+      )}
+      {phase === "result" && outcome && (
+        <>
+          <span
+            className="h-2.5 w-2.5 rounded-full"
+            style={{ backgroundColor: outcome.made ? ACCENT : RED }}
+          />
+          <span
+            className="text-sm font-semibold uppercase tracking-widest"
+            style={{ color: outcome.made ? ACCENT : RED }}
+            data-testid="outcome-name"
+            data-outcome={outcome.id}
+            data-made={outcome.made ? "true" : "false"}
+          >
+            {outcome.made ? "MADE" : "MISSED"} — {outcome.name}
+          </span>
+        </>
+      )}
     </div>
   );
 }
@@ -98,25 +142,12 @@ function MetricPanel({
     { label: "Aim Point", value: `${read.aimPointFt} ft ${read.aimPointDirection}`, color: WHITE },
   ];
 
-  if (phase === "ready" || !outcome) {
-    return (
-      <div className="golf-glass w-full rounded-2xl p-6">
-        <div className="flex flex-col">
-          {predicted.map((row) => (
-            <MetricRow key={row.label} label={row.label} value={row.value} valueColor={row.color} />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // LIVE + RESULT: measured values fill in one at a time as the ball rolls.
-  // TODO: this is the hook point where real hardware/sensor data will eventually
-  // populate these values instead of the mock outcome variants.
-  return (
-    <div className="golf-glass w-full rounded-2xl p-6">
-      <div className="flex flex-col">
-        {outcome.stats.map((stat, i) => {
+  const rows =
+    phase === "ready" || !outcome
+      ? predicted.map((row) => (
+          <MetricRow key={row.label} label={row.label} value={row.value} valueColor={row.color} />
+        ))
+      : outcome.stats.map((stat, i) => {
           const pending = i >= revealed;
           const color = stat.off ? (outcome.made ? YELLOW : RED) : ACCENT;
           return (
@@ -128,7 +159,44 @@ function MetricPanel({
               pending={pending}
             />
           );
-        })}
+        });
+
+  return (
+    <div className="golf-glass w-full rounded-2xl px-5 py-6 flex-1 flex flex-col min-h-0">
+      <PhaseStatus phase={phase} outcome={outcome} />
+      <div className="flex flex-col flex-1 min-h-0 justify-evenly gap-0.5">{rows}</div>
+    </div>
+  );
+}
+
+/** Compact static session strip — Putts / Made / Streak only (no swipe carousel). */
+function SessionStatsCard({
+  putts,
+  made,
+  streak,
+}: {
+  putts: number;
+  made: number;
+  streak: number;
+}) {
+  return (
+    <div className="golf-glass rounded-2xl px-5 py-4 shrink-0">
+      <div className="golf-label mb-3">Session</div>
+      <div className="flex items-end justify-around gap-4">
+        <div className="flex flex-col items-center gap-1">
+          <div className="golf-display text-3xl leading-none text-white">{putts}</div>
+          <div className="golf-label-sm">Putts</div>
+        </div>
+        <div className="flex flex-col items-center gap-1">
+          <div className="golf-display text-3xl leading-none" style={{ color: ACCENT }}>
+            {made}
+          </div>
+          <div className="golf-label-sm">Made</div>
+        </div>
+        <div className="flex flex-col items-center gap-1">
+          <div className="golf-display text-3xl leading-none text-white">{streak}</div>
+          <div className="golf-label-sm">Streak</div>
+        </div>
       </div>
     </div>
   );
@@ -142,8 +210,6 @@ function PracticePage() {
   const [revealed, setRevealed] = useState(0);
   const [runId, setRunId] = useState(0);
   const [session, setSession] = useState({ putts: 0, made: 0, streak: 0, currentStreak: 0 });
-  const [recent, setRecent] = useState<SessionPutt[]>([]);
-  const [tipIndex, setTipIndex] = useState(0);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const clearTimers = () => {
@@ -180,12 +246,6 @@ function PracticePage() {
             streak: Math.max(s.streak, cs),
           };
         });
-        setRecent((r) =>
-          [
-            { made: picked.made, distanceFt: read.distanceFt, speedMs: currentPutt.speedMs },
-            ...r,
-          ].slice(0, 3),
-        );
       }, LIVE_DURATION_MS + 300),
     );
   };
@@ -197,123 +257,76 @@ function PracticePage() {
     setOutcome(null);
     setRevealed(0);
     setPhase("ready");
-    setTipIndex((i) => (i + 1) % COACHING_TIPS.length);
   };
 
   const showLivePath = (phase === "live" || phase === "result") && outcome;
 
   return (
-    <div className="relative min-h-[calc(100vh-3.5rem)] p-6">
+    <div className="relative h-full min-h-0 overflow-hidden p-4">
       <CoursePhotoBackdrop />
-      <div className="relative w-full max-w-[1400px] mx-auto flex flex-col gap-5">
+      <div className="relative h-full min-h-0 w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4">
         <h1 className="sr-only">Practice</h1>
 
-        {/* Status line — READY / RECORDING / result */}
-        <div className="w-full flex items-center gap-2" data-testid="practice-phase" data-phase={phase}>
-          {phase === "ready" && (
+        {/* Left — metrics + coaching/CTA stretch to fill column height */}
+        <div className="flex flex-col gap-4 min-h-0 h-full overflow-hidden">
+          <MetricPanel phase={phase} read={read} outcome={outcome} revealed={revealed} />
+
+          {phase === "result" && outcome ? (
             <>
-              <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: ACCENT }} />
-              <span className="text-base font-semibold uppercase tracking-widest" style={{ color: ACCENT }}>
-                READY
-              </span>
-            </>
-          )}
-          {phase === "live" && (
-            <>
-              <Circle size={10} fill={RED} stroke={RED} className="animate-pulse" />
-              <span className="text-base font-semibold uppercase tracking-widest" style={{ color: RED }}>
-                RECORDING
-              </span>
-            </>
-          )}
-          {phase === "result" && outcome && (
-            <>
-              <span
-                className="h-2.5 w-2.5 rounded-full"
-                style={{ backgroundColor: outcome.made ? ACCENT : RED }}
-              />
-              <span
-                className="text-base font-semibold uppercase tracking-widest"
-                style={{ color: outcome.made ? ACCENT : RED }}
-                data-testid="outcome-name"
-                data-outcome={outcome.id}
-                data-made={outcome.made ? "true" : "false"}
+              <div className="golf-glass rounded-2xl px-5 py-6 flex flex-col items-center justify-center gap-3 flex-1 min-h-0">
+                <div className="golf-label">Putt Result</div>
+                <div
+                  className="golf-display text-5xl tracking-tight"
+                  style={{ color: outcome.made ? ACCENT : RED }}
+                >
+                  {outcome.made ? "MADE!" : "MISSED"}
+                </div>
+                <p
+                  className="text-base italic leading-relaxed text-center max-w-md"
+                  style={{ color: outcome.made ? ACCENT : "#F5F5F5" }}
+                  data-testid="outcome-feedback"
+                >
+                  &ldquo;{outcome.feedback}&rdquo;
+                </p>
+              </div>
+              <button
+                onClick={handleNext}
+                className="w-full rounded-lg py-4 text-sm font-semibold tracking-wide shrink-0"
+                style={{ backgroundColor: BLUE, color: WHITE }}
               >
-                {outcome.made ? "MADE" : "MISSED"} — {outcome.name}
-              </span>
+                NEXT PUTT
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={handlePutt}
+                disabled={phase === "live"}
+                className="golf-accent-glow w-full rounded-2xl py-5 flex items-center justify-center gap-3 border border-[#22C55E] active:opacity-80 transition disabled:opacity-50 shrink-0"
+                style={{ backgroundColor: ACCENT, color: INNER }}
+              >
+                <PutterIcon size={22} color={INNER} />
+                <span className="text-lg font-semibold tracking-wide">
+                  {phase === "live" ? "MEASURING…" : "PUTT NOW"}
+                </span>
+              </button>
+
+              <div className="golf-glass-inner w-full rounded-xl px-4 py-3 shrink-0">
+                <div className="golf-label mb-1.5">AI Coaching</div>
+                <p className="text-sm italic leading-snug" style={{ color: ACCENT }}>
+                  &ldquo;{read.coaching}&rdquo;
+                </p>
+              </div>
             </>
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
-          {/* Left column */}
-          <div className="flex flex-col gap-5">
-            <MetricPanel phase={phase} read={read} outcome={outcome} revealed={revealed} />
+        {/* Right — Session (static) on top, Putt Map fills the rest */}
+        <div className="flex flex-col gap-4 min-h-0 h-full overflow-hidden">
+          <SessionStatsCard putts={session.putts} made={session.made} streak={session.streak} />
 
-            {phase === "result" && outcome ? (
-              <>
-                <div className="golf-glass rounded-2xl p-6 flex flex-col items-center gap-3">
-                  <div className="golf-label">Putt Result</div>
-                  <div
-                    className="golf-display text-6xl tracking-tight"
-                    style={{ color: outcome.made ? ACCENT : RED }}
-                  >
-                    {outcome.made ? "MADE!" : "MISSED"}
-                  </div>
-                  <p
-                    className="text-base italic leading-relaxed text-center"
-                    style={{ color: outcome.made ? ACCENT : "#F5F5F5" }}
-                    data-testid="outcome-feedback"
-                  >
-                    &ldquo;{outcome.feedback}&rdquo;
-                  </p>
-                </div>
-                <button
-                  onClick={handleNext}
-                  className="w-full rounded-lg py-4 text-sm font-semibold tracking-wide"
-                  style={{ backgroundColor: BLUE, color: WHITE }}
-                >
-                  NEXT PUTT
-                </button>
-              </>
-            ) : (
-              <>
-                <div className="golf-glass-inner w-full rounded-xl p-5">
-                  <div className="golf-label mb-2">AI Coaching</div>
-                  <p className="text-base italic leading-relaxed" style={{ color: ACCENT }}>
-                    &ldquo;{read.coaching}&rdquo;
-                  </p>
-                </div>
-
-                <button
-                  onClick={handlePutt}
-                  disabled={phase === "live"}
-                  className="golf-accent-glow w-full rounded-2xl py-6 flex items-center justify-center gap-3 border border-[#22C55E] active:opacity-80 transition disabled:opacity-50"
-                  style={{ backgroundColor: ACCENT, color: INNER }}
-                >
-                  <PutterIcon size={22} color={INNER} />
-                  <span className="text-lg font-semibold tracking-wide">
-                    {phase === "live" ? "MEASURING…" : "PUTT NOW"}
-                  </span>
-                </button>
-
-                <SwipeableInfoCards
-                  putts={session.putts}
-                  made={session.made}
-                  streak={session.streak}
-                  recent={recent}
-                  tip={COACHING_TIPS[tipIndex]}
-                />
-              </>
-            )}
-          </div>
-
-          {/* Right column — shared Putt Map */}
-          <div
-            className="golf-glass relative w-full rounded-2xl p-4 flex items-center justify-center"
-            style={{ minHeight: 520 }}
-          >
-            <div className="w-full h-full max-h-[640px] flex items-center justify-center">
+          <div className="golf-glass relative w-full flex-1 min-h-0 rounded-2xl p-3 flex items-center justify-center overflow-hidden">
+            <div className="w-full h-full max-h-full flex items-center justify-center">
               <SharedGreenView
                 key={`green-${runId}-${phase === "ready" ? "ready" : "live"}`}
                 ballAngle={currentPutt.ballAngle}

@@ -147,13 +147,14 @@ function DashboardPage() {
             <p className="mt-1 xl:mt-2 text-xs xl:text-sm golf-text-secondary">{subtitle}</p>
           </div>
           <div className="flex items-center gap-3 xl:gap-4">
-            <Link
-              to="/practice"
+            <button
+              type="button"
+              onClick={() => navigate({ to: "/practice" })}
               className="golf-accent-glow flex items-center gap-2 xl:gap-3 bg-[#22C55E] hover:bg-[#4ADE80] text-black px-4 py-2 xl:px-6 xl:py-3 rounded-xl font-bold transition-all text-sm xl:text-base"
             >
               <Play className="h-[18px] w-[18px] xl:h-5 xl:w-5" />
               <span>START SESSION</span>
-            </Link>
+            </button>
             <button
               ref={avatarRef}
               onClick={() => setShowSettings((s) => !s)}
