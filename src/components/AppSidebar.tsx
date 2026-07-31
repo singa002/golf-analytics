@@ -66,7 +66,7 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
               to={to}
               className={`shrink-0 flex flex-col items-center gap-1 py-3 rounded-lg transition-colors ${
                 active
-                  ? "golf-accent-glow text-[#34D399] bg-[#34D399]/10"
+                  ? "golf-accent-glow text-[#22C55E] bg-[#0F271A]"
                   : "golf-text-secondary hover:text-white"
               }`}
             >
@@ -83,7 +83,7 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
         <button
           ref={avatarRef}
           onClick={() => setShowSettings((shown) => !shown)}
-          className="w-12 h-12 rounded-full border-2 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-sm font-bold text-[#34D399]"
+          className="w-12 h-12 rounded-full border-2 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-sm font-bold text-[#22C55E]"
         >
           {profile.initials}
         </button>
@@ -95,7 +95,7 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
           className="absolute bottom-8 left-24 w-64 bg-[#0D1512] border border-white/10 rounded-2xl shadow-2xl p-6 z-50"
         >
           <div className="flex items-center gap-4 mb-6 border-b border-white/10 pb-4">
-            <div className="w-10 h-10 rounded-full bg-[#34D399]/20 flex items-center justify-center text-[#34D399]">
+            <div className="w-10 h-10 rounded-full bg-[#113821] flex items-center justify-center text-[#22C55E]">
               <User size={20} />
             </div>
             <div>
@@ -112,7 +112,7 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
                   setShowSettings(false);
                   navigate({ to: nextMode === "coach" ? "/coach" : "/dashboard" });
                 }}
-                className="golfer-chrome-text w-full flex items-center justify-between text-xs font-bold text-[#34D399] hover:text-[#6EE7B7]"
+                className="golfer-chrome-text w-full flex items-center justify-between text-xs font-bold text-[#22C55E] hover:text-[#4ADE80]"
               >
                 <span>Switch to {profile.mode === "golfer" ? "Coach" : "Golfer"} View</span>
                 <ChevronRight size={16} />

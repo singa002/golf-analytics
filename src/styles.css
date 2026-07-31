@@ -48,8 +48,13 @@
   /* Golf sports palette tokens */
   --golf-deep: #040906;
   --golf-card: #0D1512;
-  --golf-accent: #34D399;
-  --golf-accent-secondary: #10B981;
+  --golf-accent: #22C55E;
+  --golf-accent-secondary: #16A34A;
+  /* Solid soft fills (accent mixed into card) — avoid opacity washes that read minty */
+  --golf-accent-soft: #0F271A; /* ~10% accent on card */
+  --golf-accent-muted: #113821; /* ~20% accent on card */
+  --golf-accent-chip: #102F1D; /* ~15% accent on card */
+  --golf-accent-ring: #155B30; /* ~40% accent on card */
   --golf-gold: #F59E0B;
   --golf-miss: #EF4444;
   /* Dark sports analytics palette */
@@ -158,16 +163,29 @@
   background-blend-mode: soft-light, normal;
 }
 
+/* Glow uses explicit #22C55E rgb — color-mix(...transparent) washed minty on dark UIs */
 @utility golf-accent-glow {
   box-shadow:
-    0 0 20px color-mix(in srgb, var(--golf-accent) 45%, transparent),
-    0 0 48px color-mix(in srgb, var(--golf-accent) 28%, transparent);
+    0 0 16px rgba(34, 197, 94, 0.7),
+    0 0 40px rgba(34, 197, 94, 0.45);
 }
 
 @utility golf-accent-text-glow {
   text-shadow:
-    0 0 12px color-mix(in srgb, var(--golf-accent) 55%, transparent),
-    0 0 36px color-mix(in srgb, var(--golf-accent) 40%, transparent);
+    0 0 10px rgba(34, 197, 94, 0.75),
+    0 0 28px rgba(34, 197, 94, 0.5);
+}
+
+@utility golf-accent-soft {
+  background-color: var(--golf-accent-soft);
+}
+
+@utility golf-accent-muted {
+  background-color: var(--golf-accent-muted);
+}
+
+@utility golf-accent-chip {
+  background-color: var(--golf-accent-chip);
 }
 
 /* ---- Photo background + glassmorphism (Preview, Practice, Dashboard, Analytics, Compete, Settings) ---- */

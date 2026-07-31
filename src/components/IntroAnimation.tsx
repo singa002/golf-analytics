@@ -4,7 +4,7 @@ interface IntroAnimationProps {
   onComplete: () => void;
 }
 
-const GREEN = "#22C55E";
+const ACCENT = "#22C55E"; // --golf-accent
 
 type Phase = "rolling" | "dropping" | "zooming";
 
@@ -117,7 +117,7 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
               height: 0,
               borderTop: "8px solid transparent",
               borderBottom: "8px solid transparent",
-              borderLeft: `18px solid ${GREEN}`,
+              borderLeft: `18px solid ${ACCENT}`,
             }}
           />
 
@@ -129,7 +129,7 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
                 width: 40,
                 height: 40,
                 borderRadius: "50%",
-                border: `3px solid ${GREEN}`,
+                border: `3px solid ${ACCENT}`,
                 animation: "pv-ripple 700ms ease-out forwards",
               }}
             />

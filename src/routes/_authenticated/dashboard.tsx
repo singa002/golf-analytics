@@ -36,7 +36,7 @@ function welcomeSubtitle(streak: number, latestDate: string) {
 /** Compact sparkline for Personal Bests supporting visuals. */
 function MiniSpark({
   values,
-  accent = "#34D399",
+  accent = "#22C55E",
 }: {
   values: number[];
   accent?: string;
@@ -55,7 +55,7 @@ function MiniSpark({
     })
     .join(" ");
   return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="shrink-0 opacity-90" aria-hidden>
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="shrink-0" aria-hidden>
       <polyline fill="none" stroke={accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" points={pts} />
       {values.map((v, i) => {
         const x = values.length === 1 ? w / 2 : (i / (values.length - 1)) * w;
@@ -69,7 +69,7 @@ function MiniSpark({
 /** Equal-width bars — one per session — for count-style bests. */
 function MiniBars({
   values,
-  accent = "#34D399",
+  accent = "#22C55E",
 }: {
   values: number[];
   accent?: string;
@@ -83,8 +83,8 @@ function MiniBars({
           className="w-2 rounded-sm"
           style={{
             height: `${Math.max(18, (v / max) * 100)}%`,
-            backgroundColor: accent,
-            opacity: 0.35 + (v / max) * 0.65,
+            /* Solid fills only — opacity washes read minty on dark cards */
+            backgroundColor: v / max >= 0.7 ? accent : "#16A34A",
           }}
         />
       ))}
@@ -149,7 +149,7 @@ function DashboardPage() {
           <div className="flex items-center gap-3 xl:gap-4">
             <Link
               to="/preview"
-              className="golf-accent-glow flex items-center gap-2 xl:gap-3 bg-[#34D399] hover:bg-[#6EE7B7] text-black px-4 py-2 xl:px-6 xl:py-3 rounded-xl font-bold transition-all text-sm xl:text-base"
+              className="golf-accent-glow flex items-center gap-2 xl:gap-3 bg-[#22C55E] hover:bg-[#4ADE80] text-black px-4 py-2 xl:px-6 xl:py-3 rounded-xl font-bold transition-all text-sm xl:text-base"
             >
               <Play className="h-[18px] w-[18px] xl:h-5 xl:w-5" />
               <span>START SESSION</span>
@@ -157,7 +157,7 @@ function DashboardPage() {
             <button
               ref={avatarRef}
               onClick={() => setShowSettings((s) => !s)}
-              className="w-10 h-10 xl:w-12 xl:h-12 rounded-full border-2 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-sm font-bold text-[#34D399]"
+              className="w-10 h-10 xl:w-12 xl:h-12 rounded-full border-2 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-sm font-bold text-[#22C55E]"
             >
               DS
             </button>
@@ -169,26 +169,26 @@ function DashboardPage() {
           <div className="col-span-7 flex flex-col gap-4 xl:gap-8 min-h-0">
             {/* Season stats + progress live in one card so the column reads as a single unit. */}
             <div className="golf-glass rounded-[12px] p-4 xl:p-8 relative overflow-hidden flex-1 flex flex-col min-h-0">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#34D399]/5 blur-3xl rounded-full translate-x-10 -translate-y-10" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#0E1E16] blur-3xl rounded-full translate-x-10 -translate-y-10" />
               <div className="relative grid w-full grid-cols-3 items-end shrink-0">
                 <div className="min-w-0">
                   <p className="golf-label mb-1">SEASON MAKE %</p>
                   <div className="golf-accent-text-glow flex items-baseline gap-2 xl:gap-4">
                     <span className="golf-display text-5xl xl:text-7xl text-white leading-none">{latest.makePercent}</span>
-                    <span className="golf-display text-xl xl:text-2xl text-[#34D399]">%</span>
+                    <span className="golf-display text-xl xl:text-2xl text-[#22C55E]">%</span>
                   </div>
                 </div>
 
                 <div className="border-l border-white/10 pl-4 xl:pl-8 min-w-0">
                   <p className="golf-label mb-1">Locally</p>
                   <div className="golf-display text-2xl xl:text-3xl leading-none text-white">
-                    Top <span className="text-[#34D399]">{localTopPercent}%</span>
+                    Top <span className="text-[#22C55E]">{localTopPercent}%</span>
                   </div>
                 </div>
                 <div className="border-l border-white/10 pl-4 xl:pl-8 min-w-0">
                   <p className="golf-label mb-1">Current Streak</p>
                   <div className="golf-display text-2xl xl:text-3xl leading-none text-white">
-                    <span className="text-[#34D399]">{YOUR_MAKE_STREAK}</span>
+                    <span className="text-[#22C55E]">{YOUR_MAKE_STREAK}</span>
                     <span className="text-xs xl:text-sm golf-text-secondary ml-2">IN A ROW</span>
                   </div>
                 </div>
@@ -213,13 +213,13 @@ function DashboardPage() {
                   <div
                     key={rank}
                     className={`flex items-center gap-3 xl:gap-4 ${
-                      you ? "bg-white/5 -mx-2 xl:-mx-4 px-2 xl:px-4 py-1.5 xl:py-2 rounded-lg border-l-2 border-[#34D399]" : ""
+                      you ? "bg-white/5 -mx-2 xl:-mx-4 px-2 xl:px-4 py-1.5 xl:py-2 rounded-lg border-l-2 border-[#22C55E]" : ""
                     }`}
                   >
-                    <div className={you ? "text-[#34D399] font-bold" : "text-[#F59E0B] font-bold"}>{rank}</div>
+                    <div className={you ? "text-[#22C55E] font-bold" : "text-[#F59E0B] font-bold"}>{rank}</div>
                     <div
                       className={`w-7 h-7 xl:w-8 xl:h-8 rounded-full flex items-center justify-center text-xs xl:text-base ${
-                        you ? "bg-[#34D399]/20 border border-[#34D399]/40 text-[#34D399]" : "bg-white/10 golf-text-secondary"
+                        you ? "bg-[#113821] border border-[#155B30] text-[#22C55E]" : "bg-white/10 golf-text-secondary"
                       }`}
                     >
                       {name
@@ -240,7 +240,7 @@ function DashboardPage() {
               <div className="mt-3 xl:mt-6 flex justify-end">
                 <Link
                   to="/compete"
-                  className="flex items-center gap-1 text-sm xl:text-base font-semibold text-[#34D399] hover:text-[#6EE7B7] transition-colors"
+                  className="flex items-center gap-1 text-sm xl:text-base font-semibold text-[#22C55E] hover:text-[#4ADE80] transition-colors"
                 >
                   View full leaderboard
                   <ChevronRight size={14} />
@@ -262,7 +262,7 @@ function DashboardPage() {
                       visual: (
                         <MiniSpark
                           values={[...sessions].reverse().map((s) => s.makePercent)}
-                          accent="#34D399"
+                          accent="#22C55E"
                         />
                       ),
                     },
@@ -274,7 +274,7 @@ function DashboardPage() {
                       visual: (
                         <MiniBars
                           values={[...sessions].reverse().map(() => 1)}
-                          accent="#34D399"
+                          accent="#22C55E"
                         />
                       ),
                     },
@@ -286,7 +286,7 @@ function DashboardPage() {
                       visual: (
                         <MiniBars
                           values={[...sessions].reverse().map((s) => s.totalPutts)}
-                          accent="#34D399"
+                          accent="#22C55E"
                         />
                       ),
                     },
@@ -301,7 +301,7 @@ function DashboardPage() {
                       <span
                         className={`shrink-0 px-2 py-0.5 xl:px-2.5 xl:py-1 rounded text-xs xl:text-sm font-bold tracking-wider ${
                           item.badge === "MASTER"
-                            ? "bg-[#34D399]/10 text-[#34D399]"
+                            ? "bg-[#0F271A] text-[#22C55E]"
                             : "bg-white/5 golf-text-secondary"
                         }`}
                       >
@@ -311,7 +311,7 @@ function DashboardPage() {
                     <div className="flex items-end justify-between gap-4">
                       <div className="golf-display text-4xl xl:text-5xl text-white leading-none">
                         {item.value}
-                        <span className="text-lg xl:text-xl text-[#34D399] ml-2">{item.unit}</span>
+                        <span className="text-lg xl:text-xl text-[#22C55E] ml-2">{item.unit}</span>
                       </div>
                       {item.visual}
                     </div>
@@ -329,7 +329,7 @@ function DashboardPage() {
             className="golf-glass absolute top-24 right-12 w-64 rounded-2xl p-6 z-50"
           >
             <div className="flex items-center gap-4 mb-6 border-b border-white/10 pb-4">
-              <div className="w-10 h-10 rounded-full bg-[#34D399]/20 flex items-center justify-center text-[#34D399]">
+              <div className="w-10 h-10 rounded-full bg-[#113821] flex items-center justify-center text-[#22C55E]">
                 <User size={20} />
               </div>
               <div>
@@ -346,7 +346,7 @@ function DashboardPage() {
                     setShowSettings(false);
                     navigate({ to: "/coach" });
                   }}
-                  className="w-full flex items-center justify-between text-base font-bold text-[#34D399] hover:text-[#6EE7B7]"
+                  className="w-full flex items-center justify-between text-base font-bold text-[#22C55E] hover:text-[#4ADE80]"
                 >
                   <span>Switch to Coach View</span>
                   <ChevronRight size={16} />

@@ -22,11 +22,11 @@ const PutterIcon = (props: SVGProps<SVGSVGElement>) => (
 );
 
 const GOLFER_NAV: NavItem[] = [
-  { to: "/preview", label: "Preview", Icon: Eye },
+  { to: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
   { to: "/practice", label: "Practice", Icon: PutterIcon },
   { to: "/analytics", label: "Analytics", Icon: BarChart3 },
   { to: "/compete", label: "Compete", Icon: Trophy },
-  { to: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
+  { to: "/preview", label: "Preview", Icon: Eye },
 ];
 
 function AuthenticatedLayout() {

@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import type { PuttData } from "@/lib/sensorService";
 
 const CARD = "#1C1C1E";
-const GREEN = "#22C55E";
+const ACCENT = "#22C55E"; // --golf-accent
 const RED = "#EF4444";
 const WHITE = "#FFFFFF";
 
@@ -75,7 +75,7 @@ export function SwipeableInfoCards({ putts, made, streak, recent, tip }: Props) 
           </div>
           <div className="flex items-end justify-around">
             <Stat label="Putts" value={putts.toString()} color={WHITE} />
-            <Stat label="Made" value={made.toString()} color={GREEN} />
+            <Stat label="Made" value={made.toString()} color={ACCENT} />
             <Stat label="Streak" value={streak.toString()} color={WHITE} />
           </div>
         </div>
@@ -89,13 +89,13 @@ export function SwipeableInfoCards({ putts, made, streak, recent, tip }: Props) 
               <div key={i} className="flex items-center gap-3 text-sm">
                 <span
                   className="h-2.5 w-2.5 rounded-full shrink-0"
-                  style={{ backgroundColor: p.made ? GREEN : RED }}
+                  style={{ backgroundColor: p.made ? ACCENT : RED }}
                 />
                 <span style={{ color: WHITE }}>{p.distanceFt} ft</span>
                 <span className="golf-text-secondary">·</span>
                 <span style={{ color: WHITE }}>{p.speedMs} m/s</span>
                 <span className="golf-text-secondary">·</span>
-                <span style={{ color: p.made ? GREEN : RED }} className="font-semibold">
+                <span style={{ color: p.made ? ACCENT : RED }} className="font-semibold">
                   {p.made ? "Made" : "Missed"}
                 </span>
               </div>
@@ -108,7 +108,7 @@ export function SwipeableInfoCards({ putts, made, streak, recent, tip }: Props) 
             Coaching Tip
           </div>
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-base italic text-center leading-relaxed" style={{ color: GREEN }}>
+            <p className="text-base italic text-center leading-relaxed" style={{ color: ACCENT }}>
               &ldquo;{tip}&rdquo;
             </p>
           </div>
@@ -128,7 +128,7 @@ export function SwipeableInfoCards({ putts, made, streak, recent, tip }: Props) 
             className="h-2 rounded-full transition-all"
             style={{
               width: i === index ? 20 : 8,
-              backgroundColor: i === index ? GREEN : "#3A3A3C",
+              backgroundColor: i === index ? ACCENT : "#3A3A3C",
             }}
           />
         ))}

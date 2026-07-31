@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import type { SessionSummary } from "@/lib/historyService";
 
-const ACCENT = "#34D399"; // --golf-accent
+const ACCENT = "#22C55E"; // --golf-accent (also MADE / positive data)
 const DEEP = "#040906"; // --golf-deep
 /** Ignore chart "taps" that moved farther than this (px) — treat as swipe/scroll instead. */
 const TAP_MOVE_THRESHOLD_PX = 12;
@@ -44,7 +44,7 @@ function ProgressTooltip({
   return (
     <div className="rounded-[10px] border border-white/10 px-3 py-2 shadow-xl" style={{ backgroundColor: DEEP }}>
       <div className="golf-label-sm whitespace-nowrap">{point.date}</div>
-      <div className="golf-display text-lg text-[#34D399] leading-tight">{point.makePercent}%</div>
+      <div className="golf-display text-lg text-[#22C55E] leading-tight">{point.makePercent}%</div>
       <div className="text-base golf-text-secondary">
         <span className="text-[#22C55E]">{point.made} made</span>
         {" · "}
@@ -129,7 +129,7 @@ export function ProgressChart({ sessions }: { sessions: SessionSummary[] }) {
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex justify-between items-center mb-2 xl:mb-4 shrink-0">
         <p className="golf-label">PROGRESS</p>
-        <span className="text-sm xl:text-base font-medium text-[#34D399]">
+        <span className="text-sm xl:text-base font-medium text-[#22C55E]">
           {progressDelta >= 0 ? "+" : ""}
           {progressDelta}% since your first session
         </span>
@@ -225,7 +225,7 @@ export function ProgressChart({ sessions }: { sessions: SessionSummary[] }) {
         <Link
           to="/analytics"
           search={selectedId ? { session: selectedId } : {}}
-          className="flex items-center gap-1 text-sm xl:text-base font-semibold text-[#34D399] hover:text-[#6EE7B7] transition-colors"
+          className="flex items-center gap-1 text-sm xl:text-base font-semibold text-[#22C55E] hover:text-[#4ADE80] transition-colors"
         >
           View full history
           <ChevronRight size={14} />

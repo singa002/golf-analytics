@@ -42,7 +42,7 @@ function CoachAnalytics() {
                 <span className="flex-1 text-sm font-bold text-white">{s.name}</span>
                 <div className="w-24">
                   <CoachLabel>Make %</CoachLabel>
-                  <p className="golf-display text-xl text-[#34D399]">{s.makePercent}</p>
+                  <p className="golf-display text-xl text-[#22C55E]">{s.makePercent}</p>
                 </div>
                 <div className="w-24">
                   <CoachLabel>Sessions</CoachLabel>

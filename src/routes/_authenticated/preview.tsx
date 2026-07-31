@@ -24,7 +24,7 @@ export const Route = createFileRoute("/_authenticated/preview")({
   component: PreviewPage,
 });
 
-const GREEN = "#34D399"; // --golf-accent
+const ACCENT = "#22C55E"; // --golf-accent
 const WHITE = "#FFFFFF";
 
 const DEEP = "#040906"; // --golf-deep
@@ -65,10 +65,10 @@ function PreviewPage() {
       <div className="relative w-full max-w-[1400px] mx-auto flex flex-col gap-5">
 
         <div className="w-full flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: GREEN }} />
+          <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: ACCENT }} />
           <span
             className="text-base font-semibold uppercase tracking-widest"
-            style={{ color: GREEN }}
+            style={{ color: ACCENT }}
           >
             {read.status}
           </span>
@@ -86,7 +86,7 @@ function PreviewPage() {
                 <MetricRow
                   label="Break"
                   value={`${read.breakDeg}° ${read.breakDirection}`}
-                  valueColor={GREEN}
+                  valueColor={ACCENT}
                 />
                 <MetricRow
                   label="Start Line"
@@ -106,7 +106,7 @@ function PreviewPage() {
               </div>
               <p
                 className="text-base italic leading-relaxed"
-                style={{ color: GREEN }}
+                style={{ color: ACCENT }}
               >
                 &ldquo;{read.coaching}&rdquo;
               </p>
@@ -135,15 +135,15 @@ function PreviewPage() {
 
         <div className="flex items-center gap-4 w-full">
           <button
-            className="flex-1 rounded-lg py-3.5 text-sm font-semibold tracking-wide border border-[#34D399]"
-            style={{ color: GREEN }}
+            className="flex-1 rounded-lg py-3.5 text-sm font-semibold tracking-wide border border-[#22C55E]"
+            style={{ color: ACCENT }}
           >
             PREVIEW COMPLETE
           </button>
           <Link
             to="/practice"
-            className="golf-accent-glow flex-1 rounded-lg py-3.5 text-sm font-semibold tracking-wide text-center border border-[#34D399]"
-            style={{ backgroundColor: GREEN, color: DEEP }}
+            className="golf-accent-glow flex-1 rounded-lg py-3.5 text-sm font-semibold tracking-wide text-center border border-[#22C55E]"
+            style={{ backgroundColor: ACCENT, color: DEEP }}
           >
             START PRACTICE
           </Link>

@@ -1,4 +1,4 @@
-const GREEN = "#34D399"; // --golf-accent
+const ACCENT = "#22C55E"; // --golf-accent
 const WHITE = "#FFFFFF";
 const DEEP = "#040906"; // --golf-deep
 
@@ -70,7 +70,7 @@ export function SharedGreenView({
         </radialGradient>
         <linearGradient id="shimmerGrad" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
-          <stop offset="50%" stopColor="#B8FFD9" stopOpacity="0.35" />
+          <stop offset="50%" stopColor="#86EFAC" stopOpacity="0.35" />
           <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
         </linearGradient>
         <clipPath id="greenClip">
@@ -145,7 +145,7 @@ export function SharedGreenView({
       {/* Predicted putt path — wide glow */}
       <path
         d={pathD}
-        stroke={GREEN}
+        stroke={ACCENT}
         strokeWidth="12"
         strokeOpacity="0.16"
         strokeLinecap="round"
@@ -154,7 +154,7 @@ export function SharedGreenView({
       />
       <path
         d={pathD}
-        stroke={GREEN}
+        stroke={ACCENT}
         strokeWidth="6"
         strokeOpacity="0.28"
         strokeLinecap="round"
@@ -164,7 +164,7 @@ export function SharedGreenView({
       {/* Predicted putt path — dashed core with travel animation */}
       <path
         d={pathD}
-        stroke={GREEN}
+        stroke={ACCENT}
         strokeWidth="3"
         strokeDasharray="6 8"
         strokeLinecap="round"
@@ -178,14 +178,14 @@ export function SharedGreenView({
       </circle>
 
       {/* Hole in center with shadow + halo */}
-      <circle cx={cx} cy={cy} r="20" fill={GREEN} opacity="0.12" />
+      <circle cx={cx} cy={cy} r="20" fill="#113821" />
       <circle cx={cx} cy={cy} r="10" fill="#050505" stroke="#000" strokeWidth="1.5" filter="url(#holeShadow)" />
       <ellipse cx={cx} cy={cy - 3} rx="8" ry="4" fill="#FFFFFF" opacity="0.06" />
       <line x1={cx} y1={cy} x2={cx} y2={cy - 70} stroke="#F5F5F5" strokeWidth="2" />
       <line x1={cx + 2} y1={cy} x2={cx + 14} y2={cy + 6} stroke="#000" strokeWidth="2" opacity="0.35" />
       <path
         d={`M ${cx} ${cy - 70} L ${cx + 30} ${cy - 62} L ${cx} ${cy - 54} Z`}
-        fill={GREEN}
+        fill={ACCENT}
         filter="url(#sharedGreenGlow)"
       />
 
@@ -198,7 +198,7 @@ export function SharedGreenView({
         cy={ballY}
         r="11"
         fill="none"
-        stroke={GREEN}
+        stroke={ACCENT}
         strokeWidth="1.5"
         opacity="0.7"
       >

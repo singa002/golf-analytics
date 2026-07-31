@@ -28,8 +28,7 @@ export const Route = createFileRoute("/_authenticated/practice")({
   component: PracticePage,
 });
 
-const ACCENT = "#34D399"; // --golf-accent
-const MADE = "#22C55E";
+const ACCENT = "#22C55E"; // --golf-accent (also ACCENT / positive data)
 const RED = "#EF4444"; // --golf-miss
 const BLUE = "#3B82F6";
 const YELLOW = "#EAB308";
@@ -166,7 +165,7 @@ function LiveView({
 
         <button
           onClick={onPutt}
-          className="golf-accent-glow w-full rounded-2xl py-6 flex items-center justify-center gap-3 border border-[#34D399] active:opacity-80 transition"
+          className="golf-accent-glow w-full rounded-2xl py-6 flex items-center justify-center gap-3 border border-[#22C55E] active:opacity-80 transition"
           style={{ backgroundColor: ACCENT, color: INNER }}
         >
           <PutterIcon size={22} color={INNER} />
@@ -227,11 +226,11 @@ function ResultView({ data, onNext }: { data: PuttData; onNext: () => void }) {
         <div className="golf-label">Putt Result</div>
         <div
           className="golf-display text-7xl tracking-tight"
-          style={{ color: data.made ? MADE : RED }}
+          style={{ color: data.made ? ACCENT : RED }}
         >
           {data.made ? "MADE!" : "MISSED"}
         </div>
-        <p className="text-base italic text-center max-w-xl" style={{ color: data.made ? MADE : "#F5F5F5" }}>
+        <p className="text-base italic text-center max-w-xl" style={{ color: data.made ? ACCENT : "#F5F5F5" }}>
           &ldquo;{data.coaching}&rdquo;
         </p>
         <div className="mt-2 flex items-center gap-2">

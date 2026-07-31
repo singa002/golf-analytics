@@ -32,7 +32,7 @@ function CoachDashboard() {
         </div>
         <Link
           to="/coach/schedule"
-          className="golf-accent-glow flex items-center gap-3 bg-[#34D399] hover:bg-[#6EE7B7] text-black px-6 py-3 rounded-xl font-bold transition-all"
+          className="golf-accent-glow flex items-center gap-3 bg-[#22C55E] hover:bg-[#4ADE80] text-black px-6 py-3 rounded-xl font-bold transition-all"
         >
           <Clock size={20} />
           <span>VIEW SCHEDULE</span>
@@ -48,7 +48,7 @@ function CoachDashboard() {
         ].map((s) => (
           <CoachCard key={s.label} className="p-6">
             <CoachLabel>{s.label}</CoachLabel>
-            <p className={`golf-display text-4xl mt-2 ${s.label === "Roster Avg Make %" ? "text-[#34D399]" : "text-white"}`}>
+            <p className={`golf-display text-4xl mt-2 ${s.label === "Roster Avg Make %" ? "text-[#22C55E]" : "text-white"}`}>
               {s.value}
             </p>
           </CoachCard>
@@ -67,7 +67,7 @@ function CoachDashboard() {
                     <p className="text-base golf-text-secondary mt-1">{l.focus}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-bold text-[#34D399]">{l.time}</p>
+                    <p className="text-sm font-bold text-[#22C55E]">{l.time}</p>
                     <p className="golf-label mt-1">{l.date}</p>
                   </div>
                 </li>
@@ -80,7 +80,7 @@ function CoachDashboard() {
           <CoachCard>
             <div className="flex items-center justify-between">
               <CoachLabel>Current Students</CoachLabel>
-              <Link to="/coach/students" className="text-base uppercase tracking-widest font-bold text-[#34D399]">
+              <Link to="/coach/students" className="text-base uppercase tracking-widest font-bold text-[#22C55E]">
                 View all
               </Link>
             </div>
@@ -96,7 +96,7 @@ function CoachDashboard() {
                       {s.initials}
                     </span>
                     <span className="flex-1 text-sm font-medium text-white">{s.name}</span>
-                    <span className="text-sm font-bold text-[#34D399]">{s.makePercent}%</span>
+                    <span className="text-sm font-bold text-[#22C55E]">{s.makePercent}%</span>
                   </Link>
                 </li>
               ))}

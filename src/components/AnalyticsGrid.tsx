@@ -4,7 +4,7 @@
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 import type { SessionAnalytics } from "@/lib/analyticsService";
 
-const MADE = "#22C55E";
+const ACCENT = "#22C55E"; // --golf-accent (also ACCENT / positive data)
 const MISS = "#EF4444";
 const BLUE = "#3B82F6";
 
@@ -54,7 +54,7 @@ function SessionSummary({ data }: { data: SessionAnalytics }) {
               cx={size / 2}
               cy={size / 2}
               r={r}
-              stroke={MADE}
+              stroke={ACCENT}
               strokeWidth={stroke}
               strokeLinecap="round"
               fill="none"
@@ -92,7 +92,7 @@ function SessionSummary({ data }: { data: SessionAnalytics }) {
       <div className="mt-6 flex-1 flex flex-col justify-end">
         <div className="flex items-center justify-between mb-2">
           <Label>Start Line Accuracy</Label>
-          <div className="text-base text-[#34D399] font-semibold">
+          <div className="text-base text-[#22C55E] font-semibold">
             {data.withinOneFiveDegPercent}% Within 1.5°
           </div>
         </div>
@@ -103,7 +103,7 @@ function SessionSummary({ data }: { data: SessionAnalytics }) {
               <Bar dataKey="count" radius={[3, 3, 0, 0]}>
                 {data.startLineAccuracy.map((b, i) => {
                   const near = Math.abs(parseFloat(b.bucket)) <= 1;
-                  return <Cell key={i} fill={near ? MADE : "rgba(255,255,255,0.12)"} />;
+                  return <Cell key={i} fill={near ? ACCENT : "rgba(255,255,255,0.12)"} />;
                 })}
               </Bar>
             </BarChart>
@@ -150,13 +150,13 @@ function StartLineAnalysis({ data }: { data: SessionAnalytics }) {
       <div className="flex items-start justify-between">
         <div>
           <Label>Start Line Analysis</Label>
-          <div className="mt-2 golf-display text-2xl text-[#34D399]">
+          <div className="mt-2 golf-display text-2xl text-[#22C55E]">
             {Math.abs(data.avgStartLineDeg)}° {data.avgStartLineDeg < 0 ? "Left" : "Right"}
           </div>
           <Label>Average Start Line</Label>
         </div>
         <div className="text-right">
-          <div className="golf-display text-xl text-[#34D399]">{data.withinOneFiveDegPercent}%</div>
+          <div className="golf-display text-xl text-[#22C55E]">{data.withinOneFiveDegPercent}%</div>
           <Label>Within 1.5°</Label>
         </div>
       </div>
@@ -194,13 +194,13 @@ function StartLineAnalysis({ data }: { data: SessionAnalytics }) {
             const angle = p.x < 0 ? Math.PI - t : t;
             const px = cx + r * Math.cos(angle);
             const py = cy + r * Math.sin(angle);
-            return <circle key={i} cx={px} cy={py} r={5} fill={p.result === "made" ? MADE : MISS} opacity={0.95} />;
+            return <circle key={i} cx={px} cy={py} r={5} fill={p.result === "made" ? ACCENT : MISS} />;
           })}
         </svg>
       </div>
 
       <div className="flex items-center justify-center gap-6 mt-2 text-base">
-        <LegendDot color={MADE} label="Made" />
+        <LegendDot color={ACCENT} label="Made" />
         <LegendDot color={MISS} label="Missed" />
       </div>
     </Card>
@@ -230,7 +230,7 @@ function SpeedControl({ data }: { data: SessionAnalytics }) {
           <Label>Avg Speed</Label>
         </div>
         <div>
-          <div className="golf-display text-xl text-[#34D399]">{data.optimalSpeedMs} m/s</div>
+          <div className="golf-display text-xl text-[#22C55E]">{data.optimalSpeedMs} m/s</div>
           <Label>Optimal</Label>
         </div>
       </div>
@@ -250,7 +250,7 @@ function SpeedControl({ data }: { data: SessionAnalytics }) {
 
       <div className="grid grid-cols-3 gap-3 mt-3 text-center">
         <SpeedTag label="Too Slow" value={data.tooSlow} color="golf-text-secondary" />
-        <SpeedTag label="Good" value={data.good} color="text-[#34D399]" />
+        <SpeedTag label="Good" value={data.good} color="text-[#22C55E]" />
         <SpeedTag label="Too Fast" value={data.tooFast} color="text-[#EF4444]" />
       </div>
     </Card>
@@ -325,7 +325,7 @@ export function PuttMap({ data }: { data: SessionAnalytics }) {
             <line x1={cx} y1={cy - ry + 20} x2={cx} y2={cy - ry - 18} stroke="#fff" strokeWidth={1.5} />
             <polygon
               points={`${cx},${cy - ry - 18} ${cx + 14},${cy - ry - 12} ${cx},${cy - ry - 6}`}
-              fill={MADE}
+              fill={ACCENT}
             />
             <circle cx={cx} cy={cy - ry + 20} r={3} fill="#fff" />
           </g>
@@ -333,7 +333,8 @@ export function PuttMap({ data }: { data: SessionAnalytics }) {
           {data.puttMap.map((p, i) => {
             const px = cx + p.x * rx * 0.9;
             const py = cy - ry * 0.85 + p.y * ry * 1.6;
-            const color = p.result === "made" ? MADE : MISS;
+            const color = p.result === "made" ? ACCENT : MISS;
+            const halo = p.result === "made" ? "#113821" : "#3F1515";
             return (
               <g
                 key={i}
@@ -344,8 +345,8 @@ export function PuttMap({ data }: { data: SessionAnalytics }) {
                 }}
                 className="cursor-pointer"
               >
-                <circle cx={px} cy={py} r={10} fill={color} opacity={0.12} />
-                <circle cx={px} cy={py} r={5} fill={color} opacity={0.95} />
+                <circle cx={px} cy={py} r={10} fill={halo} />
+                <circle cx={px} cy={py} r={5} fill={color} />
                 <circle cx={px} cy={py} r={12} fill="transparent">
                   <title>{`Putt ${i + 1} — ${p.result === "made" ? "Made" : "Missed"}`}</title>
                 </circle>

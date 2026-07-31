@@ -138,13 +138,13 @@ const leaderboards: Record<string, LeaderRow[]> = {
 
 const typeColors: Record<ChallengeType, string> = {
   ACCURACY: "bg-[#3B82F6]/20 text-[#3B82F6] border-[#3B82F6]/40",
-  STREAK: "bg-[#34D399]/20 text-[#34D399] border-[#34D399]/40",
+  STREAK: "bg-[#113821] text-[#22C55E] border-[#155B30]",
   SPEED: "bg-[#F59E0B]/20 text-[#F59E0B] border-[#F59E0B]/40",
   DISTANCE: "bg-[#38BDF8]/20 text-[#38BDF8] border-[#38BDF8]/40",
 };
 
 function TrendIcon({ trend }: { trend: Trend }) {
-  if (trend === "up") return <TrendingUp className="w-4 h-4 text-[#34D399]" />;
+  if (trend === "up") return <TrendingUp className="w-4 h-4 text-[#22C55E]" />;
   if (trend === "down") return <TrendingDown className="w-4 h-4 text-[#EF4444]" />;
   return <Minus className="w-4 h-4 golf-text-secondary" />;
 }
@@ -161,7 +161,7 @@ function ComparePage() {
         {/* LEFT — Active Challenges */}
         <div className="flex flex-col min-h-0">
           <div className="flex items-center gap-2 mb-4">
-            <Trophy className="w-5 h-5 text-[#34D399]" />
+            <Trophy className="w-5 h-5 text-[#22C55E]" />
             <h2 className="golf-label">ACTIVE CHALLENGES</h2>
           </div>
           <div className="flex-1 overflow-y-auto space-y-3 pr-1">
@@ -180,7 +180,7 @@ function ComparePage() {
                   <span className={`text-base font-bold px-2 py-1 rounded-full border ${typeColors[c.type]}`}>
                     {c.type}
                   </span>
-                  <span className="text-base font-bold px-2 py-1 rounded-full bg-[#34D399]/20 text-[#34D399] border border-[#34D399]/40">
+                  <span className="text-base font-bold px-2 py-1 rounded-full bg-[#113821] text-[#22C55E] border border-[#155B30]">
                     {c.daysLeft} DAYS LEFT
                   </span>
                   <span className="text-base golf-text-secondary">{c.participants} golfers competing</span>
@@ -197,11 +197,11 @@ function ComparePage() {
                     )}
                   </div>
                   {c.joined ? (
-                    <span className="text-sm font-bold px-3 py-1.5 rounded-full text-[#34D399] border border-[#34D399]">
+                    <span className="text-sm font-bold px-3 py-1.5 rounded-full text-[#22C55E] border border-[#22C55E]">
                       COMPETING
                     </span>
                   ) : (
-                    <button className="golf-accent-glow text-sm font-bold px-4 py-2 rounded-lg border border-[#34D399] bg-[#34D399] text-black hover:bg-[#6EE7B7] transition">
+                    <button className="golf-accent-glow text-sm font-bold px-4 py-2 rounded-lg border border-[#22C55E] bg-[#22C55E] text-black hover:bg-[#4ADE80] transition">
                       JOIN CHALLENGE
                     </button>
                   )}
@@ -214,7 +214,7 @@ function ComparePage() {
         {/* RIGHT — Leaderboard */}
         <div className="flex flex-col min-h-0">
           <div className="flex items-center gap-2 mb-2">
-            <Trophy className="w-5 h-5 text-[#34D399]" />
+            <Trophy className="w-5 h-5 text-[#22C55E]" />
             <h2 className="golf-label">LEADERBOARD</h2>
             <span className="text-base golf-text-secondary">— {activeName}</span>
           </div>
@@ -225,7 +225,7 @@ function ComparePage() {
                 onClick={() => setActiveChallenge(c.id)}
                 className={`text-base font-semibold px-3 py-1.5 rounded-full transition ${
                   activeChallenge === c.id
-                    ? "golf-accent-glow bg-[#34D399] text-black"
+                    ? "golf-accent-glow bg-[#22C55E] text-black"
                     : "golf-glass-inner golf-text-secondary hover:text-white"
                 }`}
               >
@@ -240,7 +240,7 @@ function ComparePage() {
                 <div
                   key={r.rank}
                   className={`flex items-center gap-3 px-4 py-3 ${
-                    r.you ? "bg-[#34D399]/10 border-l-2 border-[#34D399]" : ""
+                    r.you ? "bg-[#0F271A] border-l-2 border-[#22C55E]" : ""
                   }`}
                 >
                   <div className="w-8 text-center">
@@ -251,8 +251,8 @@ function ComparePage() {
                     )}
                   </div>
                   <div className="flex-1">
-                    <div className={`font-semibold ${r.you ? "text-[#34D399]" : "text-white"}`}>
-                      {r.name} {r.you && <span className="text-base text-[#34D399] ml-1">YOU</span>}
+                    <div className={`font-semibold ${r.you ? "text-[#22C55E]" : "text-white"}`}>
+                      {r.name} {r.you && <span className="text-base text-[#22C55E] ml-1">YOU</span>}
                     </div>
                     <div className="text-base golf-text-secondary">{r.sessions} sessions</div>
                   </div>

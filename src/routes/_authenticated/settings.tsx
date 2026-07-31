@@ -56,7 +56,7 @@ function Section({
     <section
       id={id}
       className={`scroll-mt-6 rounded-[16px] transition-shadow duration-500 ${
-        highlighted ? "ring-2 ring-[#34D399] ring-offset-4 ring-offset-[#040906]" : ""
+        highlighted ? "ring-2 ring-[#22C55E] ring-offset-4 ring-offset-[#040906]" : ""
       }`}
     >
       <h2 className="golf-display text-xl text-white mb-3">{title}</h2>
@@ -80,7 +80,7 @@ function Toggle({
       onClick={() => !locked && onChange(!on)}
       disabled={locked}
       className={`relative inline-flex h-7 w-12 items-center rounded-full transition ${
-        on ? "bg-[#34D399]" : "bg-white/10"
+        on ? "bg-[#22C55E]" : "bg-white/10"
       } ${locked ? "opacity-70 cursor-not-allowed" : ""}`}
       aria-pressed={on}
     >
@@ -111,7 +111,7 @@ function SegmentedToggle<T extends string>({
             key={opt}
             onClick={() => onChange(opt)}
             className={`px-4 py-1.5 text-base font-semibold rounded-full transition ${
-              active ? "bg-[#34D399] text-black" : "golf-text-secondary"
+              active ? "bg-[#22C55E] text-black" : "golf-text-secondary"
             }`}
           >
             {opt}
@@ -163,12 +163,12 @@ function SettingsPage() {
           <div className="grid grid-cols-2 gap-4">
             <Card>
               <div className="flex items-start gap-5">
-                <div className="h-20 w-20 rounded-full flex items-center justify-center text-2xl font-bold text-[#34D399] bg-[#34D399]/15">
+                <div className="h-20 w-20 rounded-full flex items-center justify-center text-2xl font-bold text-[#22C55E] bg-[#102F1D]">
                   DS
                 </div>
                 <div className="flex-1">
                   <div className="text-xl font-bold text-white">Dheeraj Singavarapu</div>
-                  <div className="mt-1 inline-block px-2.5 py-0.5 rounded-full text-base font-bold tracking-wider text-[#34D399] bg-[#34D399]/15">
+                  <div className="mt-1 inline-block px-2.5 py-0.5 rounded-full text-base font-bold tracking-wider text-[#22C55E] bg-[#102F1D]">
                     GOLFER
                   </div>
                   <div className="mt-4 grid grid-cols-2 gap-3">
@@ -183,7 +183,7 @@ function SettingsPage() {
                   </div>
                 </div>
               </div>
-              <button className="mt-5 w-full py-2.5 rounded-xl border border-[#34D399] text-[#34D399] text-sm font-semibold hover:bg-[#34D399]/10 transition">
+              <button className="mt-5 w-full py-2.5 rounded-xl border border-[#22C55E] text-[#22C55E] text-sm font-semibold hover:bg-[#0F271A] transition">
                 Edit Profile
               </button>
             </Card>
@@ -214,10 +214,10 @@ function SettingsPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between py-3 border-b border-white/10">
                   <div className="flex items-center gap-3">
-                    <Bluetooth size={18} className="text-[#34D399]" />
+                    <Bluetooth size={18} className="text-[#22C55E]" />
                     <span className="text-sm text-white">Putt Vector Sensor</span>
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full text-base font-bold tracking-wider text-[#34D399] bg-[#34D399]/15">
+                  <span className="px-2.5 py-0.5 rounded-full text-base font-bold tracking-wider text-[#22C55E] bg-[#102F1D]">
                     CONNECTED
                   </span>
                 </div>
@@ -241,7 +241,7 @@ function SettingsPage() {
                 <span className="golf-label">Last Calibrated</span>
                 <span className="text-sm font-semibold text-white">Today, 3:41 PM</span>
               </div>
-              <button className="mt-5 w-full py-2.5 rounded-xl border border-[#34D399] text-[#34D399] text-sm font-semibold hover:bg-[#34D399]/10 transition flex items-center justify-center gap-2">
+              <button className="mt-5 w-full py-2.5 rounded-xl border border-[#22C55E] text-[#22C55E] text-sm font-semibold hover:bg-[#0F271A] transition flex items-center justify-center gap-2">
                 <Crosshair size={16} />
                 Calibrate Sensor
               </button>
@@ -254,7 +254,7 @@ function SettingsPage() {
             <Card>
               <SectionHeader>Assigned Coach</SectionHeader>
               <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-full flex items-center justify-center text-sm font-bold text-[#34D399] bg-[#34D399]/15">
+                <div className="h-12 w-12 rounded-full flex items-center justify-center text-sm font-bold text-[#22C55E] bg-[#102F1D]">
                   CW
                 </div>
                 <div>

@@ -30,13 +30,13 @@ function SchedulePage() {
           <CoachCard key={l.id} className="p-6 flex items-center gap-6">
             <div className="w-32 min-w-0">
               <CoachLabel>{l.date}</CoachLabel>
-              <p className="golf-display text-2xl text-[#34D399] mt-1 whitespace-nowrap">{l.time}</p>
+              <p className="golf-display text-2xl text-[#22C55E] mt-1 whitespace-nowrap">{l.time}</p>
             </div>
             <div className="flex-1 border-l border-white/10 pl-6">
               <p className="text-lg font-bold text-white">{l.studentName}</p>
               <p className="text-base golf-text-secondary mt-1">{l.focus}</p>
             </div>
-            <span className="px-3 py-1 rounded-full bg-[#34D399]/10 text-[#34D399] text-base font-bold uppercase tracking-widest">
+            <span className="px-3 py-1 rounded-full bg-[#0F271A] text-[#22C55E] text-base font-bold uppercase tracking-widest">
               Confirmed
             </span>
           </CoachCard>

@@ -29,11 +29,11 @@ function StudentDetail() {
           <ChevronLeft size={14} /> Students
         </Link>
         <span className="golf-text-secondary">/</span>
-        <span className="text-[#34D399]">{student?.name ?? "Unknown"}</span>
+        <span className="text-[#22C55E]">{student?.name ?? "Unknown"}</span>
       </nav>
 
       <header className="flex items-center gap-5 mb-10">
-        <span className="w-14 h-14 rounded-full bg-[#34D399]/15 text-[#34D399] flex items-center justify-center text-base font-bold">
+        <span className="w-14 h-14 rounded-full bg-[#102F1D] text-[#22C55E] flex items-center justify-center text-base font-bold">
           {student?.initials ?? "--"}
         </span>
         <div>

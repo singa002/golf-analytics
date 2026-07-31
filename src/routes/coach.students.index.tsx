@@ -31,7 +31,7 @@ function StudentsPage() {
           <Link key={s.id} to="/coach/students/$studentId" params={{ studentId: s.id }}>
             <CoachCard className="hover:bg-white/5 transition-colors">
               <div className="flex items-center gap-5">
-                <span className="w-14 h-14 rounded-full bg-[#34D399]/15 text-[#34D399] flex items-center justify-center text-base font-bold">
+                <span className="w-14 h-14 rounded-full bg-[#102F1D] text-[#22C55E] flex items-center justify-center text-base font-bold">
                   {s.initials}
                 </span>
                 <div className="flex-1">
@@ -43,7 +43,7 @@ function StudentsPage() {
                 <div className="text-right mr-2">
                   <CoachLabel>Make %</CoachLabel>
                   <p
-                    className={`golf-display text-3xl ${s.trend === "down" ? "text-[#EF4444]" : "text-[#34D399]"}`}
+                    className={`golf-display text-3xl ${s.trend === "down" ? "text-[#EF4444]" : "text-[#22C55E]"}`}
                   >
                     {s.makePercent}
                   </p>
