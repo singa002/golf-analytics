@@ -26,8 +26,7 @@ export const Route = createFileRoute("/_authenticated/preview")({
 
 const GREEN = "#34D399"; // --golf-accent
 const WHITE = "#FFFFFF";
-const CARD = "#0D1512"; // --golf-card
-const COACHING_BG = "#040906"; // --golf-deep
+const DEEP_BG = "#040906"; // --golf-deep
 const DEEP = "#040906"; // --golf-deep
 
 function MetricRow({
