@@ -54,7 +54,8 @@ function DashboardPage() {
   const latest = sessions[0];
   const bestSession = sessions.reduce((a, b) => (a.makePercent >= b.makePercent ? a : b));
   const totalPutts = sessions.reduce((s, x) => s + x.totalPutts, 0);
-  const greeting = timeOfDayGreeting();
+  const [greeting, setGreeting] = useState("Welcome Back");
+  useEffect(() => setGreeting(timeOfDayGreeting()), []);
   const subtitle = welcomeSubtitle(YOUR_MAKE_STREAK, latest.date);
 
   // Local leaderboard is ranked by season make %. Keep displayed scores consistent with ranks.
