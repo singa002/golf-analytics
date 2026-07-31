@@ -379,8 +379,8 @@ export function SharedGreenView({
 
       {/* Previous putts scatter — depth + spring entrance + hover */}
       {putts?.map((p, i) => {
-        const px = cx + p.x * rx * 0.85;
-        const py = cy + p.y * ry * 0.85;
+        const px = Number((cx + p.x * rx * 0.85).toFixed(2));
+        const py = Number((cy + p.y * ry * 0.85).toFixed(2));
         const made = p.result === "made";
         const color = made ? ACCENT : MISS;
         const isHover = hovered === i;
