@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Trophy, TrendingUp, TrendingDown, Minus } from "lucide-react";
-import { CoursePhotoBackdrop } from "@/components/CoursePhotoBackdrop";
 
 export const Route = createFileRoute("/_authenticated/compete")({
   head: () => ({ meta: [{ title: "Compete — Putt Vector" }] }),
@@ -156,7 +155,6 @@ function ComparePage() {
 
   return (
     <div className="relative h-full w-full p-6 overflow-hidden">
-      <CoursePhotoBackdrop />
       <div className="relative grid grid-cols-2 gap-6 h-full">
         {/* LEFT — Active Challenges */}
         <div className="flex flex-col min-h-0">

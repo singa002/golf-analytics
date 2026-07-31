@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Bluetooth, Crosshair, Share2 } from "lucide-react";
-import { CoursePhotoBackdrop } from "@/components/CoursePhotoBackdrop";
 
 const SETTINGS_SECTIONS = ["account", "hardware", "sharing"] as const;
 export type SettingsSection = (typeof SETTINGS_SECTIONS)[number];
@@ -156,7 +155,6 @@ function SettingsPage() {
 
   return (
     <div className="relative p-4 min-h-full">
-      <CoursePhotoBackdrop />
       <h1 className="sr-only">Settings</h1>
       <div className="relative flex w-full max-w-[1500px] flex-col gap-10 mx-auto">
         <Section id="account" title="Account Settings" highlighted={highlighted === "account"}>

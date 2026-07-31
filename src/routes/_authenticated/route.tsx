@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useRouterState } from "@tanstack/react-router";
 import {
   BarChart3,
   LayoutDashboard,
@@ -6,6 +6,10 @@ import {
 } from "lucide-react";
 import type { SVGProps } from "react";
 import { AppSidebar, type NavItem } from "@/components/AppSidebar";
+import {
+  CoursePhotoBackdrop,
+  coursePhotoVariantFromPath,
+} from "@/components/CoursePhotoBackdrop";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthenticatedLayout,
@@ -28,8 +32,13 @@ const GOLFER_NAV: NavItem[] = [
 ];
 
 function AuthenticatedLayout() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const photoVariant = coursePhotoVariantFromPath(pathname);
+
   return (
     <div className="h-dvh golf-page-background flex flex-col golfer-ui overflow-hidden">
+      {/* Persistent across child routes — crossfades instead of remounting */}
+      <CoursePhotoBackdrop variant={photoVariant} />
       <div className="flex flex-1 min-h-0">
         <AppSidebar
           navItems={GOLFER_NAV}
@@ -40,7 +49,7 @@ function AuthenticatedLayout() {
             mode: "golfer",
           }}
         />
-        <main className="flex-1 min-w-0 min-h-0 overflow-y-auto">
+        <main className="relative z-10 flex-1 min-w-0 min-h-0 overflow-y-auto">
           <Outlet />
         </main>
       </div>

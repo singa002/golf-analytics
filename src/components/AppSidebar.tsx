@@ -52,9 +52,10 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
     location.pathname === to || (to !== "/coach" && location.pathname.startsWith(`${to}/`));
 
   return (
+    // Transparent shell — photo shows between floating glass nav items.
     // Shells that render a top header set --app-header-h so the sidebar ends at the
     // viewport bottom and the avatar never falls below the fold.
-    <nav className="sticky top-0 h-[calc(100vh-var(--app-header-h,0px))] w-[100px] shrink-0 flex flex-col items-center pt-3 pb-5 z-20 border-r border-white/10 bg-[#0D1512]">
+    <nav className="sticky top-0 h-[calc(100vh-var(--app-header-h,0px))] w-[100px] shrink-0 flex flex-col items-center pt-3 pb-5 z-20 bg-transparent">
       {/* overflow-y-auto clips box-shadow; py gives the active glow room at the ends
           without changing spacing between nav items (still justify-between). */}
       <div className="flex flex-col justify-between flex-1 w-full px-2 py-6 min-h-0 overflow-y-auto">
@@ -64,9 +65,9 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
             <Link
               key={to}
               to={to}
-              className={`shrink-0 flex flex-col items-center gap-1 py-3 rounded-lg transition-colors ${
+              className={`golf-glass shrink-0 flex flex-col items-center gap-1 py-3 rounded-lg transition-colors ${
                 active
-                  ? "golf-accent-glow text-[#22C55E] bg-[#0F271A]"
+                  ? "golf-accent-glow text-[#22C55E]"
                   : "golf-text-secondary hover:text-white"
               }`}
             >
@@ -83,16 +84,18 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
         <button
           ref={avatarRef}
           onClick={() => setShowSettings((shown) => !shown)}
-          className="w-12 h-12 rounded-full border-2 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-sm font-bold text-[#22C55E]"
+          className="golf-glass w-full flex flex-col items-center py-3 rounded-lg transition-colors hover:text-white"
         >
-          {profile.initials}
+          <span className="w-12 h-12 rounded-full border-2 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-sm font-bold text-[#22C55E]">
+            {profile.initials}
+          </span>
         </button>
       </div>
 
       {showSettings && (
         <div
           ref={settingsRef}
-          className="absolute bottom-8 left-24 w-64 bg-[#0D1512] border border-white/10 rounded-2xl shadow-2xl p-6 z-50"
+          className="golf-glass absolute bottom-8 left-24 w-64 rounded-2xl p-6 z-50"
         >
           <div className="flex items-center gap-4 mb-6 border-b border-white/10 pb-4">
             <div className="w-10 h-10 rounded-full bg-[#113821] flex items-center justify-center text-[#22C55E]">

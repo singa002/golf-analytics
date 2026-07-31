@@ -5,7 +5,6 @@ import { generatePrePuttRead, type PrePuttRead } from "@/lib/previewService";
 import { pickPuttOutcome, type PuttOutcome } from "@/lib/puttOutcome";
 import { SharedGreenView } from "@/components/SharedGreenView";
 import { usePutt } from "@/context/PuttContext";
-import { CoursePhotoBackdrop } from "@/components/CoursePhotoBackdrop";
 
 export const Route = createFileRoute("/_authenticated/practice")({
   head: () => ({
@@ -76,7 +75,7 @@ function MetricRow({
   );
 }
 
-/** READY / RECORDING / MADE|MISSED — lives in the metrics card header (not a separate row). */
+/** INTENDED PREVIEW / RECORDING / ACTUAL RESULT — metrics card header by phase. */
 function PhaseStatus({ phase, outcome }: { phase: Phase; outcome: PuttOutcome | null }) {
   return (
     <div
@@ -88,7 +87,7 @@ function PhaseStatus({ phase, outcome }: { phase: Phase; outcome: PuttOutcome | 
         <>
           <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: ACCENT }} />
           <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: ACCENT }}>
-            READY
+            INTENDED PREVIEW
           </span>
         </>
       )}
@@ -113,7 +112,7 @@ function PhaseStatus({ phase, outcome }: { phase: Phase; outcome: PuttOutcome | 
             data-outcome={outcome.id}
             data-made={outcome.made ? "true" : "false"}
           >
-            {outcome.made ? "MADE" : "MISSED"} — {outcome.name}
+            ACTUAL RESULT
           </span>
         </>
       )}
@@ -263,7 +262,6 @@ function PracticePage() {
 
   return (
     <div className="relative h-full min-h-0 overflow-hidden p-4">
-      <CoursePhotoBackdrop />
       <div className="relative h-full min-h-0 w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4">
         <h1 className="sr-only">Practice</h1>
 

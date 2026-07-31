@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { PuttProvider } from "@/context/PuttContext";
 import { ViewModeProvider } from "@/context/ViewModeContext";
+import { COURSE_PHOTO_PRELOAD_HREFS } from "@/components/CoursePhotoBackdrop";
 
 function NotFoundComponent() {
   return (
@@ -100,6 +101,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600&family=Space+Mono:wght@400;700&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      // Course backdrops — warm cache before Dashboard/Analytics/Practice navigations
+      ...COURSE_PHOTO_PRELOAD_HREFS.map((href) => ({
+        rel: "preload" as const,
+        as: "image" as const,
+        href,
+      })),
     ],
   }),
   shellComponent: RootShell,

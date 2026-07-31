@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Calendar } from "lucide-react";
-import { CoursePhotoBackdrop } from "@/components/CoursePhotoBackdrop";
 import { SharedGreenView } from "@/components/SharedGreenView";
 import { getSessionHistory, type SessionSummary } from "@/lib/historyService";
 
@@ -27,12 +26,6 @@ export const Route = createFileRoute("/_authenticated/analytics")({
 
 const ACCENT = "#22C55E"; // --golf-accent (shared with MADE / positive data)
 const MISS = "#EF4444"; // --golf-miss
-const DEEP = "#040906"; // --golf-deep
-const CARD = "#0D1512"; // --golf-card
-
-/** Same mock insight previously shown on the standalone Analytics tab. */
-// TODO: mock — generate this insight dynamically from the session's tendencies.
-const SESSION_INSIGHT = "Your putts are drifting left on breaking putts.";
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
@@ -45,6 +38,39 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
 /** Accent at/above avg, red below — same rule as session list rows. */
 function makePercentVsAverage(makePercent: number, averageMakePercent: number) {
   return makePercent >= averageMakePercent ? ACCENT : MISS;
+}
+
+function startLineLabel(deg: number) {
+  const abs = Math.abs(deg).toFixed(1);
+  if (Math.abs(deg) < 0.15) return `${abs}° square`;
+  return `${abs}° ${deg < 0 ? "left" : "right"}`;
+}
+
+/** Session-specific insight — concrete numbers, changes with the selected session. */
+function buildSessionInsight(session: SessionSummary, averageMakePercent: number): string {
+  const start = startLineLabel(session.avgStartLineDeg);
+  const breakAbs = Math.abs(session.avgBreakDeg).toFixed(1);
+  const vsAvg = Math.round(session.makePercent - averageMakePercent);
+  const vsAvgPhrase =
+    vsAvg >= 3
+      ? `${vsAvg} points above your recent average`
+      : vsAvg <= -3
+        ? `${Math.abs(vsAvg)} points below your recent average`
+        : "roughly in line with your recent average";
+
+  const misses = session.puttMap.filter((p) => p.result === "missed");
+  const leftMisses = misses.filter((p) => p.x < -0.08).length;
+  const rightMisses = misses.filter((p) => p.x > 0.08).length;
+  let missPattern = "misses were scattered around the hole";
+  if (leftMisses > rightMisses + 1) {
+    missPattern = `most of your ${session.missed} misses finished left of the hole`;
+  } else if (rightMisses > leftMisses + 1) {
+    missPattern = `most of your ${session.missed} misses finished right of the hole`;
+  } else if (session.missed > 0) {
+    missPattern = `your ${session.missed} misses were split evenly left and right`;
+  }
+
+  return `You made ${session.made} of ${session.totalPutts} from an average ${session.avgDistanceFt} ft at ${session.avgSpeedMs} m/s — ${vsAvgPhrase}. Start line averaged ${start} with ${breakAbs}° of break; ${missPattern}.`;
 }
 
 function AnalyticsPage() {
@@ -65,7 +91,6 @@ function AnalyticsPage() {
 
   return (
     <div className="relative p-4 h-full">
-      <CoursePhotoBackdrop />
       <h1 className="sr-only">Analytics</h1>
       <div className="relative grid grid-cols-[380px_1fr] gap-4 h-full min-h-0">
         {/* Left column — session list */}
@@ -118,22 +143,54 @@ function SessionDetail({
   session: SessionSummary;
   averageMakePercent: number;
 }) {
-  const size = 130;
-  const stroke = 12;
+  const size = 72;
+  const stroke = 7;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const offset = c - (session.makePercent / 100) * c;
   const color = makePercentVsAverage(session.makePercent, averageMakePercent);
+  const insight = buildSessionInsight(session, averageMakePercent);
+
+  const stats = [
+    { label: "Total Putts", value: session.totalPutts, valueClass: "text-white" },
+    { label: "Made", value: session.made, valueClass: "text-[#22C55E]" },
+    { label: "Missed", value: session.missed, valueClass: "text-[#EF4444]" },
+    {
+      label: "Avg Distance",
+      value: (
+        <>
+          {session.avgDistanceFt}
+          <span className="text-base golf-text-secondary ml-1.5 font-semibold">ft</span>
+        </>
+      ),
+      valueClass: "text-white",
+    },
+    {
+      label: "Avg Speed",
+      value: (
+        <>
+          {session.avgSpeedMs}
+          <span className="text-base golf-text-secondary ml-1.5 font-semibold">m/s</span>
+        </>
+      ),
+      valueClass: "text-white",
+    },
+    {
+      label: "Avg Start Line",
+      value: startLineLabel(session.avgStartLineDeg),
+      valueClass: "text-white",
+    },
+  ] as const;
 
   return (
-    <Card className="overflow-y-auto flex flex-col gap-5 h-full min-h-0">
-      <div className="flex items-center justify-between shrink-0">
-        <div>
-          <div className="golf-label">Session</div>
-          <div className="golf-display text-2xl text-white">{session.date}</div>
-          <div className="text-sm golf-text-secondary">{session.time}</div>
+    <Card className="overflow-y-auto flex flex-col gap-4 h-full min-h-0">
+      <div className="flex items-center justify-between shrink-0 gap-4">
+        <div className="min-w-0">
+          <div className="golf-label-sm">Session</div>
+          <div className="golf-display text-base text-white leading-tight mt-0.5">{session.date}</div>
+          <div className="text-xs golf-text-secondary mt-0.5">{session.time}</div>
         </div>
-        <div className="relative" style={{ width: size, height: size }}>
+        <div className="relative shrink-0" style={{ width: size, height: size }}>
           <svg width={size} height={size} className="-rotate-90">
             <circle cx={size / 2} cy={size / 2} r={r} stroke="rgba(255,255,255,0.08)" strokeWidth={stroke} fill="none" />
             <circle
@@ -149,54 +206,40 @@ function SessionDetail({
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="golf-display text-2xl leading-none" style={{ color }}>
+            <div className="golf-display text-sm leading-none" style={{ color }}>
               {session.makePercent}
-              <span className="text-lg">%</span>
+              <span className="text-[10px]">%</span>
             </div>
-            <div className="golf-label">Make</div>
+            <div className="text-[9px] uppercase tracking-wider golf-text-secondary mt-0.5">Make</div>
           </div>
         </div>
       </div>
 
-      <div className="golf-glass-inner rounded-[12px] flex-1 flex flex-col min-h-0 divide-y divide-white/5 px-4 py-2">
-        {(
-          [
-            { label: "Total Putts", value: session.totalPutts, valueClass: "text-white" },
-            { label: "Made", value: session.made, valueClass: "text-[#22C55E]" },
-            { label: "Missed", value: session.missed, valueClass: "text-[#EF4444]" },
-            {
-              label: "Avg Distance",
-              value: (
-                <>
-                  {session.avgDistanceFt}
-                  <span className="text-lg golf-text-secondary ml-2 font-semibold">ft</span>
-                </>
-              ),
-              valueClass: "text-white",
-            },
-          ] as const
-        ).map((stat) => (
+      <div className="golf-glass-inner rounded-[12px] flex-1 flex flex-col min-h-0 divide-y divide-white/5 px-4 py-1">
+        {stats.map((stat) => (
           <div
             key={stat.label}
-            className="flex-1 flex items-center justify-between gap-4 min-h-0 py-5 first:pt-4 last:pb-4"
+            className="flex-1 flex items-center justify-between gap-4 min-h-0 py-3 first:pt-2 last:pb-2"
           >
             <p className="golf-label shrink-0">{stat.label}</p>
-            <div className={`golf-display text-4xl leading-none text-right ${stat.valueClass}`}>
+            <div className={`golf-display text-3xl leading-none text-right ${stat.valueClass}`}>
               {stat.value}
             </div>
           </div>
         ))}
       </div>
 
-      <div className="golf-glass-inner rounded-[12px] p-4 shrink-0">
-        <div className="golf-label mb-2">Insight</div>
-        <p className="text-base text-[#22C55E] italic leading-relaxed">{SESSION_INSIGHT}</p>
-      </div>
-
-      <div className="golf-glass-inner rounded-[12px] p-3 flex flex-col flex-[1.35] min-h-0">
-        <div className="golf-label mb-2 shrink-0">Putt Map</div>
-        <div className="flex-1 min-h-0 flex items-center justify-center">
-          <PuttMapSvg session={session} />
+      {/* Putt Map (compact, left) + Insight (wider, right) */}
+      <div className="grid grid-cols-[minmax(0,0.9fr)_minmax(0,1.25fr)] gap-3 shrink-0 min-h-[200px]">
+        <div className="golf-glass-inner rounded-[12px] p-3 flex flex-col min-h-0">
+          <div className="golf-label mb-2 shrink-0">Putt Map</div>
+          <div className="flex-1 min-h-0 flex items-center justify-center overflow-hidden">
+            <PuttMapSvg session={session} />
+          </div>
+        </div>
+        <div className="golf-glass-inner rounded-[12px] p-4 flex flex-col min-h-0">
+          <div className="golf-label mb-2 shrink-0">Insight</div>
+          <p className="text-sm text-[#22C55E] italic leading-relaxed flex-1">{insight}</p>
         </div>
       </div>
     </Card>

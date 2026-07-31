@@ -26,7 +26,7 @@ export function CoachShell({ children }: { children: ReactNode }) {
         />
       </div>
 
-      <main className="flex-1 overflow-y-auto px-12 py-10 z-10 relative">
+      <main className="flex-1 overflow-y-auto px-12 py-10 relative z-10">
         {children}
       </main>
     </div>

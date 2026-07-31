@@ -207,7 +207,7 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* Full-bleed course photo scrim — lighter so the aerial stays recognizable; grain unchanged. */
+/* Full-bleed course photo scrim — grain shared; darkness tuned per photo. */
 @utility golf-photo-scrim {
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.085'/%3E%3C/svg%3E"),
@@ -216,6 +216,40 @@
   background-repeat: repeat, no-repeat, no-repeat;
   background-size: 240px 240px, cover, cover;
   background-blend-mode: soft-light, normal, normal;
+}
+
+/* Dashboard mountains — visible photo with modest edge/sky falloff for text */
+@utility golf-photo-scrim-dashboard {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.085'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 50% 45%, rgba(4, 9, 6, 0.04) 0%, rgba(4, 9, 6, 0.12) 45%, rgba(4, 9, 6, 0.36) 78%, rgba(4, 9, 6, 0.62) 100%),
+    linear-gradient(to bottom, rgba(4, 9, 6, 0.28) 0%, rgba(4, 9, 6, 0.12) 40%, rgba(4, 9, 6, 0.22) 70%, rgba(4, 9, 6, 0.58) 100%);
+  background-repeat: repeat, no-repeat, no-repeat;
+  background-size: 240px 240px, cover, cover;
+  background-blend-mode: soft-light, normal, normal;
+}
+
+/* Analytics ball-at-hole — hot golden highlight; heavy top + edge darkening */
+@utility golf-photo-scrim-analytics {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.09'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 50% 62%, rgba(4, 9, 6, 0.08) 0%, rgba(4, 9, 6, 0.28) 40%, rgba(4, 9, 6, 0.62) 78%, rgba(4, 9, 6, 0.82) 100%),
+    linear-gradient(to bottom, rgba(4, 9, 6, 0.58) 0%, rgba(4, 9, 6, 0.28) 40%, rgba(4, 9, 6, 0.35) 70%, rgba(4, 9, 6, 0.75) 100%);
+  background-repeat: repeat, no-repeat, no-repeat;
+  background-size: 240px 240px, cover, cover;
+  background-blend-mode: soft-light, normal, normal;
+}
+
+/* Practice ball/putter — show subject clearly; soft left/top for UI only */
+@utility golf-photo-scrim-practice {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.085'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 55% 55%, rgba(4, 9, 6, 0) 0%, rgba(4, 9, 6, 0.08) 48%, rgba(4, 9, 6, 0.3) 80%, rgba(4, 9, 6, 0.55) 100%),
+    linear-gradient(to right, rgba(4, 9, 6, 0.22) 0%, rgba(4, 9, 6, 0.06) 40%, rgba(4, 9, 6, 0.14) 100%),
+    linear-gradient(to bottom, rgba(4, 9, 6, 0.22) 0%, rgba(4, 9, 6, 0.08) 45%, rgba(4, 9, 6, 0.18) 75%, rgba(4, 9, 6, 0.48) 100%);
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+  background-size: 240px 240px, cover, cover, cover;
+  background-blend-mode: soft-light, normal, normal, normal;
 }
 
 @keyframes golf-shimmer {
