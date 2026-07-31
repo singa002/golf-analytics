@@ -3,6 +3,7 @@
 // system (#0D1512 cards, border-white/10, uppercase micro-labels).
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 import type { SessionAnalytics } from "@/lib/analyticsService";
+import { SharedGreenView } from "@/components/SharedGreenView";
 
 const ACCENT = "#22C55E"; // --golf-accent (also ACCENT / positive data)
 const MISS = "#EF4444";
