@@ -1,7 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import {
   BarChart3,
-  Eye,
   LayoutDashboard,
   Trophy,
 } from "lucide-react";
@@ -26,7 +25,6 @@ const GOLFER_NAV: NavItem[] = [
   { to: "/practice", label: "Practice", Icon: PutterIcon },
   { to: "/analytics", label: "Analytics", Icon: BarChart3 },
   { to: "/compete", label: "Compete", Icon: Trophy },
-  { to: "/preview", label: "Preview", Icon: Eye },
 ];
 
 function AuthenticatedLayout() {
