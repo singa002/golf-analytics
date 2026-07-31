@@ -250,6 +250,53 @@ export function SharedGreenView({
         filter="url(#sharedGreenGlow)"
       />
 
+      {/* Actual ball path (live) — red, draws in over the intended line */}
+      {live && (
+        <g>
+          <path
+            d={live.d}
+            pathLength={1000}
+            stroke={MISS}
+            strokeWidth="10"
+            strokeOpacity="0.18"
+            strokeLinecap="round"
+            fill="none"
+            strokeDasharray="1000"
+            filter="url(#sharedGreenGlow)"
+          >
+            <animate
+              attributeName="stroke-dashoffset"
+              from="1000"
+              to="0"
+              dur={liveDur}
+              fill="freeze"
+            />
+          </path>
+          <path
+            d={live.d}
+            pathLength={1000}
+            stroke={MISS}
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            fill="none"
+            strokeDasharray="1000"
+            filter="url(#sharedGreenGlow)"
+          >
+            <animate
+              attributeName="stroke-dashoffset"
+              from="1000"
+              to="0"
+              dur={liveDur}
+              fill="freeze"
+            />
+          </path>
+          {/* Rolling ball marker riding the actual path */}
+          <circle r="7" fill={WHITE} stroke={MISS} strokeWidth="2">
+            <animateMotion dur={liveDur} fill="freeze" path={live.d} />
+          </circle>
+        </g>
+      )}
+
       {/* Ball */}
       <ellipse cx={ballX + 3} cy={ballY + 5} rx="10" ry="5" fill="#000" opacity="0.5" />
       <circle cx={ballX} cy={ballY} r="11" fill={WHITE} stroke="#000" strokeWidth="1.5" />
