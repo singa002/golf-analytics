@@ -17,7 +17,6 @@ import { Route as CoachIndexRouteImport } from './routes/coach.index'
 import { Route as CoachScheduleRouteImport } from './routes/coach.schedule'
 import { Route as CoachAnalyticsRouteImport } from './routes/coach.analytics'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
-import { Route as AuthenticatedPreviewRouteImport } from './routes/_authenticated/preview'
 import { Route as AuthenticatedPracticeRouteImport } from './routes/_authenticated/practice'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated/history'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -66,11 +65,6 @@ const CoachAnalyticsRoute = CoachAnalyticsRouteImport.update({
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPreviewRoute = AuthenticatedPreviewRouteImport.update({
-  id: '/preview',
-  path: '/preview',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedPracticeRoute = AuthenticatedPracticeRouteImport.update({
@@ -138,7 +132,6 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/practice': typeof AuthenticatedPracticeRoute
-  '/preview': typeof AuthenticatedPreviewRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/coach/analytics': typeof CoachAnalyticsRoute
   '/coach/schedule': typeof CoachScheduleRoute
@@ -157,7 +150,6 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/practice': typeof AuthenticatedPracticeRoute
-  '/preview': typeof AuthenticatedPreviewRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/coach/analytics': typeof CoachAnalyticsRoute
   '/coach/schedule': typeof CoachScheduleRoute
@@ -179,7 +171,6 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
   '/_authenticated/practice': typeof AuthenticatedPracticeRoute
-  '/_authenticated/preview': typeof AuthenticatedPreviewRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/coach/analytics': typeof CoachAnalyticsRoute
   '/coach/schedule': typeof CoachScheduleRoute
@@ -201,7 +192,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/history'
     | '/practice'
-    | '/preview'
     | '/settings'
     | '/coach/analytics'
     | '/coach/schedule'
@@ -220,7 +210,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/history'
     | '/practice'
-    | '/preview'
     | '/settings'
     | '/coach/analytics'
     | '/coach/schedule'
@@ -241,7 +230,6 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/history'
     | '/_authenticated/practice'
-    | '/_authenticated/preview'
     | '/_authenticated/settings'
     | '/coach/analytics'
     | '/coach/schedule'
@@ -317,13 +305,6 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/preview': {
-      id: '/_authenticated/preview'
-      path: '/preview'
-      fullPath: '/preview'
-      preLoaderRoute: typeof AuthenticatedPreviewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/practice': {
@@ -405,7 +386,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
   AuthenticatedPracticeRoute: typeof AuthenticatedPracticeRoute
-  AuthenticatedPreviewRoute: typeof AuthenticatedPreviewRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
 }
 
@@ -415,7 +395,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
   AuthenticatedPracticeRoute: AuthenticatedPracticeRoute,
-  AuthenticatedPreviewRoute: AuthenticatedPreviewRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
 }
 

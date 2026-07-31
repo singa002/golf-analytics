@@ -1,11 +1,23 @@
 const ACCENT = "#22C55E"; // --golf-accent
 const WHITE = "#FFFFFF";
 const DEEP = "#040906"; // --golf-deep
+const MISS = "#EF4444"; // --golf-miss
+
+export interface LivePath {
+  /** Lateral deviation samples in feet (positive = right of the intended line) */
+  deviation: number[];
+  /** 1 = finishes at the hole, <1 = short, >1 = runs past */
+  endScale: number;
+}
 
 export interface SharedGreenViewProps {
   ballAngle: number; // 0-360 degrees around the hole
   ballDistance: number; // 0-1 (fraction of green radius from center)
   breakDirection: "Left" | "Right";
+  /** Optional actual ball path, drawn in red on top of the intended line */
+  livePath?: LivePath;
+  /** Duration of the live-path draw-in animation, in ms */
+  liveDurationMs?: number;
 }
 
 /**
@@ -16,6 +28,8 @@ export function SharedGreenView({
   ballAngle,
   ballDistance,
   breakDirection,
+  livePath,
+  liveDurationMs = 2400,
 }: SharedGreenViewProps) {
   const W = 400;
   const H = 400;
@@ -45,6 +59,53 @@ export function SharedGreenView({
   const c2y = midY + perpY * bendMag;
 
   const pathD = `M ${ballX} ${ballY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${cx} ${cy}`;
+
+  // ---- Actual (live) path: intended bezier + perpendicular deviation ----
+  const P0 = { x: ballX, y: ballY };
+  const P1 = { x: c1x, y: c1y };
+  const P2 = { x: c2x, y: c2y };
+  const P3 = { x: cx, y: cy };
+
+  const bez = (t: number) => {
+    const u = 1 - t;
+    return {
+      x: u * u * u * P0.x + 3 * u * u * t * P1.x + 3 * u * t * t * P2.x + t * t * t * P3.x,
+      y: u * u * u * P0.y + 3 * u * u * t * P1.y + 3 * u * t * t * P2.y + t * t * t * P3.y,
+    };
+  };
+  // Tangent at the hole, used to extrapolate when the ball runs past
+  const tangent = { x: P3.x - P2.x, y: P3.y - P2.y };
+  const tangentLen = Math.max(1, Math.hypot(tangent.x, tangent.y));
+
+  const buildLive = (live: LivePath) => {
+    const samples = live.deviation.length;
+    const FT_TO_PX = 26; // deviation feet → px, exaggerated for visibility
+    const end = Math.max(0.5, live.endScale);
+    const pts = live.deviation.map((devFt, i) => {
+      const t = (i / (samples - 1)) * end;
+      const base = t <= 1 ? bez(t) : {
+        x: P3.x + (tangent.x / tangentLen) * (t - 1) * len,
+        y: P3.y + (tangent.y / tangentLen) * (t - 1) * len,
+      };
+      return {
+        x: base.x + perpX * devFt * FT_TO_PX,
+        y: base.y + perpY * devFt * FT_TO_PX,
+      };
+    });
+    let d = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+    for (let i = 1; i < pts.length - 1; i++) {
+      const midXX = (pts[i].x + pts[i + 1].x) / 2;
+      const midYY = (pts[i].y + pts[i + 1].y) / 2;
+      d += ` Q ${pts[i].x.toFixed(1)} ${pts[i].y.toFixed(1)}, ${midXX.toFixed(1)} ${midYY.toFixed(1)}`;
+    }
+    const last = pts[pts.length - 1];
+    d += ` L ${last.x.toFixed(1)} ${last.y.toFixed(1)}`;
+    return { d, last };
+  };
+
+  const live = livePath ? buildLive(livePath) : null;
+  const liveDur = `${liveDurationMs / 1000}s`;
+
 
   return (
     <svg
@@ -188,6 +249,53 @@ export function SharedGreenView({
         fill={ACCENT}
         filter="url(#sharedGreenGlow)"
       />
+
+      {/* Actual ball path (live) — red, draws in over the intended line */}
+      {live && (
+        <g>
+          <path
+            d={live.d}
+            pathLength={1000}
+            stroke={MISS}
+            strokeWidth="10"
+            strokeOpacity="0.18"
+            strokeLinecap="round"
+            fill="none"
+            strokeDasharray="1000"
+            filter="url(#sharedGreenGlow)"
+          >
+            <animate
+              attributeName="stroke-dashoffset"
+              from="1000"
+              to="0"
+              dur={liveDur}
+              fill="freeze"
+            />
+          </path>
+          <path
+            d={live.d}
+            pathLength={1000}
+            stroke={MISS}
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            fill="none"
+            strokeDasharray="1000"
+            filter="url(#sharedGreenGlow)"
+          >
+            <animate
+              attributeName="stroke-dashoffset"
+              from="1000"
+              to="0"
+              dur={liveDur}
+              fill="freeze"
+            />
+          </path>
+          {/* Rolling ball marker riding the actual path */}
+          <circle r="7" fill={WHITE} stroke={MISS} strokeWidth="2">
+            <animateMotion dur={liveDur} fill="freeze" path={live.d} />
+          </circle>
+        </g>
+      )}
 
       {/* Ball */}
       <ellipse cx={ballX + 3} cy={ballY + 5} rx="10" ry="5" fill="#000" opacity="0.5" />
