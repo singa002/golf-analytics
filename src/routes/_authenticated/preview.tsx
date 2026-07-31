@@ -3,6 +3,7 @@ import { Camera } from "lucide-react";
 import { getPrePuttRead } from "@/lib/previewService";
 import { SharedGreenView } from "@/components/SharedGreenView";
 import { usePutt } from "@/context/PuttContext";
+import { CoursePhotoBackdrop } from "@/components/CoursePhotoBackdrop";
 
 
 export const Route = createFileRoute("/_authenticated/preview")({
@@ -25,8 +26,7 @@ export const Route = createFileRoute("/_authenticated/preview")({
 
 const GREEN = "#34D399"; // --golf-accent
 const WHITE = "#FFFFFF";
-const CARD = "#0D1512"; // --golf-card
-const COACHING_BG = "#040906"; // --golf-deep
+
 const DEEP = "#040906"; // --golf-deep
 
 function MetricRow({
@@ -60,8 +60,10 @@ function PreviewPage() {
   const { currentPutt } = usePutt();
 
   return (
-    <div className="min-h-[calc(100vh-3.5rem)] p-6">
-      <div className="w-full max-w-[1400px] mx-auto flex flex-col gap-5">
+    <div className="relative min-h-[calc(100vh-3.5rem)] p-6">
+      <CoursePhotoBackdrop />
+      <div className="relative w-full max-w-[1400px] mx-auto flex flex-col gap-5">
+
         <div className="w-full flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: GREEN }} />
           <span
@@ -77,7 +79,7 @@ function PreviewPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
           {/* Left column */}
           <div className="flex flex-col gap-5">
-            <div className="w-full rounded-2xl p-6" style={{ backgroundColor: CARD }}>
+            <div className="golf-glass w-full rounded-2xl p-6">
               <div className="flex flex-col">
                 <MetricRow label="Distance" value={`${read.distanceFt} ft`} />
                 <MetricRow label="Speed" value={`${read.speedMs} m/s`} />
@@ -98,10 +100,7 @@ function PreviewPage() {
               </div>
             </div>
 
-            <div
-              className="w-full rounded-xl p-5"
-              style={{ backgroundColor: COACHING_BG }}
-            >
+            <div className="golf-glass-inner w-full rounded-xl p-5">
               <div className="golf-label mb-2">
                 AI Coaching
               </div>
@@ -116,8 +115,8 @@ function PreviewPage() {
 
           {/* Right column */}
           <div
-            className="relative w-full rounded-2xl p-4 flex items-center justify-center"
-            style={{ backgroundColor: CARD, minHeight: 520 }}
+            className="golf-glass relative w-full rounded-2xl p-4 flex items-center justify-center"
+            style={{ minHeight: 520 }}
           >
             <div className="absolute top-4 right-4 flex items-center gap-1.5 golf-text-secondary">
               <Camera size={12} strokeWidth={2} />

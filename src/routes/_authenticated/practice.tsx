@@ -6,6 +6,7 @@ import { type PuttData, type PuttQuality } from "@/lib/sensorService";
 import { SharedGreenView } from "@/components/SharedGreenView";
 import { usePutt } from "@/context/PuttContext";
 import { SwipeableInfoCards, COACHING_TIPS, type SessionPutt } from "@/components/SwipeableInfoCards";
+import { CoursePhotoBackdrop } from "@/components/CoursePhotoBackdrop";
 
 
 
@@ -34,7 +35,6 @@ const BLUE = "#3B82F6";
 const YELLOW = "#EAB308";
 const WHITE = "#FFFFFF";
 const GRAY = "#9CA3AF";
-const CARD = "#0D1512"; // --golf-card
 const INNER = "#040906"; // --golf-deep
 
 function PutterIcon({ size = 20, color = WHITE }: { size?: number; color?: string }) {
@@ -48,7 +48,7 @@ function PutterIcon({ size = 20, color = WHITE }: { size?: number; color?: strin
 
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex-1 rounded-xl p-4" style={{ backgroundColor: INNER }}>
+    <div className="golf-glass-inner flex-1 rounded-xl p-4">
       <div className="golf-label mb-2">
         {label}
       </div>
@@ -71,7 +71,7 @@ function qualityColor(q: PuttQuality) {
 function ResultPill({ label, value, quality }: { label: string; value: string; quality: PuttQuality }) {
   const color = qualityColor(quality);
   return (
-    <div className="flex-1 rounded-xl p-4 border" style={{ backgroundColor: INNER, borderColor: `${color}55` }}>
+    <div className="golf-glass-inner flex-1 rounded-xl p-4" style={{ borderColor: `${color}55` }}>
       <div className="golf-label mb-1.5">{label}</div>
       <div className="golf-display text-xl tracking-tight" style={{ color: WHITE }}>{value}</div>
       <div className="text-base font-semibold uppercase tracking-widest mt-1.5" style={{ color }}>{quality}</div>
@@ -149,7 +149,7 @@ function LiveView({
           <MetricCard label="Break" value={`${read.breakDeg}° ${read.breakDirection}`} />
         </div>
 
-        <div className="rounded-2xl p-6" style={{ backgroundColor: CARD }}>
+        <div className="golf-glass rounded-2xl p-6">
           <div className="flex items-center justify-between py-3 border-b border-white/10">
             <span className="golf-label">Start Line</span>
             <span className="golf-display text-xl" style={{ color: ACCENT }}>0.9° Left</span>
@@ -183,7 +183,7 @@ function LiveView({
       </div>
 
       {/* Right column */}
-      <div className="relative w-full rounded-2xl p-4 flex items-center justify-center" style={{ backgroundColor: CARD, minHeight: 520 }}>
+      <div className="golf-glass relative w-full rounded-2xl p-4 flex items-center justify-center" style={{ minHeight: 520 }}>
         <div className="absolute top-4 right-4 flex items-center gap-1.5">
           <Circle size={10} fill={RED} stroke={RED} className="animate-pulse" />
           <span className="text-base font-semibold uppercase tracking-widest" style={{ color: RED }}>Recording</span>
@@ -223,7 +223,7 @@ function ResultView({ data, onNext }: { data: PuttData; onNext: () => void }) {
         />
       </div>
 
-      <div className="rounded-2xl p-8 flex flex-col items-center gap-4" style={{ backgroundColor: CARD }}>
+      <div className="golf-glass rounded-2xl p-8 flex flex-col items-center gap-4">
         <div className="golf-label">Putt Result</div>
         <div
           className="golf-display text-7xl tracking-tight"
@@ -240,7 +240,7 @@ function ResultView({ data, onNext }: { data: PuttData; onNext: () => void }) {
         </div>
       </div>
 
-      <div className="rounded-2xl p-5" style={{ backgroundColor: CARD }}>
+      <div className="golf-glass rounded-2xl p-5">
         <div className="golf-label mb-3">Ball Path vs. Intended Line</div>
         <div className="h-44">
           <PuttPathDiagram samples={data.pathSamples} />
@@ -290,8 +290,9 @@ function PracticePage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-3.5rem)] p-6">
-      <div className="w-full max-w-[1400px] mx-auto">
+    <div className="relative min-h-[calc(100vh-3.5rem)] p-6">
+      <CoursePhotoBackdrop />
+      <div className="relative w-full max-w-[1400px] mx-auto">
         <h1 className="sr-only">Practice</h1>
         {result ? (
           <ResultView data={result} onNext={handleNext} />

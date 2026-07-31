@@ -333,7 +333,24 @@ export function PuttMap({ data }: { data: SessionAnalytics }) {
           {data.puttMap.map((p, i) => {
             const px = cx + p.x * rx * 0.9;
             const py = cy - ry * 0.85 + p.y * ry * 1.6;
-            return <circle key={i} cx={px} cy={py} r={5} fill={p.result === "made" ? MADE : MISS} opacity={0.95} />;
+            const color = p.result === "made" ? MADE : MISS;
+            return (
+              <g
+                key={i}
+                style={{
+                  opacity: 0,
+                  transformOrigin: `${px}px ${py}px`,
+                  animation: `golf-dot-in 420ms ease-out ${i * 45}ms forwards`,
+                }}
+                className="cursor-pointer"
+              >
+                <circle cx={px} cy={py} r={10} fill={color} opacity={0.12} />
+                <circle cx={px} cy={py} r={5} fill={color} opacity={0.95} />
+                <circle cx={px} cy={py} r={12} fill="transparent">
+                  <title>{`Putt ${i + 1} — ${p.result === "made" ? "Made" : "Missed"}`}</title>
+                </circle>
+              </g>
+            );
           })}
         </svg>
       </div>
