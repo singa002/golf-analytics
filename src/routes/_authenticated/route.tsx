@@ -49,7 +49,7 @@ function AuthenticatedLayout() {
             mode: "golfer",
           }}
         />
-        <main className="relative z-10 flex-1 min-w-0 min-h-0 overflow-y-auto">
+        <main className="relative z-10 flex-1 min-w-0 min-h-0 overflow-hidden">
           <Outlet />
         </main>
       </div>

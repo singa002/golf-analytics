@@ -128,7 +128,7 @@ function DashboardPage() {
               <p className="golf-label mb-1">Current Streak</p>
               <div className="golf-display text-2xl xl:text-3xl leading-none text-white">
                 <span className="text-[#22C55E]">{YOUR_MAKE_STREAK}</span>
-                <span className="text-xs xl:text-sm golf-text-secondary ml-2">IN A ROW</span>
+                <span className="text-xs xl:text-sm golf-text-secondary ml-2">MADE IN A ROW</span>
               </div>
             </div>
           </div>

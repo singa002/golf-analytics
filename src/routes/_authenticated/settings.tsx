@@ -154,9 +154,10 @@ function SettingsPage() {
   }, [section]);
 
   return (
-    <div className="relative p-4 min-h-full">
+    /* Absolute fill of layout <main> — avoids iOS %/flex height scroll bugs. */
+    <div className="absolute inset-0 golf-scroll p-4">
       <h1 className="sr-only">Settings</h1>
-      <div className="relative flex w-full max-w-[1500px] flex-col gap-10 mx-auto">
+      <div className="relative flex w-full max-w-[1500px] flex-col gap-10 mx-auto pb-10">
         <Section id="account" title="Account Settings" highlighted={highlighted === "account"}>
           <div className="grid grid-cols-2 gap-4">
             <Card>

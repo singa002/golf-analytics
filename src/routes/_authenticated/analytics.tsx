@@ -46,32 +46,196 @@ function startLineLabel(deg: number) {
   return `${abs}° ${deg < 0 ? "left" : "right"}`;
 }
 
-/** Session-specific insight — concrete numbers, changes with the selected session. */
-function buildSessionInsight(session: SessionSummary, averageMakePercent: number): string {
-  const start = startLineLabel(session.avgStartLineDeg);
-  const breakAbs = Math.abs(session.avgBreakDeg).toFixed(1);
-  const vsAvg = Math.round(session.makePercent - averageMakePercent);
-  const vsAvgPhrase =
-    vsAvg >= 3
-      ? `${vsAvg} points above your recent average`
-      : vsAvg <= -3
-        ? `${Math.abs(vsAvg)} points below your recent average`
-        : "roughly in line with your recent average";
+/** Wrap standalone metrics (%, °, counts) in gold for scanability. */
+function InsightMetricText({ text }: { text: string }) {
+  const parts = text.split(/(\d+\.?\d*%|\d+\.?\d*°|\b\d+\b)/g);
+  return (
+    <>
+      {parts.map((part, i) =>
+        /^\d/.test(part) ? (
+          <span key={i} className="font-semibold" style={{ color: "var(--golf-gold)" }}>
+            {part}
+          </span>
+        ) : (
+          <span key={i}>{part}</span>
+        ),
+      )}
+    </>
+  );
+}
+
+/**
+ * Interpretive session insights — patterns, baselines, and takeaways.
+ * Never restates the raw stats card (totals / avgs) without a "why" or "so what."
+ */
+function buildSessionInsights(
+  session: SessionSummary,
+  history: SessionSummary[],
+): string[] {
+  const lines: string[] = [];
+  const avgMake =
+    history.reduce((sum, s) => sum + s.makePercent, 0) / Math.max(1, history.length);
+  const avgDist =
+    history.reduce((sum, s) => sum + s.avgDistanceFt, 0) / Math.max(1, history.length);
+  const avgSpeed =
+    history.reduce((sum, s) => sum + s.avgSpeedMs, 0) / Math.max(1, history.length);
+  const avgStart =
+    history.reduce((sum, s) => sum + s.avgStartLineDeg, 0) / Math.max(1, history.length);
+
+  const makeDelta = Math.round(session.makePercent - avgMake);
+  const breakAbs = Math.abs(session.avgBreakDeg);
+  const startAbs = Math.abs(session.avgStartLineDeg);
+  const startSide = session.avgStartLineDeg < 0 ? "left" : "right";
+  const breakSide = session.avgBreakDeg < 0 ? "left" : "right";
 
   const misses = session.puttMap.filter((p) => p.result === "missed");
   const leftMisses = misses.filter((p) => p.x < -0.08).length;
   const rightMisses = misses.filter((p) => p.x > 0.08).length;
-  let missPattern = "misses were scattered around the hole";
-  if (leftMisses > rightMisses + 1) {
-    missPattern = `most of your ${session.missed} misses finished left of the hole`;
-  } else if (rightMisses > leftMisses + 1) {
-    missPattern = `most of your ${session.missed} misses finished right of the hole`;
-  } else if (session.missed > 0) {
-    missPattern = `your ${session.missed} misses were split evenly left and right`;
+  // puttMap y increases with distance in the mock generator
+  const longThreshold = 0.55;
+  const longPutts = session.puttMap.filter((p) => p.y >= longThreshold);
+  const longMisses = longPutts.filter((p) => p.result === "missed").length;
+  const shortPutts = session.puttMap.filter((p) => p.y < longThreshold);
+  const shortMissRate =
+    shortPutts.length > 0
+      ? shortPutts.filter((p) => p.result === "missed").length / shortPutts.length
+      : 0;
+  const longMissRate = longPutts.length > 0 ? longMisses / longPutts.length : 0;
+
+  const offCenterBuckets = session.startLineAccuracy.filter((b) => b.bucket !== "0");
+  const centerCount = session.startLineAccuracy.find((b) => b.bucket === "0")?.count ?? 0;
+  const offCenterCount = offCenterBuckets.reduce((sum, b) => sum + b.count, 0);
+  const farSideCount = session.startLineAccuracy
+    .filter((b) => Math.abs(parseFloat(b.bucket)) >= 2)
+    .reduce((sum, b) => sum + b.count, 0);
+
+  // --- Baseline vs own history ---
+  if (Math.abs(makeDelta) >= 3) {
+    lines.push(
+      makeDelta > 0
+        ? `Make % sits ${makeDelta} points above your recent average — keep this distance band; the stroke is holding under pressure.`
+        : `Make % sits ${Math.abs(makeDelta)} points below your recent average — shrink the practice circle before chasing length again.`,
+    );
   }
 
-  return `You made ${session.made} of ${session.totalPutts} from an average ${session.avgDistanceFt} ft at ${session.avgSpeedMs} m/s — ${vsAvgPhrase}. Start line averaged ${start} with ${breakAbs}° of break; ${missPattern}.`;
+  // --- Miss side + start-line correlation (two stats together) ---
+  if (session.missed >= 3 && leftMisses > rightMisses + 1 && session.avgStartLineDeg <= -0.35) {
+    lines.push(
+      `Misses clustered left and start line averaged ${startAbs.toFixed(1)}° left — face aim is the likely leak, not green reading alone.`,
+    );
+  } else if (session.missed >= 3 && rightMisses > leftMisses + 1 && session.avgStartLineDeg >= 0.35) {
+    lines.push(
+      `Misses clustered right and start line averaged ${startAbs.toFixed(1)}° right — quiet the hands through impact before you change the read.`,
+    );
+  } else if (session.missed >= 3 && leftMisses > rightMisses + 1 && session.avgStartLineDeg >= 0.35) {
+    lines.push(
+      `Balls finished left while start line drifted right — over-correction after an open face; pick one start target and commit.`,
+    );
+  } else if (session.missed >= 3 && rightMisses > leftMisses + 1 && session.avgStartLineDeg <= -0.35) {
+    lines.push(
+      `Balls finished right while start line drifted left — classic push from a closed path; square the face, then trust the line.`,
+    );
+  }
+
+  // --- Start line × break interaction ---
+  if (startAbs >= 0.45 && breakAbs >= 1.0 && lines.length < 4) {
+    const sameSide = startSide === breakSide;
+    lines.push(
+      sameSide
+        ? `Start line and break both lean ${startSide} (${startAbs.toFixed(1)}° / ${breakAbs.toFixed(1)}°) — you're stacking error to one side; aim less break, stroke straighter.`
+        : `Start line ${startSide} (${startAbs.toFixed(1)}°) fights ${breakAbs.toFixed(1)}° of ${breakSide} break — misses will look "random" until face and read agree.`,
+    );
+  }
+
+  // --- Distance pattern from putt map ---
+  if (
+    longPutts.length >= 4 &&
+    longMissRate >= 0.55 &&
+    longMissRate > shortMissRate + 0.15 &&
+    lines.length < 4
+  ) {
+    lines.push(
+      `Misses concentrated on the longer rolls (${longMisses} of ${longPutts.length} past mid-range) — prioritize lag speed before fine-tuning line.`,
+    );
+  } else if (
+    session.avgDistanceFt >= avgDist + 2.5 &&
+    session.makePercent < avgMake - 2 &&
+    lines.length < 4
+  ) {
+    lines.push(
+      `You played ${(session.avgDistanceFt - avgDist).toFixed(1)} ft longer than usual and make % slipped — length is taxing pace control more than aim.`,
+    );
+  }
+
+  // --- Speed vs history / break ---
+  if (session.avgSpeedMs >= avgSpeed + 0.15 && breakAbs >= 1.0 && lines.length < 4) {
+    lines.push(
+      `Pace is hotter than your baseline (${session.avgSpeedMs} vs ${avgSpeed.toFixed(1)} m/s) on ${breakAbs.toFixed(1)}° break — soften entry so the ball can take the curve.`,
+    );
+  } else if (session.avgSpeedMs <= avgSpeed - 0.15 && session.makePercent < avgMake && lines.length < 4) {
+    lines.push(
+      `Pace is softer than your recent norm — dying putts leave break-side lip-outs; add a touch more roll on mid-range tries.`,
+    );
+  }
+
+  // --- Start-line distribution shape ---
+  if (farSideCount >= 3 && farSideCount >= centerCount && lines.length < 4) {
+    lines.push(
+      `${farSideCount} starts landed 2°+ offline vs ${centerCount} square — the face is wandering before the stroke starts; rehearse a gate at address.`,
+    );
+  } else if (offCenterCount > centerCount * 2 && lines.length < 4) {
+    lines.push(
+      `Start-line histogram is spread thin (${offCenterCount} offline vs ${centerCount} on zero) — pick a blade of grass 1 ft ahead and start every putt at it.`,
+    );
+  }
+
+  // --- Actionable takeaways (fill to at least 2, cap 4) ---
+  if (lines.length < 2) {
+    if (startAbs >= 0.35) {
+      lines.push(
+        `Primary leak is a ${startAbs.toFixed(1)}° ${startSide} start — next session, one drill: 10 straight 8-ft putts with a gate, no break.`,
+      );
+    } else if (breakAbs >= 1.2) {
+      lines.push(
+        `Break averaged ${breakAbs.toFixed(1)}° — next session, aim to the apex and stroke it like a straight putt instead of steering.`,
+      );
+    } else if (makeDelta >= 0) {
+      lines.push(
+        `Session tracked near your baseline with a quiet start line — next, add 3 mid-breaking putts and keep the same face control.`,
+      );
+    } else {
+      lines.push(
+        `No single miss side dominated — next session, log start line on every miss so the first real pattern can surface.`,
+      );
+    }
+  }
+
+  if (lines.length < 2) {
+    lines.push(
+      `Carry one focus forward: square start line inside 0.5° before you stretch distance again.`,
+    );
+  }
+
+  // Prefer a closing action if we still have a slot and the last line isn't already a "next"
+  if (lines.length < 4 && !lines.some((l) => /next session|next,/i.test(l))) {
+    if (leftMisses > rightMisses + 1) {
+      lines.push(
+        `Next session focus: open-to-square face drills — your miss map is still leaking left.`,
+      );
+    } else if (rightMisses > leftMisses + 1) {
+      lines.push(
+        `Next session focus: hold face through impact — your miss map is still leaking right.`,
+      );
+    } else if (session.avgDistanceFt >= 18) {
+      lines.push(
+        `Next session focus: 20–30 ft lags to a 3-ft circle before you chase make % again.`,
+      );
+    }
+  }
+
+  return lines.slice(0, 4);
 }
+
 
 function AnalyticsPage() {
   const { session: requestedId } = Route.useSearch();
@@ -130,7 +294,11 @@ function AnalyticsPage() {
         </div>
 
         {/* Right column — session detail (defaults to latest) */}
-        <SessionDetail session={selected} averageMakePercent={averageMakePercent} />
+        <SessionDetail
+          session={selected}
+          history={sessions}
+          averageMakePercent={averageMakePercent}
+        />
       </div>
     </div>
   );
@@ -138,9 +306,11 @@ function AnalyticsPage() {
 
 function SessionDetail({
   session,
+  history,
   averageMakePercent,
 }: {
   session: SessionSummary;
+  history: SessionSummary[];
   averageMakePercent: number;
 }) {
   const size = 72;
@@ -149,7 +319,7 @@ function SessionDetail({
   const c = 2 * Math.PI * r;
   const offset = c - (session.makePercent / 100) * c;
   const color = makePercentVsAverage(session.makePercent, averageMakePercent);
-  const insight = buildSessionInsight(session, averageMakePercent);
+  const insights = buildSessionInsights(session, history);
 
   const stats = [
     { label: "Total Putts", value: session.totalPutts, valueClass: "text-white" },
@@ -238,8 +408,22 @@ function SessionDetail({
           </div>
         </div>
         <div className="golf-glass-inner rounded-[12px] p-4 flex flex-col min-h-0">
-          <div className="golf-label mb-2 shrink-0">Insight</div>
-          <p className="text-sm text-[#22C55E] italic leading-relaxed flex-1">{insight}</p>
+          <div className="golf-label mb-3 shrink-0">Insight</div>
+          <ol className="flex flex-col gap-2.5 flex-1 min-h-0">
+            {insights.map((line, index) => (
+              <li key={index} className="flex gap-2.5 golfer-chrome-text leading-snug text-white/90">
+                <span
+                  className="golf-display shrink-0 tabular-nums"
+                  style={{ color: "var(--golf-gold)" }}
+                >
+                  {index + 1}.
+                </span>
+                <span className="min-w-0">
+                  <InsightMetricText text={line} />
+                </span>
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </Card>

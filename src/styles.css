@@ -153,6 +153,34 @@
   line-height: 20px;
 }
 
+/*
+  iPad Safari scrollport — percentage/flex height + overflow:auto often never
+  becomes a touch-scrollable layer. Pair with `absolute inset-0` (or flex-1 min-h-0).
+*/
+.golf-scroll {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  /* Promote to its own layer so touch scrolling isn't eaten by glass children. */
+  transform: translateZ(0);
+  isolation: isolate;
+}
+
+/*
+  WebKit bug: backdrop-filter on descendants of an overflow scroller can kill
+  touch scrolling on iPad. Inside scrollports, use opaque glass fills instead.
+*/
+@supports (-webkit-touch-callout: none) {
+  .golf-scroll .golf-glass,
+  .golf-scroll .golf-glass-inner {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background-color: rgba(13, 21, 18, 0.94);
+  }
+}
+
 @utility golf-page-background {
   background-color: var(--golf-deep);
   background-image:
@@ -261,4 +289,51 @@
 @keyframes golf-dot-in {
   from { opacity: 0; transform: scale(0.2); }
   to { opacity: 0.95; transform: scale(1); }
+}
+
+/* ---- Scoped @avenra/liquid-glass sidebar nav (test) ---- */
+.golf-sidebar-liquid {
+  --lg-tint: rgba(4, 9, 6, 0.34);
+  --lg-border: rgba(255, 255, 255, 0.14);
+  --lg-shadow-out: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --lg-shadow-hi: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --lg-shadow-lo: inset 0 -2px 6px rgba(0, 0, 0, 0.35);
+  --lg-accent: #22c55e;
+  --lg-accent-2: #16a34a;
+}
+
+/* Override library defaults (160×48 + large padding) so nav sizing stays unchanged */
+.golf-sidebar-liquid .lg-button {
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  padding: 0.75rem 0.25rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  background: none;
+  border: none;
+}
+
+.golf-sidebar-liquid .lg-button-text {
+  font-size: 0.75rem;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: inherit;
+  text-shadow: none;
+}
+
+.golf-sidebar-liquid .lg-button-text:empty {
+  display: none;
+}
+
+.golf-sidebar-liquid .lg-nav-icon {
+  position: relative;
+  z-index: 5;
+  flex-shrink: 0;
 }

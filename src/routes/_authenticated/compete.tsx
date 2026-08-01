@@ -154,111 +154,111 @@ function ComparePage() {
   const activeName = challenges.find((c) => c.id === activeChallenge)?.title ?? "";
 
   return (
-    <div className="relative h-full w-full p-6 overflow-hidden">
-      <div className="relative grid grid-cols-2 gap-6 h-full">
-        {/* LEFT — Active Challenges */}
-        <div className="flex flex-col min-h-0">
-          <div className="flex items-center gap-2 mb-4">
-            <Trophy className="w-5 h-5 text-[#22C55E]" />
-            <h2 className="golf-label">ACTIVE CHALLENGES</h2>
-          </div>
-          <div className="flex-1 overflow-y-auto space-y-3 pr-1">
-            {challenges.map((c) => (
-              <div
-                key={c.id}
-                className="golf-glass rounded-[12px] p-4"
-              >
-                <div className="flex items-start justify-between gap-3 mb-2">
-                  <div>
-                    <h3 className="text-white font-bold text-lg">{c.title}</h3>
-                    <p className="golf-text-secondary text-sm mt-0.5">{c.description}</p>
-                  </div>
-                </div>
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <span className={`text-base font-bold px-2 py-1 rounded-full border ${typeColors[c.type]}`}>
-                    {c.type}
-                  </span>
-                  <span className="text-base font-bold px-2 py-1 rounded-full bg-[#113821] text-[#22C55E] border border-[#155B30]">
-                    {c.daysLeft} DAYS LEFT
-                  </span>
-                  <span className="text-base golf-text-secondary">{c.participants} golfers competing</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="text-sm">
-                    {c.yourScore ? (
-                      <>
-                        <span className="golf-label">Your Score</span>
-                        <div className="golf-display text-base text-white">{c.yourScore}</div>
-                      </>
-                    ) : (
-                      <span className="golf-text-secondary text-base">Not joined</span>
-                    )}
-                  </div>
-                  {c.joined ? (
-                    <span className="text-sm font-bold px-3 py-1.5 rounded-full text-[#22C55E] border border-[#22C55E]">
-                      COMPETING
-                    </span>
-                  ) : (
-                    <button className="golf-accent-glow text-sm font-bold px-4 py-2 rounded-lg border border-[#22C55E] bg-[#22C55E] text-black hover:bg-[#4ADE80] transition">
-                      JOIN CHALLENGE
-                    </button>
-                  )}
+    /* Absolute fill + flex columns (not grid) — iOS needs a hard height budget
+       for nested overflow-y scrollports; flex+min-h-0 is more reliable than grid. */
+    <div className="absolute inset-0 p-6 flex gap-6 min-h-0 overflow-hidden">
+      {/* LEFT — Active Challenges */}
+      <div className="flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden">
+        <div className="flex items-center gap-2 mb-4 shrink-0">
+          <Trophy className="w-5 h-5 text-[#22C55E]" />
+          <h2 className="golf-label">ACTIVE CHALLENGES</h2>
+        </div>
+        <div className="golf-scroll flex-1 min-h-0 space-y-3 pr-1">
+          {challenges.map((c) => (
+            <div
+              key={c.id}
+              className="golf-glass rounded-[12px] p-4"
+            >
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <div>
+                  <h3 className="text-white font-bold text-lg">{c.title}</h3>
+                  <p className="golf-text-secondary text-sm mt-0.5">{c.description}</p>
                 </div>
               </div>
-            ))}
-          </div>
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <span className={`text-base font-bold px-2 py-1 rounded-full border ${typeColors[c.type]}`}>
+                  {c.type}
+                </span>
+                <span className="text-base font-bold px-2 py-1 rounded-full bg-[#113821] text-[#22C55E] border border-[#155B30]">
+                  {c.daysLeft} DAYS LEFT
+                </span>
+                <span className="text-base golf-text-secondary">{c.participants} golfers competing</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="text-sm">
+                  {c.yourScore ? (
+                    <>
+                      <span className="golf-label">Your Score</span>
+                      <div className="golf-display text-base text-white">{c.yourScore}</div>
+                    </>
+                  ) : (
+                    <span className="golf-text-secondary text-base">Not joined</span>
+                  )}
+                </div>
+                {c.joined ? (
+                  <span className="text-sm font-bold px-3 py-1.5 rounded-full text-[#22C55E] border border-[#22C55E]">
+                    COMPETING
+                  </span>
+                ) : (
+                  <button className="golf-accent-glow text-sm font-bold px-4 py-2 rounded-lg border border-[#22C55E] bg-[#22C55E] text-black hover:bg-[#4ADE80] transition">
+                    JOIN CHALLENGE
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* RIGHT — Leaderboard */}
+      <div className="flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden">
+        <div className="flex items-center gap-2 mb-2 shrink-0">
+          <Trophy className="w-5 h-5 text-[#22C55E]" />
+          <h2 className="golf-label">LEADERBOARD</h2>
+          <span className="text-base golf-text-secondary">— {activeName}</span>
+        </div>
+        <div className="flex gap-2 mb-3 shrink-0">
+          {challenges.map((c) => (
+            <button
+              key={c.id}
+              onClick={() => setActiveChallenge(c.id)}
+              className={`text-base font-semibold px-3 py-1.5 rounded-full transition ${
+                activeChallenge === c.id
+                  ? "golf-accent-glow bg-[#22C55E] text-black"
+                  : "golf-glass-inner golf-text-secondary hover:text-white"
+              }`}
+            >
+              {c.type}
+            </button>
+          ))}
         </div>
 
-        {/* RIGHT — Leaderboard */}
-        <div className="flex flex-col min-h-0">
-          <div className="flex items-center gap-2 mb-2">
-            <Trophy className="w-5 h-5 text-[#22C55E]" />
-            <h2 className="golf-label">LEADERBOARD</h2>
-            <span className="text-base golf-text-secondary">— {activeName}</span>
-          </div>
-          <div className="flex gap-2 mb-3">
-            {challenges.map((c) => (
-              <button
-                key={c.id}
-                onClick={() => setActiveChallenge(c.id)}
-                className={`text-base font-semibold px-3 py-1.5 rounded-full transition ${
-                  activeChallenge === c.id
-                    ? "golf-accent-glow bg-[#22C55E] text-black"
-                    : "golf-glass-inner golf-text-secondary hover:text-white"
+        <div className="golf-glass rounded-[12px] overflow-hidden flex-1 flex flex-col min-h-0">
+          <div className="golf-scroll flex-1 min-h-0 divide-y divide-white/5">
+            {rows.map((r) => (
+              <div
+                key={r.rank}
+                className={`flex items-center gap-3 px-4 py-3 ${
+                  r.you ? "bg-[#0F271A] border-l-2 border-[#22C55E]" : ""
                 }`}
               >
-                {c.type}
-              </button>
-            ))}
-          </div>
-
-          <div className="golf-glass rounded-[12px] overflow-hidden flex-1 flex flex-col min-h-0">
-            <div className="flex-1 overflow-y-auto divide-y divide-white/5">
-              {rows.map((r) => (
-                <div
-                  key={r.rank}
-                  className={`flex items-center gap-3 px-4 py-3 ${
-                    r.you ? "bg-[#0F271A] border-l-2 border-[#22C55E]" : ""
-                  }`}
-                >
-                  <div className="w-8 text-center">
-                    {r.medal ? (
-                      <span className="text-xl">{r.medal}</span>
-                    ) : (
-                      <span className="text-[#F59E0B] font-bold">#{r.rank}</span>
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <div className={`font-semibold ${r.you ? "text-[#22C55E]" : "text-white"}`}>
-                      {r.name} {r.you && <span className="text-base text-[#22C55E] ml-1">YOU</span>}
-                    </div>
-                    <div className="text-base golf-text-secondary">{r.sessions} sessions</div>
-                  </div>
-                  <div className="text-white golf-display text-lg">{r.score}</div>
-                  <TrendIcon trend={r.trend} />
+                <div className="w-8 text-center">
+                  {r.medal ? (
+                    <span className="text-xl">{r.medal}</span>
+                  ) : (
+                    <span className="text-[#F59E0B] font-bold">#{r.rank}</span>
+                  )}
                 </div>
-              ))}
-            </div>
+                <div className="flex-1">
+                  <div className={`font-semibold ${r.you ? "text-[#22C55E]" : "text-white"}`}>
+                    {r.name} {r.you && <span className="text-base text-[#22C55E] ml-1">YOU</span>}
+                  </div>
+                  <div className="text-base golf-text-secondary">{r.sessions} sessions</div>
+                </div>
+                <div className="text-white golf-display text-lg">{r.score}</div>
+                <TrendIcon trend={r.trend} />
+              </div>
+            ))}
           </div>
         </div>
       </div>

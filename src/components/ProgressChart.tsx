@@ -42,10 +42,13 @@ function ProgressTooltip({
   const point = payload?.[0]?.payload;
   if (!active || !point) return null;
   return (
-    <div className="rounded-[10px] border border-white/10 px-3 py-2 shadow-xl" style={{ backgroundColor: DEEP }}>
+    <div
+      className="rounded-[10px] border border-white/10 px-3.5 py-3 shadow-xl flex flex-col gap-1.5"
+      style={{ backgroundColor: DEEP }}
+    >
       <div className="golf-label-sm whitespace-nowrap">{point.date}</div>
-      <div className="golf-display text-lg text-[#22C55E] leading-tight">{point.makePercent}%</div>
-      <div className="text-base golf-text-secondary">
+      <div className="golf-display text-lg text-[#22C55E] leading-none">{point.makePercent}%</div>
+      <div className="text-base golf-text-secondary leading-snug">
         <span className="text-[#22C55E]">{point.made} made</span>
         {" · "}
         <span className="text-[#EF4444]">{point.missed} missed</span>
@@ -158,7 +161,7 @@ export function ProgressChart({ sessions }: { sessions: SessionSummary[] }) {
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={series}
-            margin={{ top: 12, right: 10, left: 4, bottom: 8 }}
+            margin={{ top: 12, right: 12, left: 12, bottom: 36 }}
             onClick={(state) => {
               if (skipNextClick.current) {
                 skipNextClick.current = false;
@@ -179,19 +182,37 @@ export function ProgressChart({ sessions }: { sessions: SessionSummary[] }) {
             <XAxis
               dataKey="date"
               interval={0}
-              tick={{ fill: "#B0B3AF", fontSize: 11 }}
+              tick={{ fill: "#B0B3AF", fontSize: 14 }}
               tickFormatter={shortDateTick}
               axisLine={false}
               tickLine={false}
-              height={28}
+              tickMargin={14}
+              height={56}
+              label={{
+                value: "Date",
+                position: "insideBottom",
+                offset: -4,
+                fill: "#B0B3AF",
+                fontSize: 14,
+              }}
             />
             <YAxis
               domain={domain}
-              tick={{ fill: "#B0B3AF", fontSize: 11 }}
+              tick={{ fill: "#B0B3AF", fontSize: 14 }}
               axisLine={false}
               tickLine={false}
-              width={40}
+              tickMargin={10}
+              width={58}
               tickFormatter={(v: number) => `${v}%`}
+              label={{
+                value: "Make %",
+                angle: -90,
+                position: "insideLeft",
+                offset: 4,
+                fill: "#B0B3AF",
+                fontSize: 14,
+                style: { textAnchor: "middle" },
+              }}
             />
             <Tooltip
               // pinnedIndex set → force show that session (touch/click).
