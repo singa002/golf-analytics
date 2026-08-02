@@ -79,7 +79,10 @@ function MetricPanel({
       <div className="grid grid-cols-[1fr_auto_1fr] gap-x-3 mb-2 pb-2.5 border-b border-white/10 items-center">
         <div className="flex items-center gap-2 min-w-0">
           <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: ACCENT }} />
-          <span className="text-sm font-semibold uppercase tracking-widest truncate" style={{ color: ACCENT }}>
+          <span
+            className="text-xs xl:text-sm font-semibold uppercase tracking-wide whitespace-nowrap"
+            style={{ color: ACCENT }}
+          >
             INTENDED PREVIEW
           </span>
         </div>
@@ -90,7 +93,7 @@ function MetricPanel({
             style={{ backgroundColor: phase === "result" && outcome ? (outcome.made ? ACCENT : RED) : "rgba(255,255,255,0.35)" }}
           />
           <span
-            className="text-sm font-semibold uppercase tracking-widest truncate"
+            className="text-xs xl:text-sm font-semibold uppercase tracking-wide whitespace-nowrap"
             style={{
               color:
                 phase === "result" && outcome
