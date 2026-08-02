@@ -68,14 +68,14 @@ function SessionSummary({ data }: { data: SessionAnalytics }) {
             <Label>Make %</Label>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-3 flex-1">
+        <div className="grid grid-cols-3 gap-x-4 gap-y-2 flex-1 min-w-0">
           <Stat label="Total Putts" value={totalPutts} />
           <Stat label="Made" value={made} valueClass="text-[#22C55E]" />
           <Stat label="Miss" value={missed} valueClass="text-[#EF4444]" />
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-3 mt-6">
+      <div className="grid grid-cols-4 gap-x-4 gap-y-2 mt-6 min-w-0">
         <Stat label="Avg Distance" value={`${data.avgDistanceFt} ft`} small />
         <Stat label="Avg Speed" value={`${data.avgSpeedMs} m/s`} small />
         <Stat
@@ -127,8 +127,8 @@ function Stat({
   small?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-1 min-w-0">
-      <div className="golf-label-sm whitespace-nowrap">{label}</div>
+    <div className="flex flex-col gap-1 min-w-0 overflow-hidden">
+      <div className="golf-label-sm leading-tight break-words hyphens-auto">{label}</div>
       <div className={`${small ? "text-base" : "text-2xl"} golf-display ${valueClass}`}>{value}</div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { BarChart3, CalendarDays, LayoutDashboard, Users } from "lucide-react";
+import { CalendarDays, LayoutDashboard, Users } from "lucide-react";
 import type { ReactNode } from "react";
 import { COACH } from "@/lib/coachService";
 import { AppSidebar, type NavItem } from "@/components/AppSidebar";
@@ -6,7 +6,6 @@ import { AppSidebar, type NavItem } from "@/components/AppSidebar";
 const COACH_NAV: NavItem[] = [
   { to: "/coach", label: "Home", Icon: LayoutDashboard },
   { to: "/coach/students", label: "Students", Icon: Users },
-  { to: "/coach/analytics", label: "Stats", Icon: BarChart3 },
   { to: "/coach/schedule", label: "Schedule", Icon: CalendarDays },
 ];
 

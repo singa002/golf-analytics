@@ -58,11 +58,6 @@ function DashboardPage() {
   useEffect(() => setGreeting(timeOfDayGreeting()), []);
   const subtitle = welcomeSubtitle(YOUR_MAKE_STREAK, latest.date);
 
-  // Same rank framing as before — percentile for the hero "Locally" stat.
-  const localFieldSize = 68;
-  const yourRank = 5;
-  const localTopPercent = Math.ceil((yourRank / localFieldSize) * 100);
-
   return (
     <div className="w-full h-full min-h-0 flex overflow-hidden relative">
       {/* Main Content — no scroll on iPad; desktop can grow naturally inside parent. */}
@@ -96,66 +91,41 @@ function DashboardPage() {
           </div>
         </header>
 
-        {/* Single full-width stack: hero stats → secondary stats → chart */}
+        {/* Stats + chart */}
         <div className="golf-glass rounded-[12px] p-4 xl:p-8 relative overflow-hidden flex-1 flex flex-col min-h-0">
           <div className="absolute top-0 right-0 w-32 h-32 bg-[#0E1E16] blur-3xl rounded-full translate-x-10 -translate-y-10" />
 
-          {/* Hero row */}
-          <div className="relative grid w-full grid-cols-3 items-start shrink-0">
+          {/* Hero stats — Season Make % leads; three supporting stats beside it */}
+          <div className="relative grid w-full grid-cols-[1.35fr_1fr_1fr_1fr] items-start shrink-0">
             <div className="min-w-0">
               <p className="golf-label mb-1">SEASON MAKE %</p>
               <div className="golf-accent-text-glow flex items-baseline gap-2 xl:gap-4">
-                <span className="golf-display text-5xl xl:text-7xl text-white leading-none">{latest.makePercent}</span>
-                <span className="golf-display text-xl xl:text-2xl text-[#22C55E]">%</span>
+                <span className="golf-display text-6xl xl:text-8xl text-white leading-none">{latest.makePercent}</span>
+                <span className="golf-display text-2xl xl:text-3xl text-[#22C55E]">%</span>
               </div>
             </div>
 
             <div className="border-l border-white/10 pl-4 xl:pl-8 min-w-0">
-              <p className="golf-label mb-1">Locally</p>
-              <div className="golf-display text-2xl xl:text-3xl leading-none text-white">
-                Top <span className="text-[#22C55E]">{localTopPercent}%</span>
+              <p className="golf-label mb-1">BEST MAKE %</p>
+              <div className="golf-display text-4xl xl:text-5xl leading-none text-white">
+                {bestSession.makePercent}
+                <span className="text-2xl xl:text-3xl text-[#22C55E] ml-1.5">%</span>
               </div>
-              <Link
-                to="/compete"
-                className="mt-2 xl:mt-3 inline-flex items-center gap-1 text-xs xl:text-sm font-semibold text-[#22C55E] hover:text-[#4ADE80] transition-colors"
-              >
-                View full leaderboard
-                <ChevronRight size={14} />
-              </Link>
             </div>
 
             <div className="border-l border-white/10 pl-4 xl:pl-8 min-w-0">
               <p className="golf-label mb-1">Current Streak</p>
-              <div className="golf-display text-2xl xl:text-3xl leading-none text-white">
+              <div className="golf-display text-4xl xl:text-5xl leading-none text-white">
                 <span className="text-[#22C55E]">{YOUR_MAKE_STREAK}</span>
-                <span className="text-xs xl:text-sm golf-text-secondary ml-2">MADE IN A ROW</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Secondary stats row — former Personal Bests */}
-          <div className="relative mt-4 xl:mt-6 pt-4 xl:pt-6 border-t border-white/5 grid w-full grid-cols-3 items-start shrink-0">
-            <div className="min-w-0">
-              <p className="golf-label mb-1">BEST MAKE %</p>
-              <div className="golf-display text-2xl xl:text-3xl leading-none text-white">
-                {bestSession.makePercent}
-                <span className="text-lg xl:text-xl text-[#22C55E] ml-1.5">%</span>
-              </div>
-            </div>
-
-            <div className="border-l border-white/10 pl-4 xl:pl-8 min-w-0">
-              <p className="golf-label mb-1">SESSIONS LOGGED</p>
-              <div className="golf-display text-2xl xl:text-3xl leading-none text-white">
-                {sessions.length}
-                <span className="text-xs xl:text-sm golf-text-secondary ml-2">TOTAL</span>
+                <span className="text-sm xl:text-base golf-text-secondary ml-2">MADE IN A ROW</span>
               </div>
             </div>
 
             <div className="border-l border-white/10 pl-4 xl:pl-8 min-w-0">
               <p className="golf-label mb-1">PUTTS RECORDED</p>
-              <div className="golf-display text-2xl xl:text-3xl leading-none text-white">
+              <div className="golf-display text-4xl xl:text-5xl leading-none text-white">
                 {totalPutts}
-                <span className="text-xs xl:text-sm golf-text-secondary ml-2">PUTTS</span>
+                <span className="text-sm xl:text-base golf-text-secondary ml-2">PUTTS</span>
               </div>
             </div>
           </div>

@@ -22,7 +22,6 @@ import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedPracticeRouteImport } from './routes/_authenticated/practice'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as CoachIndexRouteImport } from './routes/coach.index'
-import { Route as CoachAnalyticsRouteImport } from './routes/coach.analytics'
 import { Route as CoachScheduleRouteImport } from './routes/coach.schedule'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as CoachStudentsIndexRouteImport } from './routes/coach.students.index'
@@ -94,11 +93,6 @@ const CoachIndexRoute = CoachIndexRouteImport.update({
   path: '/',
   getParentRoute: () => CoachRoute,
 } as any)
-const CoachAnalyticsRoute = CoachAnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
-  getParentRoute: () => CoachRoute,
-} as any)
 const CoachScheduleRoute = CoachScheduleRouteImport.update({
   id: '/schedule',
   path: '/schedule',
@@ -133,7 +127,6 @@ export interface FileRoutesByFullPath {
   '/history': typeof AuthenticatedHistoryRoute
   '/practice': typeof AuthenticatedPracticeRoute
   '/settings': typeof AuthenticatedSettingsRoute
-  '/coach/analytics': typeof CoachAnalyticsRoute
   '/coach/schedule': typeof CoachScheduleRoute
   '/coach/': typeof CoachIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -151,7 +144,6 @@ export interface FileRoutesByTo {
   '/history': typeof AuthenticatedHistoryRoute
   '/practice': typeof AuthenticatedPracticeRoute
   '/settings': typeof AuthenticatedSettingsRoute
-  '/coach/analytics': typeof CoachAnalyticsRoute
   '/coach/schedule': typeof CoachScheduleRoute
   '/coach': typeof CoachIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -172,7 +164,6 @@ export interface FileRoutesById {
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
   '/_authenticated/practice': typeof AuthenticatedPracticeRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
-  '/coach/analytics': typeof CoachAnalyticsRoute
   '/coach/schedule': typeof CoachScheduleRoute
   '/coach/': typeof CoachIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -193,7 +184,6 @@ export interface FileRouteTypes {
     | '/history'
     | '/practice'
     | '/settings'
-    | '/coach/analytics'
     | '/coach/schedule'
     | '/coach/'
     | '/.mcp/invoke-tool/$tool'
@@ -211,7 +201,6 @@ export interface FileRouteTypes {
     | '/history'
     | '/practice'
     | '/settings'
-    | '/coach/analytics'
     | '/coach/schedule'
     | '/coach'
     | '/.mcp/invoke-tool/$tool'
@@ -231,7 +220,6 @@ export interface FileRouteTypes {
     | '/_authenticated/history'
     | '/_authenticated/practice'
     | '/_authenticated/settings'
-    | '/coach/analytics'
     | '/coach/schedule'
     | '/coach/'
     | '/.mcp/invoke-tool/$tool'
@@ -342,13 +330,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoachIndexRouteImport
       parentRoute: typeof CoachRoute
     }
-    '/coach/analytics': {
-      id: '/coach/analytics'
-      path: '/analytics'
-      fullPath: '/coach/analytics'
-      preLoaderRoute: typeof CoachAnalyticsRouteImport
-      parentRoute: typeof CoachRoute
-    }
     '/coach/schedule': {
       id: '/coach/schedule'
       path: '/schedule'
@@ -402,7 +383,6 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface CoachRouteChildren {
-  CoachAnalyticsRoute: typeof CoachAnalyticsRoute
   CoachScheduleRoute: typeof CoachScheduleRoute
   CoachIndexRoute: typeof CoachIndexRoute
   CoachStudentsStudentIdRoute: typeof CoachStudentsStudentIdRoute
@@ -410,7 +390,6 @@ interface CoachRouteChildren {
 }
 
 const CoachRouteChildren: CoachRouteChildren = {
-  CoachAnalyticsRoute: CoachAnalyticsRoute,
   CoachScheduleRoute: CoachScheduleRoute,
   CoachIndexRoute: CoachIndexRoute,
   CoachStudentsStudentIdRoute: CoachStudentsStudentIdRoute,

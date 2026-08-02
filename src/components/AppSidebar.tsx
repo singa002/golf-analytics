@@ -103,8 +103,7 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
     // Shells that render a top header set --app-header-h so the sidebar ends at the
     // viewport bottom and the avatar never falls below the fold.
     <nav className="golf-sidebar-liquid sticky top-0 h-[calc(100vh-var(--app-header-h,0px))] w-[100px] shrink-0 flex flex-col items-center pt-3 pb-5 z-20 bg-transparent">
-      {/* overflow-y-auto clips box-shadow; py gives the active glow room at the ends
-          without changing spacing between nav items (still justify-between). */}
+      {/* Nav + avatar share one column so items stay evenly spaced after count changes. */}
       <div className="flex flex-col justify-between flex-1 w-full px-2 py-6 min-h-0 overflow-y-auto">
         {navItems.map(({ to, label, Icon }) => (
           <SidebarNavLiquidItem
@@ -115,16 +114,13 @@ export function AppSidebar({ navItems, profile }: AppSidebarProps) {
             active={isActive(to)}
           />
         ))}
-      </div>
 
-      {/* Avatar stays fixed at the bottom — not part of the even nav distribution. */}
-      <div className="shrink-0 flex flex-col items-center w-full px-2 pt-4">
         <LiquidButton
           ref={avatarRef}
           label=""
           options={SIDEBAR_LIQUID_OPTIONS}
           events={profileEvents}
-          className="lg-button w-full golf-text-secondary hover:text-white"
+          className="lg-button w-full shrink-0 golf-text-secondary hover:text-white"
           aria-label="Open profile menu"
         >
           <span className="lg-nav-icon w-12 h-12 rounded-full border-2 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-sm font-bold text-[#22C55E]">

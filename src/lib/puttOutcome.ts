@@ -19,7 +19,7 @@ export type PuttOutcome = {
   /** Human-readable variant name (used in the result view + testing) */
   name: string;
   made: boolean;
-  /** The six measured stats, revealed one at a time during the LIVE state */
+  /** Measured stats — Distance/Speed/Break/Start Line reveal during LIVE; Stimp/Aim Point match the read immediately */
   stats: MeasuredStat[];
   /** Lateral deviation samples (in feet, positive = right of the intended line) */
   deviation: number[];
@@ -59,10 +59,8 @@ function buildStats(
     breakDeg: number;
     startLineDeg: number;
     startLineDirection: "Left" | "Right";
-    stimp: number;
-    aimPointFt: number;
   },
-  offFlags: Partial<Record<"distance" | "speed" | "break" | "startLine" | "stimp" | "aimPoint", boolean>>,
+  offFlags: Partial<Record<"distance" | "speed" | "break" | "startLine", boolean>>,
 ): MeasuredStat[] {
   return [
     { label: "Distance", value: `${n1(measured.distanceFt)} ft`, off: offFlags.distance },
@@ -73,11 +71,11 @@ function buildStats(
       value: `${n1(measured.startLineDeg)}° ${measured.startLineDirection}`,
       off: offFlags.startLine,
     },
-    { label: "Stimp", value: `${n1(measured.stimp)}`, off: offFlags.stimp },
+    // Stimp & Aim Point are course/read constants — same as preview, always on.
+    { label: "Stimp", value: `${n1(read.stimp)}` },
     {
       label: "Aim Point",
-      value: `${n1(measured.aimPointFt)} ft ${read.aimPointDirection}`,
-      off: offFlags.aimPoint,
+      value: `${n1(read.aimPointFt)} ft ${read.aimPointDirection}`,
     },
   ];
 }
@@ -99,8 +97,6 @@ const VARIANTS: Record<PuttOutcomeId, (read: PrePuttRead) => PuttOutcome> = {
           breakDeg: read.breakDeg,
           startLineDeg,
           startLineDirection: read.startLineDirection,
-          stimp: read.stimp,
-          aimPointFt: read.aimPointFt,
         },
         {},
       ),
@@ -127,8 +123,6 @@ const VARIANTS: Record<PuttOutcomeId, (read: PrePuttRead) => PuttOutcome> = {
           breakDeg: n1(read.breakDeg + rand(-0.15, 0.15)),
           startLineDeg,
           startLineDirection: read.startLineDirection,
-          stimp: read.stimp,
-          aimPointFt: n1(read.aimPointFt + rand(-0.2, 0.2)),
         },
         { startLine: true },
       ),
@@ -155,8 +149,6 @@ const VARIANTS: Record<PuttOutcomeId, (read: PrePuttRead) => PuttOutcome> = {
           breakDeg: n1(read.breakDeg + rand(0.3, 0.7)),
           startLineDeg: n1(read.startLineDeg + rand(-0.1, 0.1)),
           startLineDirection: read.startLineDirection,
-          stimp: read.stimp,
-          aimPointFt: read.aimPointFt,
         },
         { speed: true, break: true },
       ),
@@ -183,10 +175,8 @@ const VARIANTS: Record<PuttOutcomeId, (read: PrePuttRead) => PuttOutcome> = {
           breakDeg: n1(read.breakDeg + rand(-0.2, 0.2)),
           startLineDeg,
           startLineDirection: side,
-          stimp: read.stimp,
-          aimPointFt: n1(read.aimPointFt + rand(0.8, 1.6)),
         },
-        { startLine: true, aimPoint: true },
+        { startLine: true },
       ),
       endScale: rand(0.98, 1.04),
       deviation: ramp(mag, 0.12),
@@ -212,8 +202,6 @@ const VARIANTS: Record<PuttOutcomeId, (read: PrePuttRead) => PuttOutcome> = {
           breakDeg: n1(long ? read.breakDeg - rand(0.3, 0.6) : read.breakDeg + rand(0.3, 0.6)),
           startLineDeg: n1(read.startLineDeg + rand(-0.15, 0.15)),
           startLineDirection: read.startLineDirection,
-          stimp: read.stimp,
-          aimPointFt: read.aimPointFt,
         },
         { distance: true, speed: true, break: true },
       ),
